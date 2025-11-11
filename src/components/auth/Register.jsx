@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Swal from "sweetalert2";
 import { checkUsernameExists, registerUser } from "../../service/user/Register";
 
 const Register = () => {
@@ -64,9 +65,13 @@ const Register = () => {
     };
 
     // Submit form
-    const handleSubmit = async (values, { setSubmitting, resetForm, setStatus }) => {
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         if (usernameExists) {
-            setStatus({ success: false, message: "Tên đăng nhập đã tồn tại!" });
+            Swal.fire({
+                icon: "error",
+                title: "Tên đăng nhập đã tồn tại!",
+                showConfirmButton: true,
+            });
             setSubmitting(false);
             return;
         }
@@ -75,25 +80,37 @@ const Register = () => {
             const response = await registerUser(values);
 
             if (response.success === false) {
-                setStatus({ success: false, message: response.message });
-            } else {
-                setStatus({
-                    success: true,
-                    message: "🎉 Đăng ký thành công! Đang chuyển đến trang đăng nhập...",
+                Swal.fire({
+                    icon: "error",
+                    title: "Đăng ký thất bại!",
+                    text: response.message,
+                    showConfirmButton: true,
                 });
-                setTimeout(() => navigate("/login"), 2500);
+            } else {
+                Swal.fire({
+                    icon: "success",
+                    title: "🎉 Đăng ký thành công!",
+                    text: "Đang chuyển đến trang đăng nhập...",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+
+                setTimeout(() => navigate("/login"), 1500);
                 resetForm();
                 setUsernameExists(null);
             }
         } catch (error) {
-            setStatus({
-                success: false,
-                message: error.response?.data?.message || "Đã xảy ra lỗi khi đăng ký.",
+            Swal.fire({
+                icon: "error",
+                title: "Đã xảy ra lỗi!",
+                text: error.response?.data?.message || "Đăng ký không thành công.",
+                showConfirmButton: true,
             });
         } finally {
             setSubmitting(false);
         }
     };
+
 
     return (
         <div className="container mt-5" style={{ maxWidth: "650px" }}>
@@ -175,16 +192,36 @@ const Register = () => {
                         {/* Role */}
                         <div className="mb-3">
                             <label className="form-label"><i className="bi bi-people-fill me-1"></i>Vai trò</label>
+
                             <div className="form-check">
-                                <Field type="radio" name="roleId" value="1" id="roleUser" className="form-check-input" />
-                                <label htmlFor="roleUser" className="form-check-label">🧍 Người dùng</label>
+                                <Field
+                                    type="radio"
+                                    name="roleId"
+                                    value="1"
+                                    id="roleUser"
+                                    className="form-check-input"
+                                />
+                                <label htmlFor="roleUser" className="form-check-label">
+                                    <i className="bi bi-person-fill me-1"></i> Người dùng
+                                </label>
                             </div>
+
                             <div className="form-check">
-                                <Field type="radio" name="roleId" value="2" id="roleCCDV" className="form-check-input" />
-                                <label htmlFor="roleCCDV" className="form-check-label">💼 Cung cấp dịch vụ</label>
+                                <Field
+                                    type="radio"
+                                    name="roleId"
+                                    value="2"
+                                    id="roleCCDV"
+                                    className="form-check-input"
+                                />
+                                <label htmlFor="roleCCDV" className="form-check-label">
+                                    <i className="bi bi-briefcase-fill me-1"></i> Cung cấp dịch vụ
+                                </label>
                             </div>
+
                             <ErrorMessage name="roleId" component="div" className="text-danger small" />
                         </div>
+
 
                         {/* Submit */}
                         <div className="text-center">
