@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { apiUserLogin, apiFindUserByToken } from "../../config/api.js";
 
@@ -11,7 +12,7 @@ const login = async (username, pass) => {
     if (response.data) {
       localStorage.setItem("token", response.data.token);
     }
-
+    console.log("Login response data:", response.data);
     return response.data;
   } catch (error) {
     console.error("Login failed:", error);
