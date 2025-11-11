@@ -19,6 +19,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.5",
     "redux": "^5.0.1",
+    "sweetalert2": "^11.26.3",
     "yup": "^1.7.1"
   },
   "devDependencies": {
