@@ -1,9 +1,9 @@
 import React from "react";
-import Header from "../layout/Header";
-import HeroSection from "../layout/HeroSection";
-import FeaturedLovers from "../user/FeaturedLovers";
-import CallToAction from "../user/CallToAction";
-import Footer from "../layout/Footer";
+import Header from "./layout/Header";
+import HeroSection from "./layout/HeroSection";
+import FeaturedLovers from "./FeaturedLovers";
+import CallToAction from "./CallToAction";
+import Footer from "./layout/Footer";
 
 export default function Home() {
   const lovers = [

@@ -4,6 +4,8 @@ import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
 import PersonalProfile from "./components/ccdv/PersonalProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CCDVHome from "./components/ccdv/CCDVHome";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // import "./App.css";
 
@@ -15,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/ccdv" element={<CCDVHome />} />
           {/* <Route path="/about" element={<About />} /> */}
           <Route path="/personalInfo" element={<PersonalProfile />} />
         </Routes>

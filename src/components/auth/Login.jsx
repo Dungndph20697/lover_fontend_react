@@ -21,17 +21,16 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await login(username, password);
+
       Toast.fire({
         icon: "success",
         title: "Đăng nhập thành công!",
       });
-      // chuyển hướng sau khi login
-
       const userData = await findUserByToken(data.token);
       if (userData.role.name === "User") {
         navigate("/");
       } else if (userData.role.name === "Service_provider") {
-        navigate("/login");
+        navigate("/ccdv");
       }
     } catch (error) {
       console.log("Login error:", error);
