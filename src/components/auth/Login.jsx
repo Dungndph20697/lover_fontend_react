@@ -28,9 +28,9 @@ export default function Login() {
       });
       const userData = await findUserByToken(data.token);
       if (userData.role.name === "User") {
-        navigate("/ccdv");
+        navigate("/");
       } else if (userData.role.name === "Service_provider") {
-        navigate("/login");
+        navigate("/ccdv");
       }
     } catch (error) {
       console.log("Login error:", error);
