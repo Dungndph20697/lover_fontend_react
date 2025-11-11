@@ -19,6 +19,11 @@ export default function Header() {
               Khám phá
             </Link>
           </li>
+          <li>
+            <Link className="nav-link" to="/personalInfo">
+              Đăng thông tin cá nhân
+            </Link>
+          </li>
           <li className="nav-item">
             <Link className="nav-link" to="/login">
               Đăng nhập

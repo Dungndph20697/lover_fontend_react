@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
+import PersonalProfile from "./components/ccdv/PersonalProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // import "./App.css";
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {/* <Route path="/about" element={<About />} /> */}
+          <Route path="/personalInfo" element={<PersonalProfile />} />
         </Routes>
       </BrowserRouter>
     </>
