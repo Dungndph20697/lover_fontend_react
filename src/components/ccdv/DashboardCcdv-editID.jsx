@@ -1,40 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Card, Tabs, Tab, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Tabs, Tab, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
-const DashboardCcdv = () => {
-    const { userId } = useParams();
+const DashboardCcdv = ({ userId }) => {
     const [tab, setTab] = useState('basic');
     const [services, setServices] = useState({ basic: [], free: [], extended: [] });
     const [selected, setSelected] = useState([]);
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState(null);
 
+    // Lấy danh sách dịch vụ
     useEffect(() => {
         const fetchAll = async () => {
             setLoading(true);
-            try {
-                const [basic, free, extended, user] = await Promise.all([
-                    axios.get('/api/service-options/basic-services'),
-                    axios.get('/api/service-options/free-services'),
-                    axios.get('/api/service-options/extended-services'),
-                    axios.get(`/api/service-options/user/${userId}`)
-                ]);
-                setServices({
-                    basic: basic.data,
-                    free: free.data,
-                    extended: extended.data
-                });
-                setSelected(user.data?.selectedServices || []);
-            } catch (e) {
-                setAlert({ type: 'danger', msg: 'Lỗi tải dữ liệu!' });
-            }
+            const [basic, free, extended, user] = await Promise.all([
+                axios.get('/api/service-options/basic-services'),
+                axios.get('/api/service-options/free-services'),
+                axios.get('/api/service-options/extended-services'),
+                axios.get(`/api/service-options/user/${userId}`)
+            ]);
+            setServices({
+                basic: basic.data,
+                free: free.data,
+                extended: extended.data
+            });
+            setSelected(user.data?.selectedServices || []);
             setLoading(false);
         };
-        if (userId) fetchAll();
+        fetchAll();
     }, [userId]);
 
+    // Xử lý chọn dịch vụ
     const handleCheck = (service) => {
         setSelected((prev) =>
             prev.includes(service)
@@ -43,6 +39,7 @@ const DashboardCcdv = () => {
         );
     };
 
+    // Lưu dịch vụ
     const handleSave = async () => {
         setLoading(true);
         try {
