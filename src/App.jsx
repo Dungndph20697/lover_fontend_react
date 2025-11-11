@@ -17,11 +17,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-<<<<<<< HEAD
+
           <Route path="/quanLiDonThue" element={<QuanLiDonThue />} />
-=======
+
           <Route path="/ccdv" element={<CCDVHome />} />
->>>>>>> 6fc702ba5f7f6b4c6c29872bbc68a63657d21517
+
           {/* <Route path="/about" element={<About />} /> */}
         </Routes>
       </BrowserRouter>
