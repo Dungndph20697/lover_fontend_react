@@ -9,16 +9,21 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end", // góc trên bên phải
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await login(username, password);
-      Swal.fire({
+      Toast.fire({
         icon: "success",
         title: "Đăng nhập thành công!",
-        text: `Chào mừng ${username}!`,
-        showConfirmButton: false,
-        timer: 2000,
       });
       // chuyển hướng sau khi login
 
@@ -29,10 +34,10 @@ export default function Login() {
         navigate("/login");
       }
     } catch (error) {
-      Swal.fire({
+      console.log("Login error:", error);
+      Toast.fire({
         icon: "error",
-        title: "Tên đăng nhập hoặc mật khẩu không đúng!",
-        text: error,
+        title: "Sai tên đăng nhập hoặc mật khẩu!",
       });
     }
   };
