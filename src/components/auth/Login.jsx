@@ -31,13 +31,9 @@ export default function Login() {
       });
 
       const userData = await findUserByToken(data.token);
-      // Lưu thông tin user (id, email, username...)
-      if (userData) {
-          localStorage.setItem("user", JSON.stringify(userData));
-      }
-      if (userData.role.name === "USER") {
+      if (userData.role.name === "User") {
         navigate("/");
-      } else if (userData.role.name === "SERVICE_PROVIDER") {
+      } else if (userData.role.name === "Service_provider") {
         navigate("/ccdv");
       }
     } catch (error) {
@@ -76,7 +72,7 @@ export default function Login() {
           </h3>
 
           <form onSubmit={handleSubmit}>
-            {/* Username */}
+            
             <div className="mb-3">
               <label htmlFor="username" className="form-label fw-semibold">
                 Tên đăng nhập

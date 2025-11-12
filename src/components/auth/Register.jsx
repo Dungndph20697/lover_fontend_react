@@ -117,7 +117,7 @@ const Register = () => {
     <>
       <Header />
 
-      {/* NỀN MỀM HỒNG CAM */}
+      
       <div
         className="d-flex justify-content-center align-items-center py-5"
         style={{

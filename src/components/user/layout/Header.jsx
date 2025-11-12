@@ -54,7 +54,7 @@ export default function Header() {
       
     >
       <div className="container">
-        {/* Logo */}
+        
         <Link className="navbar-brand text-danger fw-bold fs-4" to="/">
           ❤️ Lover
         </Link>
