@@ -73,6 +73,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/ccdv-profile" element={<PersonalProfile />}/>
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
