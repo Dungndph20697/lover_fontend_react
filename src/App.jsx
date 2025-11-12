@@ -67,20 +67,6 @@ function App() {
   };
 
   return (
-<<<<<<< HEAD
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/ccdv" element={<CCDVHome />} />
-
-          {/* <Route path="/about" element={<About />} /> */}
-        </Routes>
-      </BrowserRouter>
-    </>
-=======
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -99,7 +85,6 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
->>>>>>> 7122a74b587d4e7ac83ca307fc97ba804f0ba1e6
   );
 }
 

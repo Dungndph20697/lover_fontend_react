@@ -13,6 +13,6 @@ const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
 
-export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiHireSession ,apiHireSession};
+export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiHireSession, apiCcdvProfiles };
 
 

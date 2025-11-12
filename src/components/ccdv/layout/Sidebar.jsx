@@ -29,11 +29,10 @@ export default function Sidebar({ selected, setSelected }) {
         {menuItems.map((item) => (
           <li key={item.id} className="nav-item">
             <button
-              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${
-                selected === item.id
+              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${selected === item.id
                   ? "btn-danger text-white"
                   : "btn-outline-danger bg-white"
-              }`}
+                }`}
               onClick={() => setSelected(item.id)}
               style={{
                 borderRadius: "10px",
