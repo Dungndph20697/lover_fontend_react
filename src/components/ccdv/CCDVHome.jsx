@@ -5,6 +5,7 @@ import UserInfo from "./UserInfo";
 import Services from "./Services";
 import QuanLyDon from "./QuanLyDon";
 import Footer from "./layout/Footer";
+import PersonalInfoForm from "./PersonalProfile";
 
 export default function CCDVDashboard() {
   const [selected, setSelected] = useState("userinfo");
@@ -17,6 +18,8 @@ export default function CCDVDashboard() {
         return <Services />;
       case "quanlydon":
         return <QuanLyDon />;
+      case "personalInfo":
+        return <PersonalInfoForm />;
 
       default:
         return <UserInfo />;

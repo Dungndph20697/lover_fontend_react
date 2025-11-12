@@ -48,7 +48,12 @@ export default function CcdvProfileForm() {
             nationality: Yup.string().required("Quốc tịch là bắt buộc"),
         }),
         onSubmit: async (values) => {
-            if (!userId) {
+            console.log("🟢 Form submit chạy! Giá trị:", values);
+            console.log("userId hiện tại:", userId);
+            console.log("Token FE đang gửi:", localStorage.getItem("token"));
+            console.log(JSON.parse(localStorage.getItem("user")));
+            const token = localStorage.getItem("token");
+            if (!token) {
                 setMessage("Vui lòng đăng nhập trước khi đăng thông tin!");
                 return;
             }
@@ -66,6 +71,9 @@ export default function CcdvProfileForm() {
             try {
                 const res = await fetch(apiCcdvProfiles, {
                     method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                     body: formData,
                 });
 
