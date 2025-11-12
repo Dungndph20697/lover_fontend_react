@@ -4,7 +4,6 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
 
-
 import PersonalProfile from "./components/ccdv/PersonalProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -44,13 +43,15 @@ function App() {
 
   // Component bảo vệ route
   const ProtectedRoute = ({ children, allowedRoles }) => {
-    console.log("Checking access for roles:", allowedRoles);
-    console.log("Current user:", user);
-    if (loading) return <div>Đang tải...</div>;
+    if (loading) return <div className="text-center mt-5">Đang tải...</div>;
 
-    // if (!token || !user) return <Navigate to="/login" />;
+    if (!token || !user) return <Navigate to="/login" />;
 
-    if (!allowedRoles.includes(user.role.name)) {
+    // Xử lý trường hợp chưa có role hoặc mismatch
+    const roleName = user?.role?.name?.toLowerCase() || "";
+    const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
+
+    if (!normalizedAllowed.includes(roleName)) {
       Swal.fire({
         icon: "error",
         title: "Bạn không có quyền truy cập!",
@@ -64,8 +65,8 @@ function App() {
 
     return children;
   };
-  return (
 
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -77,14 +78,13 @@ function App() {
         <Route
           path="/ccdv"
           element={
-            <ProtectedRoute allowedRoles={["Service_provider"]}>
+            <ProtectedRoute allowedRoles={["SERVICE_PROVIDER"]}>
               <CCDVHome />
             </ProtectedRoute>
           }
         />
       </Routes>
     </BrowserRouter>
-
   );
 }
 
