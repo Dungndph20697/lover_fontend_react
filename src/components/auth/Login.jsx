@@ -31,9 +31,9 @@ export default function Login() {
       });
 
       const userData = await findUserByToken(data.token);
-      if (userData.role.name === "User") {
+      if (userData.role.name === "USER") {
         navigate("/");
-      } else if (userData.role.name === "Service_provider") {
+      } else if (userData.role.name === "SERVICE_PROVIDER") {
         navigate("/ccdv");
       }
     } catch (error) {
@@ -72,7 +72,6 @@ export default function Login() {
           </h3>
 
           <form onSubmit={handleSubmit}>
-            
             <div className="mb-3">
               <label htmlFor="username" className="form-label fw-semibold">
                 Tên đăng nhập
