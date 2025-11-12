@@ -42,17 +42,92 @@ export default function CcdvProfileForm() {
             hireCount: 0,
         },
         validationSchema: Yup.object({
-            fullName: Yup.string().required("Họ và tên là bắt buộc"),
+            fullName: Yup.string()
+                .trim()
+                .required("Họ và tên là bắt buộc")
+                .min(3, "Họ và tên phải có ít nhất 3 ký tự")
+                .max(50, "Họ và tên không được quá 50 ký tự"),
+
             yearOfBirth: Yup.number()
                 .required("Năm sinh là bắt buộc")
                 .min(1900, "Năm sinh không hợp lệ")
-                .max(new Date().getFullYear(), "Năm sinh không hợp lệ"),
-            gender: Yup.string().required("Giới tính là bắt buộc"),
-            city: Yup.string().required("Thành phố là bắt buộc"),
-            nationality: Yup.string().required("Quốc tịch là bắt buộc"),
-            height: Yup.number().nullable(),
-            weight: Yup.number().nullable(),
-            facebookLink: Yup.string().url("Link Facebook không hợp lệ").nullable(),
+                .max(new Date().getFullYear(), "Năm sinh không hợp lệ")
+                .test("is-adult", "Bạn phải ít nhất 18 tuổi", (value) => {
+                    if (!value) return false;
+                    const age = new Date().getFullYear() - value;
+                    return age >= 18;
+                }),
+
+            gender: Yup.string()
+                .required("Giới tính là bắt buộc")
+                .oneOf(["Nam", "Nữ", "Khác"], "Giới tính không hợp lệ"),
+
+            city: Yup.string()
+                .required("Thành phố là bắt buộc")
+                .min(2, "Tên thành phố không hợp lệ"),
+
+            nationality: Yup.string()
+                .required("Quốc tịch là bắt buộc")
+                .min(2, "Tên quốc tịch không hợp lệ"),
+
+            height: Yup.number()
+                .nullable()
+                .required("Chiều cao là bắt buộc")
+                .typeError("Chiều cao phải là số")
+                .min(100, "Chiều cao phải từ 100 cm trở lên")
+                .max(250, "Chiều cao không hợp lệ"),
+
+            weight: Yup.number()
+                .nullable()
+                .required("Cân nặng là bắt buộc")
+                .typeError("Cân nặng phải là số")
+                .min(30, "Cân nặng quá thấp")
+                .max(200, "Cân nặng không hợp lệ"),
+
+            hobbies: Yup.string()
+                .nullable()
+                .required("Sở thích là bắt buộc")
+                .max(300, "Sở thích không được vượt quá 300 ký tự"),
+
+            description: Yup.string()
+                .nullable()
+                .required("Mô tả bản thân là bắt buộc")
+                .min(10, "Mô tả phải có ít nhất 10 ký tự"),
+
+            requirement: Yup.string()
+                .nullable()
+                .required("Yêu cầu với người thuê là bắt buộc")
+                .min(10, "Yêu cầu phải có ít nhất 10 ký tự"),
+
+            facebookLink: Yup.string()
+                .nullable()
+                .required("Link Fackbook là bắt buộc")
+                .url("Link Facebook không hợp lệ")
+                .matches(/^https?:\/\/(www\.)?facebook\.com\//, "Link phải bắt đầu bằng facebook.com"),
+
+            // createdAt: Yup.string().required(),
+            // hireCount: Yup.number().required(),
+
+            avatar: Yup.mixed()
+                .required("Ảnh đại diện là bắt buộc")
+                .test("fileType", "Chỉ nhận ảnh PNG/JPG", value =>
+                    value && ["image/jpeg", "image/png"].includes(value.type)
+                ),
+            portrait1: Yup.mixed()
+                .required("Ảnh chân dung 1 là bắt buộc")
+                .test("fileType", "Chỉ nhận ảnh PNG/JPG", value =>
+                    value && ["image/jpeg", "image/png"].includes(value.type)
+                ),
+            portrait2: Yup.mixed()
+                .required("Ảnh chân dung 2 là bắt buộc")
+                .test("fileType", "Chỉ nhận ảnh PNG/JPG", value =>
+                    value && ["image/jpeg", "image/png"].includes(value.type)
+                ),
+            portrait3: Yup.mixed()
+                .required("Ảnh chân dung 3 là bắt buộc")
+                .test("fileType", "Chỉ nhận ảnh PNG/JPG", value =>
+                    value && ["image/jpeg", "image/png"].includes(value.type)
+                ),
         }),
         onSubmit: async (values) => {
             const token = localStorage.getItem("token");
@@ -88,6 +163,7 @@ export default function CcdvProfileForm() {
         const { name, files: fileList } = e.target;
         const file = fileList[0];
         setFiles((prev) => ({ ...prev, [name]: file }));
+        formik.setFieldValue(name, file);
 
         if (name === "avatar" && file) {
             const reader = new FileReader();
@@ -200,33 +276,67 @@ export default function CcdvProfileForm() {
                             <input
                                 type="number"
                                 name="height"
-                                className="form-control"
+                                className={`form-control ${formik.touched.height && formik.errors.height ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("height")}
                             />
+                            {formik.touched.height && formik.errors.height && (
+                                <div className="invalid-feedback">{formik.errors.height}</div>
+                            )}
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">Cân nặng (kg)</label>
                             <input
                                 type="number"
                                 name="weight"
-                                className="form-control"
+                                className={`form-control ${formik.touched.weight && formik.errors.weight ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("weight")}
                             />
+                            {formik.touched.weight && formik.errors.weight && (
+                                <div className="invalid-feedback">{formik.errors.weight}</div>
+                            )}
                         </div>
                     </div>
 
                     {/* Sở thích, Mô tả, Yêu cầu */}
                     <div className="mb-3">
                         <label className="form-label">Sở thích</label>
-                        <textarea name="hobbies" className="form-control" rows="2" {...formik.getFieldProps("hobbies")} />
+                        <textarea
+                            name="hobbies"
+                            className={`form-control ${formik.touched.hobbies && formik.errors.hobbies ? "is-invalid" : ""}`}
+                            rows="2"
+                            {...formik.getFieldProps("hobbies")}
+                        />
+                        {formik.touched.hobbies && formik.errors.hobbies && (
+                            <div className="invalid-feedback">{formik.errors.hobbies}</div>
+                        )}
                     </div>
+
+                    {/* Mô tả bản thân */}
                     <div className="mb-3">
-                        <label className="form-label">Mô tả về bản thân</label>
-                        <textarea name="description" className="form-control" rows="3" {...formik.getFieldProps("description")} />
+                        <label className="form-label">Mô tả về bản thân *</label>
+                        <textarea
+                            name="description"
+                            className={`form-control ${formik.touched.description && formik.errors.description ? "is-invalid" : ""}`}
+                            rows="3"
+                            {...formik.getFieldProps("description")}
+                        />
+                        {formik.touched.description && formik.errors.description && (
+                            <div className="invalid-feedback">{formik.errors.description}</div>
+                        )}
                     </div>
+
+                    {/* Yêu cầu với người thuê */}
                     <div className="mb-3">
-                        <label className="form-label">Yêu cầu với người thuê</label>
-                        <textarea name="requirement" className="form-control" rows="3" {...formik.getFieldProps("requirement")} />
+                        <label className="form-label">Yêu cầu với người thuê *</label>
+                        <textarea
+                            name="requirement"
+                            className={`form-control ${formik.touched.requirement && formik.errors.requirement ? "is-invalid" : ""}`}
+                            rows="3"
+                            {...formik.getFieldProps("requirement")}
+                        />
+                        {formik.touched.requirement && formik.errors.requirement && (
+                            <div className="invalid-feedback">{formik.errors.requirement}</div>
+                        )}
                     </div>
 
                     {/* Facebook */}
@@ -260,6 +370,9 @@ export default function CcdvProfileForm() {
                                 }}
                             />
                         )}
+                        {formik.touched.avatar && formik.errors.avatar && (
+                            <div className="text-danger mt-2">{formik.errors.avatar}</div>
+                        )}
                     </div>
 
                     <div className="mb-3">
@@ -269,6 +382,9 @@ export default function CcdvProfileForm() {
                             <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
                             <input type="file" name="portrait3" className="form-control" onChange={handleFileChange} />
                         </div>
+                        {formik.touched.portrait1 && formik.errors.portrait1 && (
+                            <div className="text-danger mt-2">{formik.errors.portrait1}</div>
+                        )}
                     </div>
 
                     {/* Thông tin hệ thống */}
