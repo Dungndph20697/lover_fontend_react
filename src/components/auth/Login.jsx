@@ -31,6 +31,10 @@ export default function Login() {
       });
 
       const userData = await findUserByToken(data.token);
+      // Lưu thông tin user (id, email, username...)
+      if (userData) {
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
       if (userData.role.name === "User") {
         navigate("/");
       } else if (userData.role.name === "Service_provider") {
@@ -72,7 +76,7 @@ export default function Login() {
           </h3>
 
           <form onSubmit={handleSubmit}>
-            
+
             <div className="mb-3">
               <label htmlFor="username" className="form-label fw-semibold">
                 Tên đăng nhập

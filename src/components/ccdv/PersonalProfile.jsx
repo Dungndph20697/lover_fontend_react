@@ -98,251 +98,197 @@ export default function CcdvProfileForm() {
 
     return (
         <div
+            className="min-vh-100 d-flex align-items-center justify-content-center"
             style={{
-                // minHeight: "100vh",
-                background: "linear-gradient(135deg, #ffe6eb 0%, #ffb6c1 100%)",
+                background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)",
                 fontFamily: "'Poppins', sans-serif",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "60px 20px",
-                boxSizing: "border-box",
+                padding: "40px 0",
             }}
         >
             <div
-                className="shadow-lg p-5"
+                className="card shadow-lg p-4"
                 style={{
+                    maxWidth: "800px",
                     width: "100%",
-                    maxWidth: "900px",
-                    borderRadius: "25px",
+                    borderRadius: "20px",
                     backgroundColor: "white",
-                    boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
                 }}
             >
-                <h2
-                    className="text-center mb-4 fw-bold"
-                    style={{
-                        color: "#e75480",
-                        fontSize: "1.8rem",
-                        letterSpacing: "0.5px",
-                    }}
-                >
-                    💖 Đăng Thông Tin Cá Nhân CCDV 💖
+                <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>
+                    💕 Đăng Thông Tin Cá Nhân CCDV 💕
                 </h2>
 
                 {message && (
-                    <div
-                        className="alert alert-info text-center"
-                        style={{
-                            borderRadius: "12px",
-                            background: "#fff5f8",
-                            color: "#e75480",
-                            border: "1px solid #ffc4d0",
-                            fontWeight: "500",
-                        }}
-                    >
+                    <div className="alert alert-info text-center" style={{ borderRadius: "10px" }}>
                         {message}
                     </div>
                 )}
 
                 <form onSubmit={formik.handleSubmit}>
-                    {/* ======= Họ tên & Năm sinh ======= */}
+                    {/* Họ tên + Năm sinh */}
                     <div className="row mb-3">
                         <div className="col-md-6">
-                            <label className="form-label fw-semibold">Họ và tên *</label>
+                            <label className="form-label">Họ và tên *</label>
                             <input
                                 type="text"
                                 name="fullName"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
+                                className={`form-control ${formik.touched.fullName && formik.errors.fullName ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("fullName")}
                             />
+                            {formik.touched.fullName && formik.errors.fullName && (
+                                <div className="invalid-feedback">{formik.errors.fullName}</div>
+                            )}
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-semibold">Năm sinh *</label>
+                            <label className="form-label">Năm sinh *</label>
                             <input
                                 type="number"
                                 name="yearOfBirth"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
+                                className={`form-control ${formik.touched.yearOfBirth && formik.errors.yearOfBirth ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("yearOfBirth")}
                             />
+                            {formik.touched.yearOfBirth && formik.errors.yearOfBirth && (
+                                <div className="invalid-feedback">{formik.errors.yearOfBirth}</div>
+                            )}
                         </div>
                     </div>
 
-                    {/* ======= Giới tính, Thành phố, Quốc tịch ======= */}
+                    {/* Giới tính - Thành phố - Quốc tịch */}
                     <div className="row mb-3">
                         <div className="col-md-4">
-                            <label className="form-label fw-semibold">Giới tính *</label>
+                            <label className="form-label">Giới tính *</label>
                             <input
                                 type="text"
                                 name="gender"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
+                                className={`form-control ${formik.touched.gender && formik.errors.gender ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("gender")}
                             />
+                            {formik.touched.gender && formik.errors.gender && (
+                                <div className="invalid-feedback">{formik.errors.gender}</div>
+                            )}
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label fw-semibold">Thành phố *</label>
+                            <label className="form-label">Thành phố *</label>
                             <input
                                 type="text"
                                 name="city"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
+                                className={`form-control ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("city")}
                             />
+                            {formik.touched.city && formik.errors.city && (
+                                <div className="invalid-feedback">{formik.errors.city}</div>
+                            )}
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label fw-semibold">Quốc tịch *</label>
+                            <label className="form-label">Quốc tịch *</label>
                             <input
                                 type="text"
                                 name="nationality"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
+                                className={`form-control ${formik.touched.nationality && formik.errors.nationality ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("nationality")}
                             />
+                            {formik.touched.nationality && formik.errors.nationality && (
+                                <div className="invalid-feedback">{formik.errors.nationality}</div>
+                            )}
                         </div>
                     </div>
 
-                    {/* ======= Chiều cao & Cân nặng ======= */}
+                    {/* Chiều cao - Cân nặng */}
                     <div className="row mb-3">
                         <div className="col-md-6">
-                            <label className="form-label fw-semibold">Chiều cao (cm)</label>
+                            <label className="form-label">Chiều cao (cm)</label>
                             <input
                                 type="number"
                                 name="height"
                                 className="form-control"
-                                style={{ borderRadius: "10px" }}
                                 {...formik.getFieldProps("height")}
                             />
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label fw-semibold">Cân nặng (kg)</label>
+                            <label className="form-label">Cân nặng (kg)</label>
                             <input
                                 type="number"
                                 name="weight"
                                 className="form-control"
-                                style={{ borderRadius: "10px" }}
                                 {...formik.getFieldProps("weight")}
                             />
                         </div>
                     </div>
 
-                    {/* ======= Textarea ======= */}
-                    {["hobbies", "description", "requirement"].map((field, index) => (
-                        <div className="mb-3" key={field}>
-                            <label className="form-label fw-semibold">
-                                {index === 0
-                                    ? "Sở thích"
-                                    : index === 1
-                                        ? "Mô tả về bản thân"
-                                        : "Yêu cầu với người thuê"}
-                            </label>
-                            <textarea
-                                name={field}
-                                className="form-control"
-                                rows="3"
-                                style={{ borderRadius: "10px" }}
-                                {...formik.getFieldProps(field)}
-                            />
-                        </div>
-                    ))}
-
-                    {/* ======= Facebook ======= */}
+                    {/* Sở thích, Mô tả, Yêu cầu */}
                     <div className="mb-3">
-                        <label className="form-label fw-semibold">Facebook (link)</label>
+                        <label className="form-label">Sở thích</label>
+                        <textarea name="hobbies" className="form-control" rows="2" {...formik.getFieldProps("hobbies")} />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Mô tả về bản thân</label>
+                        <textarea name="description" className="form-control" rows="3" {...formik.getFieldProps("description")} />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Yêu cầu với người thuê</label>
+                        <textarea name="requirement" className="form-control" rows="3" {...formik.getFieldProps("requirement")} />
+                    </div>
+
+                    {/* Facebook */}
+                    <div className="mb-3">
+                        <label className="form-label">Facebook (link)</label>
                         <input
                             type="url"
                             name="facebookLink"
-                            className="form-control"
-                            style={{ borderRadius: "10px" }}
+                            className={`form-control ${formik.touched.facebookLink && formik.errors.facebookLink ? "is-invalid" : ""}`}
                             {...formik.getFieldProps("facebookLink")}
                         />
-                    </div>
-
-                    {/* ======= Ảnh đại diện ======= */}
-                    <div className="mb-4 text-center">
-                        <label className="form-label fw-semibold fs-5">Ảnh đại diện *</label>
-                        <input
-                            type="file"
-                            name="avatar"
-                            className="form-control mb-3"
-                            onChange={handleFileChange}
-                            style={{ borderRadius: "10px" }}
-                        />
-                        {avatarPreview && (
-                            <div
-                                style={{
-                                    width: "120px",
-                                    height: "120px",
-                                    margin: "0 auto",
-                                    borderRadius: "50%",
-                                    overflow: "hidden",
-                                    border: "3px solid #e75480",
-                                    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                                }}
-                            >
-                                <img
-                                    src={avatarPreview}
-                                    alt="avatar preview"
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                    }}
-                                />
-                            </div>
+                        {formik.touched.facebookLink && formik.errors.facebookLink && (
+                            <div className="invalid-feedback">{formik.errors.facebookLink}</div>
                         )}
                     </div>
 
-                    {/* ======= Ảnh chân dung ======= */}
-                    <div className="mb-4">
-                        <label className="form-label fw-semibold fs-5">
-                            Ảnh chân dung (3 ảnh) *
-                        </label>
-                        <div className="d-flex flex-column gap-2">
-                            <input
-                                type="file"
-                                name="portrait1"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
-                                onChange={handleFileChange}
+                    {/* Avatar + ảnh chân dung */}
+                    <div className="mb-3 text-center">
+                        <label className="form-label fw-semibold">Ảnh đại diện *</label>
+                        <input type="file" name="avatar" className="form-control mb-3" onChange={handleFileChange} />
+                        {avatarPreview && (
+                            <img
+                                src={avatarPreview}
+                                alt="avatar preview"
+                                className="rounded-circle shadow-sm"
+                                style={{
+                                    width: "120px",
+                                    height: "120px",
+                                    objectFit: "cover",
+                                    border: "3px solid #e75480",
+                                }}
                             />
-                            <input
-                                type="file"
-                                name="portrait2"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
-                                onChange={handleFileChange}
-                            />
-                            <input
-                                type="file"
-                                name="portrait3"
-                                className="form-control"
-                                style={{ borderRadius: "10px" }}
-                                onChange={handleFileChange}
-                            />
+                        )}
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) *</label>
+                        <div className="d-flex gap-2 flex-wrap">
+                            <input type="file" name="portrait1" className="form-control" onChange={handleFileChange} />
+                            <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
+                            <input type="file" name="portrait3" className="form-control" onChange={handleFileChange} />
                         </div>
                     </div>
 
-                    {/* ======= Thông tin hệ thống ======= */}
-                    <div className="text-muted small mb-4">
+                    {/* Thông tin hệ thống */}
+                    <div className="mb-3 text-muted small">
                         <p>📅 Ngày tham gia: <strong>{formik.values.createdAt}</strong></p>
-                        <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong></p>
+                        <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong> (tự động cập nhật)</p>
                     </div>
 
-                    {/* ======= Button ======= */}
+                    {/* Nút submit */}
                     <button
                         type="submit"
-                        className="w-100 fw-semibold"
+                        className="btn w-100 mt-3 fw-semibold"
                         style={{
                             background: "linear-gradient(45deg, #ff6b9f, #e75480)",
                             color: "white",
                             border: "none",
                             borderRadius: "50px",
-                            padding: "14px",
+                            padding: "12px",
                             fontSize: "1.1rem",
-                            transition: "0.3s",
+                            transition: "all 0.3s ease",
                         }}
                         onMouseOver={(e) => (e.target.style.opacity = "0.85")}
                         onMouseOut={(e) => (e.target.style.opacity = "1")}
