@@ -10,7 +10,6 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // import "./App.css";
 
-import DashboardCcdv from './components/ccdv/DashboardCcdv-editID';
 
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/ccdv" element={<CCDVHome />} />
           {/* <Route path="/about" element={<About />} /> */}
-          <Route path="/ccdv/dashboard/:userId" element={<DashboardCcdv />} />
         </Routes>
       </BrowserRouter>
     </>

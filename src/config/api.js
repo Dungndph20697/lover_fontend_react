@@ -8,4 +8,10 @@ const apiUserLogin = `${apiURL}/users/login`;
 
 const apiFindUserByToken = `${apiURL}/users/me`;
 
-export { apiURL, apiUser, apiUserLogin, apiFindUserByToken };
+const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
+
+const apiServices = `${apiURL}/ccdv/service-types`;
+
+const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
+
+export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiCcdvProfiles, apiServices, apiServicesTypeDetail };

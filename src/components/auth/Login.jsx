@@ -27,9 +27,13 @@ export default function Login() {
         title: "Đăng nhập thành công!",
       });
       const userData = await findUserByToken(data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("userId", userData?.id);
+      console.log("userData:", userData);
       if (userData.role.name === "User") {
         navigate("/");
       } else if (userData.role.name === "Service_provider") {
+
         navigate("/ccdv");
       }
     } catch (error) {
