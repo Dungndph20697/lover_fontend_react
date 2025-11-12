@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { apiCcdvProfiles } from "../../config/api";
+import { createCcdvProfile } from "../../service/ccdvProfileService/ccdvProfileService";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CcdvProfileForm() {
@@ -15,6 +15,7 @@ export default function CcdvProfileForm() {
     const [userId, setUserId] = useState(null);
     const [message, setMessage] = useState("");
 
+    // 🔹 Lấy userId từ localStorage
     useEffect(() => {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -23,6 +24,7 @@ export default function CcdvProfileForm() {
         }
     }, []);
 
+    // 🔹 Formik setup
     const formik = useFormik({
         initialValues: {
             fullName: "",
@@ -36,6 +38,8 @@ export default function CcdvProfileForm() {
             description: "",
             requirement: "",
             facebookLink: "",
+            createdAt: new Date().toISOString().split("T")[0],
+            hireCount: 0,
         },
         validationSchema: Yup.object({
             fullName: Yup.string().required("Họ và tên là bắt buộc"),
@@ -46,52 +50,40 @@ export default function CcdvProfileForm() {
             gender: Yup.string().required("Giới tính là bắt buộc"),
             city: Yup.string().required("Thành phố là bắt buộc"),
             nationality: Yup.string().required("Quốc tịch là bắt buộc"),
+            height: Yup.number().nullable(),
+            weight: Yup.number().nullable(),
+            facebookLink: Yup.string().url("Link Facebook không hợp lệ").nullable(),
         }),
         onSubmit: async (values) => {
-            console.log("🟢 Form submit chạy! Giá trị:", values);
-            console.log("userId hiện tại:", userId);
-            console.log("Token FE đang gửi:", localStorage.getItem("token"));
-            console.log(JSON.parse(localStorage.getItem("user")));
             const token = localStorage.getItem("token");
             if (!token) {
                 setMessage("Vui lòng đăng nhập trước khi đăng thông tin!");
                 return;
             }
 
+            // 🔸 Kiểm tra file
             if (!files.avatar || !files.portrait1 || !files.portrait2 || !files.portrait3) {
                 setMessage("Vui lòng chọn tất cả các ảnh yêu cầu!");
                 return;
             }
 
+            // 🔸 Tạo FormData
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
             Object.entries(files).forEach(([key, value]) => formData.append(key, value));
             formData.append("userId", userId);
 
             try {
-                const res = await fetch(apiCcdvProfiles, {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: formData,
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setMessage("✅ Đăng thông tin thành công!");
-                    console.log(data);
-                } else {
-                    const text = await res.text();
-                    setMessage("❌ Lỗi: " + text);
-                }
+                const data = await createCcdvProfile(formData, token);
+                setMessage("✅ Đăng thông tin thành công!");
+                console.log("Phản hồi:", data);
             } catch (err) {
-                console.error(err);
-                setMessage("❌ Có lỗi xảy ra khi gửi form!");
+                setMessage("❌ Lỗi khi gửi form: " + err.message);
             }
         },
     });
 
+    // 🔹 Xử lý chọn ảnh
     const handleFileChange = (e) => {
         const { name, files: fileList } = e.target;
         const file = fileList[0];
@@ -116,7 +108,7 @@ export default function CcdvProfileForm() {
             <div
                 className="card shadow-lg p-4"
                 style={{
-                    maxWidth: "700px",
+                    maxWidth: "800px",
                     width: "100%",
                     borderRadius: "20px",
                     backgroundColor: "white",
@@ -125,6 +117,7 @@ export default function CcdvProfileForm() {
                 <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>
                     💕 Đăng Thông Tin Cá Nhân CCDV 💕
                 </h2>
+
                 {message && (
                     <div className="alert alert-info text-center" style={{ borderRadius: "10px" }}>
                         {message}
@@ -132,6 +125,7 @@ export default function CcdvProfileForm() {
                 )}
 
                 <form onSubmit={formik.handleSubmit}>
+                    {/* Họ tên + Năm sinh */}
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <label className="form-label">Họ và tên *</label>
@@ -159,6 +153,7 @@ export default function CcdvProfileForm() {
                         </div>
                     </div>
 
+                    {/* Giới tính - Thành phố - Quốc tịch */}
                     <div className="row mb-3">
                         <div className="col-md-4">
                             <label className="form-label">Giới tính *</label>
@@ -198,7 +193,57 @@ export default function CcdvProfileForm() {
                         </div>
                     </div>
 
-                    {/* Avatar */}
+                    {/* Chiều cao - Cân nặng */}
+                    <div className="row mb-3">
+                        <div className="col-md-6">
+                            <label className="form-label">Chiều cao (cm)</label>
+                            <input
+                                type="number"
+                                name="height"
+                                className="form-control"
+                                {...formik.getFieldProps("height")}
+                            />
+                        </div>
+                        <div className="col-md-6">
+                            <label className="form-label">Cân nặng (kg)</label>
+                            <input
+                                type="number"
+                                name="weight"
+                                className="form-control"
+                                {...formik.getFieldProps("weight")}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Sở thích, Mô tả, Yêu cầu */}
+                    <div className="mb-3">
+                        <label className="form-label">Sở thích</label>
+                        <textarea name="hobbies" className="form-control" rows="2" {...formik.getFieldProps("hobbies")} />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Mô tả về bản thân</label>
+                        <textarea name="description" className="form-control" rows="3" {...formik.getFieldProps("description")} />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Yêu cầu với người thuê</label>
+                        <textarea name="requirement" className="form-control" rows="3" {...formik.getFieldProps("requirement")} />
+                    </div>
+
+                    {/* Facebook */}
+                    <div className="mb-3">
+                        <label className="form-label">Facebook (link)</label>
+                        <input
+                            type="url"
+                            name="facebookLink"
+                            className={`form-control ${formik.touched.facebookLink && formik.errors.facebookLink ? "is-invalid" : ""}`}
+                            {...formik.getFieldProps("facebookLink")}
+                        />
+                        {formik.touched.facebookLink && formik.errors.facebookLink && (
+                            <div className="invalid-feedback">{formik.errors.facebookLink}</div>
+                        )}
+                    </div>
+
+                    {/* Avatar + ảnh chân dung */}
                     <div className="mb-3 text-center">
                         <label className="form-label fw-semibold">Ảnh đại diện *</label>
                         <input type="file" name="avatar" className="form-control mb-3" onChange={handleFileChange} />
@@ -217,9 +262,8 @@ export default function CcdvProfileForm() {
                         )}
                     </div>
 
-                    {/* Ảnh chân dung */}
                     <div className="mb-3">
-                        <label className="form-label fw-semibold">Ảnh chân dung *</label>
+                        <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) *</label>
                         <div className="d-flex gap-2 flex-wrap">
                             <input type="file" name="portrait1" className="form-control" onChange={handleFileChange} />
                             <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
@@ -227,6 +271,13 @@ export default function CcdvProfileForm() {
                         </div>
                     </div>
 
+                    {/* Thông tin hệ thống */}
+                    <div className="mb-3 text-muted small">
+                        <p>📅 Ngày tham gia: <strong>{formik.values.createdAt}</strong></p>
+                        <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong> (tự động cập nhật)</p>
+                    </div>
+
+                    {/* Nút submit */}
                     <button
                         type="submit"
                         className="btn w-100 mt-3 fw-semibold"
