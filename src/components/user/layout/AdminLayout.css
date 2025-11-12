@@ -1,0 +1,297 @@
+/* Modern Admin Layout */
+.admin-layout {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+/* Modern Navbar */
+.admin-navbar {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: none;
+    padding: 1rem 0;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+.admin-brand {
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+}
+
+.admin-brand:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+/* Modern Navigation Links */
+.admin-navbar .navbar-nav {
+    gap: 0.5rem;
+}
+
+.admin-navbar .nav-link {
+    font-weight: 600;
+    padding: 0.8rem 1.5rem !important;
+    border-radius: 25px;
+    margin: 0 0.2rem;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-navbar .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.admin-navbar .nav-link:hover::before {
+    left: 100%;
+}
+
+.admin-navbar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.admin-navbar .nav-link.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white !important;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Modern Dropdown */
+.dropdown-toggle {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 25px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu {
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem 0;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.8rem 2rem;
+    border-radius: 15px;
+    margin: 0.2rem 1rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    border-left: 3px solid transparent;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    transform: translateX(5px);
+    border-left-color: #ffffff;
+}
+
+/* Modern Main Content */
+.admin-main {
+    min-height: calc(100vh - 140px);
+    padding: 0;
+    background: transparent;
+}
+
+/* Modern Footer */
+.admin-footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 2rem 0;
+    margin-top: 3rem;
+    position: relative;
+}
+
+.admin-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.admin-footer .container {
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .admin-navbar .navbar-collapse {
+        background: rgba(44, 62, 80, 0.95);
+        border-radius: 20px;
+        margin-top: 1rem;
+        padding: 1rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .admin-navbar .nav-link {
+        text-align: center;
+        margin: 0.2rem 0;
+    }
+
+    .admin-brand {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-navbar {
+        padding: 0.5rem 0;
+    }
+
+    .admin-brand {
+        font-size: 1.3rem;
+    }
+
+    .dropdown-toggle {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.9rem;
+    }
+
+    .admin-footer {
+        padding: 1.5rem 0;
+    }
+}
+
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.admin-navbar {
+    animation: slideDown 0.5s ease-out;
+}
+
+/* Glassmorphism effect */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text effect */
+.gradient-text {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Notification badge */
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(238, 90, 82, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.dropdown-item {
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-navbar .navbar-nav {
+        text-align: center;
+    }
+
+    .admin-navbar .nav-link {
+        margin: 0.2rem 0;
+    }
+}

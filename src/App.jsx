@@ -1,3 +1,5 @@
+import React from "react";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./components/auth/Login";
@@ -14,7 +16,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Explore from "./components/user/Explore";
 
+
 // import "./App.css";
+
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -73,7 +78,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
-        <Route path="/ccdv-profile" element={<PersonalProfile />}/>
+        <Route path="/ccdv-profile" element={<PersonalProfile />} />
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
