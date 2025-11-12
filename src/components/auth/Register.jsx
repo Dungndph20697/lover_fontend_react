@@ -76,6 +76,17 @@ const Register = () => {
             return;
         }
 
+        if (emailExists) {
+            Swal.fire({
+                icon: "error",
+                title: "Email đã tồn tại!",
+                text: "Email này đã được sử dụng cho tài khoản khác.",
+                showConfirmButton: true,
+            });
+            setSubmitting(false);
+            return;
+        }
+
         try {
             const response = await registerUser(values);
 
@@ -87,7 +98,6 @@ const Register = () => {
                     showConfirmButton: true,
                 });
             } else {
-                //aaaaa
                 Swal.fire({
                     icon: "success",
                     title: "🎉 Đăng ký thành công!",
@@ -99,6 +109,7 @@ const Register = () => {
                 setTimeout(() => navigate("/login"), 1500);
                 resetForm();
                 setUsernameExists(null);
+                setEmailExists(null);
             }
         } catch (error) {
             Swal.fire({
@@ -152,8 +163,20 @@ const Register = () => {
                         {/* Email */}
                         <div className="mb-3">
                             <label className="form-label"><i className="bi bi-envelope-fill me-1"></i>Email</label>
-                            <Field type="email" name="email" className="form-control" placeholder="Nhập email" />
+                            <Field
+                                type="email"
+                                name="email"
+                                className="form-control"
+                                placeholder="Nhập email"
+                                onChange={(e) => {
+                                    handleChange(e);
+                                    handleCheckEmail(e.target.value);
+                                }}
+                            />
                             <ErrorMessage name="email" component="div" className="text-danger small" />
+                            {checkingEmail && <div className="text-secondary small">🔎 Đang kiểm tra...</div>}
+                            {!checkingEmail && emailExists === true && <div className="text-danger small">❌ Email đã tồn tại</div>}
+                            {!checkingEmail && emailExists === false && values.email && <div className="text-success small">✅ Email khả dụng</div>}
                         </div>
 
                         {/* Phone */}

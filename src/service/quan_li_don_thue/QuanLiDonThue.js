@@ -11,22 +11,22 @@ const getAuthHeader = () => {
     };
 };
 
-// API Đơn thuê
+// API CALLS
 
 // Lấy danh sách đơn thuê
-export const getSessions = async (ccdvId) => {
+const getSessions = async (ccdvId) => {
     const res = await axios.get(`${apiHireSession}/${ccdvId}`, getAuthHeader());
     return res.data;
 };
 
 // Lấy thống kê đơn thuê
-export const getStatistics = async (ccdvId) => {
+const getStatistics = async (ccdvId) => {
     const res = await axios.get(`${apiHireSession}/statistics/${ccdvId}`, getAuthHeader());
     return res.data;
 };
 
 // Xác nhận đơn thuê
-export const acceptSession = async (sessionId, ccdvId) => {
+const acceptSession = async (sessionId, ccdvId) => {
     const res = await axios.put(
         `${apiHireSession}/${sessionId}/accept?ccdvId=${ccdvId}`,
         null,
@@ -36,7 +36,7 @@ export const acceptSession = async (sessionId, ccdvId) => {
 };
 
 // Hoàn thành đơn thuê
-export const completeSession = async (sessionId, ccdvId) => {
+const completeSession = async (sessionId, ccdvId) => {
     const res = await axios.put(
         `${apiHireSession}/${sessionId}/complete?ccdvId=${ccdvId}`,
         null,
@@ -46,7 +46,7 @@ export const completeSession = async (sessionId, ccdvId) => {
 };
 
 // Báo cáo đơn thuê
-export const reportSession = async (sessionId, ccdvId, reportText) => {
+const reportSession = async (sessionId, ccdvId, reportText) => {
     const res = await axios.put(
         `${apiHireSession}/${sessionId}/report?ccdvId=${ccdvId}`,
         { report: reportText },
@@ -55,8 +55,25 @@ export const reportSession = async (sessionId, ccdvId, reportText) => {
     return res.data;
 };
 
-// Wrapper xử lý lỗi
+// Lấy chi tiết đơn thuê
+const getSessionDetail = async (sessionId) => {
+    const res = await axios.get(`${apiHireSession}/detail/${sessionId}`, getAuthHeader());
+    return res.data;
+};
 
+// Cập nhật phản hồi về người thuê
+const updateFeedback = async (sessionId, ccdvId, feedback) => {
+    const res = await axios.put(
+        `${apiHireSession}/${sessionId}/feedback?ccdvId=${ccdvId}`,
+        { feedback: feedback },
+        getAuthHeader()
+    );
+    return res.data;
+};
+
+// PUBLIC SERVICE FUNCTIONS (Export)
+
+// Lấy danh sách đơn thuê
 export const fetchHireSessions = async (ccdvId) => {
     try {
         const data = await getSessions(ccdvId);
@@ -67,16 +84,18 @@ export const fetchHireSessions = async (ccdvId) => {
     }
 };
 
+// Lấy thống kê đơn thuê
 export const fetchHireStatistics = async (ccdvId) => {
     try {
-        const data = await getStatistics(ccdvId);
-        return data.success ? data : null;
+        const res = await getStatistics(ccdvId);
+        return res.success ? res.data : null;
     } catch (error) {
         console.error("Lỗi khi tải thống kê:", error);
         throw error;
     }
 };
 
+// Xác nhận đơn thuê
 export const handleAccept = async (sessionId, ccdvId) => {
     try {
         const data = await acceptSession(sessionId, ccdvId);
@@ -87,6 +106,7 @@ export const handleAccept = async (sessionId, ccdvId) => {
     }
 };
 
+// Hoàn thành đơn thuê
 export const handleComplete = async (sessionId, ccdvId) => {
     try {
         const data = await completeSession(sessionId, ccdvId);
@@ -97,12 +117,35 @@ export const handleComplete = async (sessionId, ccdvId) => {
     }
 };
 
+// Gửi báo cáo
 export const handleReport = async (sessionId, ccdvId, reportText) => {
     try {
         const data = await reportSession(sessionId, ccdvId, reportText);
         return data;
     } catch (error) {
         console.error("Lỗi khi gửi báo cáo:", error);
+        throw error;
+    }
+};
+
+// Lấy chi tiết đơn thuê
+export const fetchSessionDetail = async (sessionId) => {
+    try {
+        const data = await getSessionDetail(sessionId);
+        return data.success ? data.data : null;
+    } catch (error) {
+        console.error("Lỗi khi tải chi tiết đơn:", error);
+        throw error;
+    }
+};
+
+// Cập nhật phản hồi
+export const handleUpdateFeedback = async (sessionId, ccdvId, feedback) => {
+    try {
+        const data = await updateFeedback(sessionId, ccdvId, feedback);
+        return data;
+    } catch (error) {
+        console.error("Lỗi khi cập nhật phản hồi:", error);
         throw error;
     }
 };

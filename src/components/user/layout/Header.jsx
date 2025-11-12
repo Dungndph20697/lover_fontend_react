@@ -29,11 +29,6 @@ export default function Header() {
               Đăng ký
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="btn btn-danger ms-2" to="/quanLiDonThue">
-              Quản lí đơn thuê
-            </Link>
-          </li>
         </ul>
       </div>
     </header>
