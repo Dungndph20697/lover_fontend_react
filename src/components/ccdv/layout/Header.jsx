@@ -1,10 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
+import { findUserByToken } from "../../../service/user/login.js";
 
 export default function Header() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const [user, setUser] = useState(null);
+
+  // Lấy thông tin người dùng khi có token
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (token) {
+        try {
+          const res = await findUserByToken(token);
+          setUser(res);
+        } catch (error) {
+          localStorage.removeItem("token");
+          setUser(null);
+        }
+      }
+    };
+    fetchUser();
+  }, [token]);
+
+  const displayName = user
+    ? user.nickname && user.nickname.trim() !== ""
+      ? user.nickname
+      : `${user.firstName} ${user.lastName}`
+    : "Người dùng";
 
   const Toast = Swal.mixin({
     toast: true,
@@ -26,7 +51,7 @@ export default function Header() {
     });
 
     // Chuyển về trang login
-    navigate("/"); 
+    navigate("/");
   };
 
   return (
@@ -46,7 +71,7 @@ export default function Header() {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <i className="bi bi-person-circle me-1"></i> Tài khoản
+            <i className="bi bi-person-circle me-1"></i> {displayName}
           </button>
           <ul
             className="dropdown-menu dropdown-menu-end"
