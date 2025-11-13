@@ -77,10 +77,6 @@ export default function Login() {
           </h3>
 
           <form onSubmit={handleSubmit}>
-<<<<<<< HEAD
-
-=======
->>>>>>> aba5a43e2ea65addd5c5466d0125cb0c6932b7bb
             <div className="mb-3">
               <label htmlFor="username" className="form-label fw-semibold">
                 Tên đăng nhập
