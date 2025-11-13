@@ -195,78 +195,38 @@ export default function CcdvProfileForm({ setProfile }) {
     };
 
     return (
-        <div
-            className="min-vh-100 d-flex align-items-center justify-content-center p-4"
-            style={{ background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)", fontFamily: "'Poppins', sans-serif" }}
-        >
+        <div className="min-vh-100 d-flex align-items-center justify-content-center p-4" style={{ background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)", fontFamily: "'Poppins', sans-serif" }}>
             <div className="card shadow-lg p-4" style={{ maxWidth: "850px", width: "100%", borderRadius: "20px", backgroundColor: "white" }}>
-                <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>
-                    💕 Đăng Thông Tin Cá Nhân CCDV 💕
-                </h2>
-
-                {message && (
-                    <div className="alert alert-info text-center rounded-3">
-                        {message}
-                    </div>
-                )}
-
+                <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>💕 Đăng Thông Tin Cá Nhân CCDV 💕</h2>
+                {message && <div className="alert alert-info text-center rounded-3">{message}</div>}
                 <form onSubmit={formik.handleSubmit}>
                     {/* Họ tên + Năm sinh */}
                     <div className="row g-3 mb-3">
                         <div className="col-md-6">
-                            <label className="form-label">Họ và tên *</label>
-                            <input
-                                type="text"
-                                name="fullName"
-                                className={`form-control ${formik.touched.fullName && formik.errors.fullName ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("fullName")}
-                            />
-                            {formik.touched.fullName && formik.errors.fullName && (
-                                <div className="invalid-feedback">{formik.errors.fullName}</div>
-                            )}
+                            <label className="form-label">Họ và tên <span style={{ color: "red" }}>*</span></label>
+                            <input type="text" name="fullName" placeholder="Nhập họ và tên" className={`form-control ${formik.touched.fullName && formik.errors.fullName ? "is-invalid" : ""}`} {...formik.getFieldProps("fullName")}/>
+                            {formik.touched.fullName && formik.errors.fullName && <div className="invalid-feedback">{formik.errors.fullName}</div>}
                         </div>
                         <div className="col-md-6">
-                            <label className="form-label">Năm sinh *</label>
-                            <input
-                                type="number"
-                                name="yearOfBirth"
-                                className={`form-control ${formik.touched.yearOfBirth && formik.errors.yearOfBirth ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("yearOfBirth")}
-                            />
-                            {formik.touched.yearOfBirth && formik.errors.yearOfBirth && (
-                                <div className="invalid-feedback">{formik.errors.yearOfBirth}</div>
-                            )}
+                            <label className="form-label">Năm sinh <span style={{ color: "red" }}>*</span></label>
+                            <input type="number" name="yearOfBirth" placeholder="Nhập năm sinh" className={`form-control ${formik.touched.yearOfBirth && formik.errors.yearOfBirth ? "is-invalid" : ""}`} {...formik.getFieldProps("yearOfBirth")}/>
+                            {formik.touched.yearOfBirth && formik.errors.yearOfBirth && <div className="invalid-feedback">{formik.errors.yearOfBirth}</div>}
                         </div>
                     </div>
 
                     {/* Giới tính - Thành phố - Quốc tịch */}
                     <div className="row g-3 mb-3">
                         <div className="col-md-4">
-                            <label className="form-label d-block">Giới tính *</label>
-                            {["Nam", "Nữ", "Khác"].map((g) => (
-                                <div className="form-check form-check-inline" key={g}>
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="gender"
-                                        value={g}
-                                        checked={formik.values.gender === g}
-                                        onChange={() => formik.setFieldValue("gender", g)}
-                                    />
-                                    <label className="form-check-label">{g}</label>
-                                </div>
-                            ))}
-                            {formik.touched.gender && formik.errors.gender && (
-                                <div className="text-danger mt-1">{formik.errors.gender}</div>
-                            )}
+                            <label className="form-label d-block">Giới tính <span style={{ color: "red" }}>*</span></label>
+                            {["Nam","Nữ","Khác"].map(g=><div key={g} className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="gender" value={g} checked={formik.values.gender===g} onChange={()=>formik.setFieldValue("gender",g)}/>
+                                <label className="form-check-label">{g}</label>
+                            </div>)}
+                            {formik.touched.gender && formik.errors.gender && <div className="text-danger mt-1">{formik.errors.gender}</div>}
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label">Thành phố *</label>
-                            <select
-                                name="city"
-                                className={`form-select ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("city")}
-                            >
+                            <label className="form-label">Thành phố <span style={{ color: "red" }}>*</span></label>
+                            <select name="city" placeholder="Chọn thành phố" className={`form-select ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`} {...formik.getFieldProps("city")}>
                                 <option value="">Chọn thành phố</option>
                                 <option value="Hà Nội">Hà Nội</option>
                                 <option value="Hồ Chí Minh">Hồ Chí Minh</option>
@@ -277,23 +237,13 @@ export default function CcdvProfileForm({ setProfile }) {
                                 <option value="Huế">Huế</option>
                                 <option value="Vũng Tàu">Vũng Tàu</option>
                                 <option value="Quy Nhơn">Quy Nhơn</option>
-                                {/* Bạn có thể thêm các thành phố khác */}
                             </select>
-                            {formik.touched.city && formik.errors.city && (
-                                <div className="invalid-feedback">{formik.errors.city}</div>
-                            )}
+                            {formik.touched.city && formik.errors.city && <div className="invalid-feedback">{formik.errors.city}</div>}
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label">Quốc tịch *</label>
-                            <input
-                                type="text"
-                                name="nationality"
-                                className={`form-control ${formik.touched.nationality && formik.errors.nationality ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("nationality")}
-                            />
-                            {formik.touched.nationality && formik.errors.nationality && (
-                                <div className="invalid-feedback">{formik.errors.nationality}</div>
-                            )}
+                            <label className="form-label">Quốc tịch <span style={{ color: "red" }}>*</span></label>
+                            <input type="text" name="nationality" placeholder="Nhập quốc tịch" className={`form-control ${formik.touched.nationality && formik.errors.nationality ? "is-invalid" : ""}`} {...formik.getFieldProps("nationality")}/>
+                            {formik.touched.nationality && formik.errors.nationality && <div className="invalid-feedback">{formik.errors.nationality}</div>}
                         </div>
                     </div>
 
@@ -301,106 +251,57 @@ export default function CcdvProfileForm({ setProfile }) {
                     <div className="row g-3 mb-3">
                         <div className="col-md-6">
                             <label className="form-label">Chiều cao (cm)</label>
-                            <input
-                                type="number"
-                                name="height"
-                                className={`form-control ${formik.touched.height && formik.errors.height ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("height")}
-                            />
-                            {formik.touched.height && formik.errors.height && (
-                                <div className="invalid-feedback">{formik.errors.height}</div>
-                            )}
+                            <input type="number" name="height" placeholder="Nhập chiều cao" className={`form-control ${formik.touched.height && formik.errors.height ? "is-invalid" : ""}`} {...formik.getFieldProps("height")}/>
+                            {formik.touched.height && formik.errors.height && <div className="invalid-feedback">{formik.errors.height}</div>}
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">Cân nặng (kg)</label>
-                            <input
-                                type="number"
-                                name="weight"
-                                className={`form-control ${formik.touched.weight && formik.errors.weight ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("weight")}
-                            />
-                            {formik.touched.weight && formik.errors.weight && (
-                                <div className="invalid-feedback">{formik.errors.weight}</div>
-                            )}
+                            <input type="number" name="weight" placeholder="Nhập cân nặng" className={`form-control ${formik.touched.weight && formik.errors.weight ? "is-invalid" : ""}`} {...formik.getFieldProps("weight")}/>
+                            {formik.touched.weight && formik.errors.weight && <div className="invalid-feedback">{formik.errors.weight}</div>}
                         </div>
                     </div>
 
                     {/* Sở thích */}
                     <div className="mb-3">
                         <label className="form-label">Sở thích</label>
-                        <textarea
-                            name="hobbies"
-                            className={`form-control ${formik.touched.hobbies && formik.errors.hobbies ? "is-invalid" : ""}`}
-                            rows="2"
-                            {...formik.getFieldProps("hobbies")}
-                        />
-                        {formik.touched.hobbies && formik.errors.hobbies && (
-                            <div className="invalid-feedback">{formik.errors.hobbies}</div>
-                        )}
+                        <textarea name="hobbies" placeholder="Nhập sở thích" rows="2" className={`form-control ${formik.touched.hobbies && formik.errors.hobbies ? "is-invalid" : ""}`} {...formik.getFieldProps("hobbies")}/>
+                        {formik.touched.hobbies && formik.errors.hobbies && <div className="invalid-feedback">{formik.errors.hobbies}</div>}
                     </div>
 
                     {/* Mô tả + Yêu cầu */}
                     <div className="mb-3">
-                        <label className="form-label">Mô tả về bản thân *</label>
-                        <textarea
-                            name="description"
-                            className={`form-control ${formik.touched.description && formik.errors.description ? "is-invalid" : ""}`}
-                            rows="3"
-                            {...formik.getFieldProps("description")}
-                        />
-                        {formik.touched.description && formik.errors.description && (
-                            <div className="invalid-feedback">{formik.errors.description}</div>
-                        )}
+                        <label className="form-label">Mô tả về bản thân <span style={{ color: "red" }}>*</span></label>
+                        <textarea name="description" placeholder="Nhập mô tả về bản thân" rows="3" className={`form-control ${formik.touched.description && formik.errors.description ? "is-invalid" : ""}`} {...formik.getFieldProps("description")}/>
+                        {formik.touched.description && formik.errors.description && <div className="invalid-feedback">{formik.errors.description}</div>}
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label">Yêu cầu với người thuê *</label>
-                        <textarea
-                            name="requirement"
-                            className={`form-control ${formik.touched.requirement && formik.errors.requirement ? "is-invalid" : ""}`}
-                            rows="3"
-                            {...formik.getFieldProps("requirement")}
-                        />
-                        {formik.touched.requirement && formik.errors.requirement && (
-                            <div className="invalid-feedback">{formik.errors.requirement}</div>
-                        )}
+                        <label className="form-label">Yêu cầu với người thuê <span style={{ color: "red" }}>*</span></label>
+                        <textarea name="requirement" placeholder="Nhập yêu cầu" rows="3" className={`form-control ${formik.touched.requirement && formik.errors.requirement ? "is-invalid" : ""}`} {...formik.getFieldProps("requirement")}/>
+                        {formik.touched.requirement && formik.errors.requirement && <div className="invalid-feedback">{formik.errors.requirement}</div>}
                     </div>
 
                     {/* Facebook */}
                     <div className="mb-3">
                         <label className="form-label">Facebook (link)</label>
-                        <input
-                            type="url"
-                            name="facebookLink"
-                            className={`form-control ${formik.touched.facebookLink && formik.errors.facebookLink ? "is-invalid" : ""}`}
-                            {...formik.getFieldProps("facebookLink")}
-                        />
-                        {formik.touched.facebookLink && formik.errors.facebookLink && (
-                            <div className="invalid-feedback">{formik.errors.facebookLink}</div>
-                        )}
+                        <input type="url" name="facebookLink" placeholder="Nhập link Facebook" className={`form-control ${formik.touched.facebookLink && formik.errors.facebookLink ? "is-invalid" : ""}`} {...formik.getFieldProps("facebookLink")}/>
+                        {formik.touched.facebookLink && formik.errors.facebookLink && <div className="invalid-feedback">{formik.errors.facebookLink}</div>}
                     </div>
 
                     {/* Avatar */}
                     <div className="mb-4 text-center">
-                        <label className="form-label fw-semibold">Ảnh đại diện *</label>
-                        <input type="file" name="avatar" className="form-control mb-2" onChange={handleFileChange} />
-                        {avatarPreview && (
-                            <img
-                                src={avatarPreview}
-                                alt="avatar preview"
-                                className="rounded-circle shadow-sm"
-                                style={{ width: "120px", height: "120px", objectFit: "cover", border: "3px solid #e75480" }}
-                            />
-                        )}
+                        <label className="form-label fw-semibold">Ảnh đại diện <span style={{ color: "red" }}>*</span></label>
+                        <input type="file" name="avatar" className="form-control mb-2" onChange={handleFileChange}/>
+                        {avatarPreview && <img src={avatarPreview} alt="avatar preview" className="rounded-circle shadow-sm" style={{ width: "120px", height: "120px", objectFit: "cover", border: "3px solid #e75480" }}/>}
                     </div>
 
                     {/* Portraits */}
                     <div className="mb-4">
-                        <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) *</label>
+                        <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) <span style={{ color: "red" }}>*</span></label>
                         <div className="d-flex gap-2 flex-wrap">
-                            <input type="file" name="portrait1" className="form-control" onChange={handleFileChange} />
-                            <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
-                            <input type="file" name="portrait3" className="form-control" onChange={handleFileChange} />
+                            <input type="file" name="portrait1" className="form-control" onChange={handleFileChange}/>
+                            <input type="file" name="portrait2" className="form-control" onChange={handleFileChange}/>
+                            <input type="file" name="portrait3" className="form-control" onChange={handleFileChange}/>
                         </div>
                     </div>
 
@@ -410,24 +311,7 @@ export default function CcdvProfileForm({ setProfile }) {
                         <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong></p>
                     </div>
 
-                    {/* Nút submit */}
-                    <button
-                        type="submit"
-                        className="btn w-100 mt-3 fw-semibold shadow-sm"
-                        style={{
-                            background: "linear-gradient(45deg, #ff6b9f, #e75480)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "50px",
-                            padding: "12px",
-                            fontSize: "1.1rem",
-                            transition: "all 0.3s ease",
-                        }}
-                        onMouseOver={(e) => (e.target.style.opacity = "0.85")}
-                        onMouseOut={(e) => (e.target.style.opacity = "1")}
-                    >
-                        💌 Gửi thông tin
-                    </button>
+                    <button type="submit" className="btn w-100 mt-3 fw-semibold shadow-sm" style={{ background: "linear-gradient(45deg, #ff6b9f, #e75480)", color: "white", border: "none", borderRadius: "50px", padding: "12px", fontSize: "1.1rem" }}>💌 Gửi thông tin</button>
                 </form>
             </div>
         </div>
