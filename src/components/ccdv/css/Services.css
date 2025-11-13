@@ -45,8 +45,8 @@
 
 .category-btn:hover {
     transform: translateY(-2px);
-    border-color: #1877f2;
-    color: #1877f2;
+    border-color: white;
+    color: white;
 }
 
 /* 💎 Thẻ dịch vụ */
