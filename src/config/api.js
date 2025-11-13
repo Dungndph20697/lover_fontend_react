@@ -12,6 +12,9 @@ const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
 
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
+const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
+
+const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
 
 
 const apiServices = `${apiURL}/ccdv/service-types`;
@@ -23,6 +26,10 @@ const apiCheckUsername = `${apiUser}/exists`;
 const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
+
+export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiCcdvProfiles, apiServices, apiServicesTypeDetail,apiCcdvProfileByUserId, apiUpdateCcdvProfile };
+
+
 
 export {
     apiURL,
