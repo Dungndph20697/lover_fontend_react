@@ -102,9 +102,8 @@ export default function ServiceTypeList() {
           return (
             <Col key={sv.id}>
               <Card
-                className={`service-card shadow-sm ${
-                  checked ? "selected" : ""
-                }`}
+                className={`service-card shadow-sm ${checked ? "selected" : ""
+                  }`}
                 onClick={() => handleCheck(sv)}
               >
                 <div className="d-flex justify-content-between align-items-center">
@@ -139,15 +138,15 @@ export default function ServiceTypeList() {
                       sv.type === "BASIC"
                         ? "primary"
                         : sv.type === "FREE"
-                        ? "success"
-                        : "danger"
+                          ? "success"
+                          : "danger"
                     }
                   >
                     {sv.type === "BASIC"
                       ? "Cơ bản"
                       : sv.type === "FREE"
-                      ? "Miễn phí"
-                      : "Mở rộng"}
+                        ? "Miễn phí"
+                        : "Mở rộng"}
                   </Badge>
                 </div>
               </Card>
@@ -165,9 +164,7 @@ export default function ServiceTypeList() {
       <section className="hero py-5 text-center text-white mb-4">
         <Container>
           <h1 className="fw-bold display-6 mb-2">Dịch vụ của bạn</h1>
-          <p className="text-white-50">
-            Quản lý và cập nhật các dịch vụ bạn cung cấp.
-          </p>
+          <p className="text-white-50">Quản lý và cập nhật các dịch vụ bạn cung cấp.</p>
         </Container>
       </section>
 
@@ -178,9 +175,8 @@ export default function ServiceTypeList() {
               <Button
                 key={type}
                 variant={activeType === type ? "primary" : "outline-secondary"}
-                className={`category-btn ${
-                  activeType === type ? "active" : ""
-                }`}
+                className={`category-btn ${activeType === type ? "active" : ""
+                  }`}
                 onClick={() => setActiveType(type)}
               >
                 {type === "BASIC" && " Cơ bản"}
@@ -197,14 +193,15 @@ export default function ServiceTypeList() {
             renderCardList(filtered)
           )}
 
-          <div className="text-center mt-5 d-flex flex-column align-items-center gap-3">
+          <div className="service-actions">
             <Button
-              className="modern-btn px-4 py-2 fw-semibold"
+              className="modern-btn fw-semibold"
               disabled={saving}
               onClick={handleSave}
             >
               {saving ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
+
             {userServices.length > 0 && (
               <button
                 className="view-services-btn fw-semibold"
@@ -215,6 +212,7 @@ export default function ServiceTypeList() {
               </button>
             )}
           </div>
+
         </Card>
       </Container>
 

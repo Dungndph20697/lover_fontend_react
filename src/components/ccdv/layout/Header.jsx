@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import { findUserByToken } from "../../../service/user/login.js";
+import { Link } from "react-router-dom";
+
 
 export default function Header() {
   const navigate = useNavigate();
@@ -62,9 +64,9 @@ export default function Header() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div className="container">
         {/* Logo */}
-        <a className="navbar-brand text-danger fw-bold fs-4" href="#">
-          ❤️ Lover CCDV
-        </a>
+        <Link to="/" className="navbar-brand text-danger fw-bold fs-4">
+          ❤️ Lover
+        </Link>
 
         {/* Dropdown bên phải */}
         <div className="dropdown ms-auto">
