@@ -1,0 +1,82 @@
+/* 🌈 Hiệu ứng mở mượt */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🌌 Nền blur nhẹ như Facebook Messenger */
+.modal-blur {
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 🌈 Header gradient lung linh */
+.gradient-header {
+    background: linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%);
+    border-radius: 1rem 1rem 0 0;
+    color: white;
+}
+
+/* 💎 Modal tổng thể */
+.registered-modal .modal-content {
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 40px rgba(24, 119, 242, 0.2);
+    overflow: hidden;
+    border: none;
+}
+
+/* 📋 Bảng dịch vụ */
+.modern-table th {
+    background: #f8f9fb;
+    color: #555;
+    font-weight: 600;
+    border: none;
+}
+
+.modern-table td {
+    border: none;
+    padding: 12px 16px;
+}
+
+.modern-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(106, 130, 251, 0.08);
+    transform: scale(1.005);
+}
+
+/* ✨ Hiệu ứng bo tròn bảng */
+.table-wrapper {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+/* 💠 Scroll trong modal mượt */
+.modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #a8b2ff transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #a8b2ff;
+    border-radius: 3px;
+}
