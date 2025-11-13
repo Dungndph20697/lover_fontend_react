@@ -18,6 +18,23 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
 
-export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiCcdvProfiles, apiServices, apiServicesTypeDetail ,apiHireSession};
+// các endpoint check unique
+const apiCheckUsername = `${apiUser}/exists`;
+const apiCheckEmail = `${apiUser}/check-email`;
+const apiCheckPhone = `${apiUser}/check-phone`;
+const apiCheckCccd = `${apiUser}/check-cccd`;
 
-
+export {
+    apiURL,
+    apiUser,
+    apiUserLogin,
+    apiFindUserByToken,
+    apiCcdvProfiles,
+    apiServices,
+    apiServicesTypeDetail,
+    apiHireSession,
+    apiCheckUsername,
+    apiCheckEmail,
+    apiCheckPhone,
+    apiCheckCccd
+};
