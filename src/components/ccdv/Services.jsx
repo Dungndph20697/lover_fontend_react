@@ -14,6 +14,7 @@ import {
   saveSelectedServices,
   getUserServices,
 } from "../../service/ccdv/serviceApi";
+import { findUserByToken } from "../../service/user/login.js";
 
 export default function ServiceTypeList() {
   const [services, setServices] = useState([]);
@@ -33,18 +34,18 @@ export default function ServiceTypeList() {
 
   const loadData = async () => {
     setLoading(true);
+    const userInfo = await findUserByToken(token);
+    console.log("User info:", userInfo);
     try {
       const [allServices, userRegistered] = await Promise.all([
         findAllService(token),
-        getUserServices(userId, token),
+        getUserServices(userInfo.id, token),
       ]);
       setServices(allServices);
       setUserServices(userRegistered);
 
       // ✅ Tự động tích checkbox với những dịch vụ user đã có
-      const registeredIds = userRegistered.map(
-        (item) => item.serviceType?.id
-      );
+      const registeredIds = userRegistered.map((item) => item.serviceType?.id);
       setSelected(registeredIds);
     } catch (error) {
       console.error("Lỗi khi tải dữ liệu:", error);
@@ -58,14 +59,13 @@ export default function ServiceTypeList() {
     if (type === "BASIC") return;
 
     setSelected((prev) => {
-      const updated =
-        prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id];
+      const updated = prev.includes(id)
+        ? prev.filter((s) => s !== id)
+        : [...prev, id];
 
       // ✅ Cập nhật bảng bên dưới ngay khi người dùng thay đổi checkbox
       const updatedServices = services.filter(
-        (sv) =>
-          updated.includes(sv.id) ||
-          sv.type === "BASIC" // BASIC luôn được coi là mặc định
+        (sv) => updated.includes(sv.id) || sv.type === "BASIC" // BASIC luôn được coi là mặc định
       );
       const mapped = updatedServices.map((sv) => ({
         id: sv.id,
@@ -80,7 +80,9 @@ export default function ServiceTypeList() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await saveSelectedServices(userId, selected, token);
+      const userInfo = await findUserByToken(token);
+      console.log("User info:", userInfo);
+      await saveSelectedServices(userInfo.id, selected, token);
       alert("✅ Lưu dịch vụ thành công!");
       loadData(); // reload lại danh sách từ DB
     } catch (err) {
@@ -166,7 +168,11 @@ export default function ServiceTypeList() {
               {loading ? <Spinner animation="border" /> : renderTable("FREE")}
             </Tab>
             <Tab eventKey="EXTENDED" title="🔥 Dịch vụ mở rộng">
-              {loading ? <Spinner animation="border" /> : renderTable("EXTENDED")}
+              {loading ? (
+                <Spinner animation="border" />
+              ) : (
+                renderTable("EXTENDED")
+              )}
             </Tab>
           </Tabs>
 
@@ -210,9 +216,7 @@ export default function ServiceTypeList() {
                           <Badge bg="danger">Mở rộng</Badge>
                         )}
                       </td>
-                      <td>
-                        {item.totalPrice?.toLocaleString("vi-VN") || 0}₫
-                      </td>
+                      <td>{item.totalPrice?.toLocaleString("vi-VN") || 0}₫</td>
                     </tr>
                   ))}
                 </tbody>
