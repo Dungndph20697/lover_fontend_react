@@ -20,6 +20,7 @@ const login = async (username, pass) => {
     }
 };
 
+//truyền header token để phân quyền
 const findUserByToken = async (token) => {
     try {
         const response = await axios.get(apiFindUserByToken, {
