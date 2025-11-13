@@ -47,12 +47,13 @@ export async function getProfileByUserId(userId, token) {
         });
         return res.data;
     } catch (err) {
-        console.error("❌ Lỗi khi lấy CCDV profile:", err);
-        if (err.response) {
-            throw new Error(err.response.data?.message || "Lỗi máy chủ");
+        if (err.status === 404) {
+            throw new Error("Chưa có profile cho user này");
         } else if (err.request) {
+            console.error("❌ Lỗi khi lấy CCDV profile:", err);
             throw new Error("Không nhận được phản hồi từ server");
         } else {
+            console.error("❌ Lỗi khi lấy CCDV profile:", err);
             throw new Error(err.message);
         }
     }

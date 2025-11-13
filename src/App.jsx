@@ -7,7 +7,6 @@ import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
 
 import PersonalProfile from "./components/ccdv/PersonalProfile";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import CCDVHome from "./components/ccdv/CCDVHome";
 import { findUserByToken } from "./service/user/login";

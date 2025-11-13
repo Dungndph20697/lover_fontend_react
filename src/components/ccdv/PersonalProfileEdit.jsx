@@ -111,16 +111,16 @@ export default function CcdvProfileEditForm() {
             }
 
             const formData = new FormData();
-            const textFields = ["fullName", "yearOfBirth", "gender", "city", "nationality","height","weight","hobbies","description","requirement","facebookLink"];
+            const textFields = ["fullName", "yearOfBirth", "gender", "city", "nationality", "height", "weight", "hobbies", "description", "requirement", "facebookLink"];
             textFields.forEach(key => {
                 const newValue = values[key];
                 const oldValue = existingProfile[key];
                 if (newValue !== undefined && newValue !== oldValue && newValue !== "") {
-                    if (["yearOfBirth","height","weight"].includes(key)) formData.append(key, Number(newValue));
+                    if (["yearOfBirth", "height", "weight"].includes(key)) formData.append(key, Number(newValue));
                     else formData.append(key, newValue);
                 }
             });
-            ["avatar","portrait1","portrait2","portrait3"].forEach(f => { if (files[f]) formData.append(f, files[f]); });
+            ["avatar", "portrait1", "portrait2", "portrait3"].forEach(f => { if (files[f]) formData.append(f, files[f]); });
 
             try {
                 const updated = await updateCcdvProfile(existingProfile.id, formData, token);
@@ -165,30 +165,36 @@ export default function CcdvProfileEditForm() {
                 {message && <div className="alert alert-info text-center" style={{ borderRadius: "10px", fontWeight: "500" }}>{message}</div>}
 
                 <form onSubmit={formik.handleSubmit}>
-                    {["fullName","yearOfBirth"].map(f => (
+                    {["fullName", "yearOfBirth"].map(f => (
                         <div key={f} className="mb-3">
-                            <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g," $1")}</label>
-                            <input type={f==="yearOfBirth"?"number":"text"} className="form-control shadow-sm" {...formik.getFieldProps(f)} style={{ borderRadius: "12px", padding: "10px" }} />
+                            <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g, " $1")}</label>
+                            <input 
+                                type={f === "yearOfBirth" ? "number" : "text"} 
+                                className="form-control shadow-sm" 
+                                placeholder={f === "fullName" ? "Nhập họ và tên" : "Nhập năm sinh"} 
+                                {...formik.getFieldProps(f)} 
+                                style={{ borderRadius: "12px", padding: "10px" }} 
+                            />
                             {formik.touched[f] && formik.errors[f] && <div className="text-danger small mt-1">{formik.errors[f]}</div>}
                         </div>
                     ))}
 
-                    {/* ✅ Giới tính */}
+                    {/* Giới tính */}
                     <div className="mb-3">
                         <label className="form-label fw-semibold d-block">Giới tính *</label>
-                        {["Nam","Nữ","Khác"].map(g => (
+                        {["Nam", "Nữ", "Khác"].map(g => (
                             <div className="form-check form-check-inline" key={g}>
-                                <input className="form-check-input" type="radio" name="gender" value={g} checked={formik.values.gender===g} onChange={()=>formik.setFieldValue("gender", g)} />
+                                <input className="form-check-input" type="radio" name="gender" value={g} checked={formik.values.gender === g} onChange={() => formik.setFieldValue("gender", g)} />
                                 <label className="form-check-label">{g}</label>
                             </div>
                         ))}
                         {formik.touched.gender && formik.errors.gender && <div className="text-danger mt-1">{formik.errors.gender}</div>}
                     </div>
 
-                    {/* ✅ Thành phố */}
+                    {/* Thành phố */}
                     <div className="mb-3">
                         <label className="form-label fw-semibold">Thành phố *</label>
-                        <select name="city" className={`form-select ${formik.touched.city && formik.errors.city ? "is-invalid":""}`} {...formik.getFieldProps("city")}>
+                        <select name="city" className={`form-select ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`} {...formik.getFieldProps("city")}>
                             <option value="">Chọn thành phố</option>
                             <option value="Hà Nội">Hà Nội</option>
                             <option value="Hồ Chí Minh">Hồ Chí Minh</option>
@@ -203,12 +209,29 @@ export default function CcdvProfileEditForm() {
                         {formik.touched.city && formik.errors.city && <div className="invalid-feedback">{formik.errors.city}</div>}
                     </div>
 
-                    {["nationality","height","weight","hobbies","description","requirement","facebookLink"].map(f => (
+                    {["nationality", "height", "weight", "hobbies", "description", "requirement", "facebookLink"].map(f => (
                         <div key={f} className="mb-3">
-                            <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g," $1")}</label>
-                            {["hobbies","description","requirement"].includes(f)?
-                                <textarea className="form-control shadow-sm" rows={f==="hobbies"?2:3} {...formik.getFieldProps(f)} style={{borderRadius:"12px",padding:"10px"}} />:
-                                <input type={["height","weight"].includes(f)?"number":"text"} className="form-control shadow-sm" {...formik.getFieldProps(f)} style={{borderRadius:"12px",padding:"10px"}} />
+                            <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g, " $1")}</label>
+                            {["hobbies", "description", "requirement"].includes(f) ?
+                                <textarea 
+                                    className="form-control shadow-sm" 
+                                    rows={f === "hobbies" ? 2 : 3} 
+                                    placeholder={f === "hobbies" ? "Nhập sở thích" : f === "description" ? "Nhập mô tả" : "Nhập yêu cầu"} 
+                                    {...formik.getFieldProps(f)} 
+                                    style={{ borderRadius: "12px", padding: "10px" }} 
+                                /> :
+                                <input 
+                                    type={["height", "weight"].includes(f) ? "number" : "text"} 
+                                    className="form-control shadow-sm" 
+                                    placeholder={
+                                        f === "nationality" ? "Nhập quốc tịch" : 
+                                        f === "height" ? "Nhập chiều cao (cm)" : 
+                                        f === "weight" ? "Nhập cân nặng (kg)" : 
+                                        f === "facebookLink" ? "Nhập link Facebook" : ""
+                                    } 
+                                    {...formik.getFieldProps(f)} 
+                                    style={{ borderRadius: "12px", padding: "10px" }} 
+                                />
                             }
                             {formik.touched[f] && formik.errors[f] && <div className="text-danger small mt-1">{formik.errors[f]}</div>}
                         </div>
@@ -217,26 +240,26 @@ export default function CcdvProfileEditForm() {
                     {/* Avatar */}
                     <div className="mb-4 text-center">
                         <label className="form-label fw-semibold">Ảnh đại diện</label>
-                        <input type="file" className="form-control mb-2" onChange={e=>handleFileChange(e,"avatar")} style={{ borderRadius:"12px" }} />
+                        <input type="file" className="form-control mb-2" onChange={e => handleFileChange(e, "avatar")} style={{ borderRadius: "12px" }} />
                         {formik.touched.avatar && formik.errors.avatar && <div className="text-danger small mt-1">{formik.errors.avatar}</div>}
-                        {avatarPreview && <img src={avatarPreview} alt="avatar" className="rounded-circle shadow-sm mt-2" style={{width:"130px",height:"130px",objectFit:"cover",border:"3px solid #e75480"}} />}
+                        {avatarPreview && <img src={avatarPreview} alt="avatar" className="rounded-circle shadow-sm mt-2" style={{ width: "130px", height: "130px", objectFit: "cover", border: "3px solid #e75480" }} />}
                     </div>
 
                     {/* Portraits */}
                     <div className="mb-4 text-center">
                         <label className="form-label fw-semibold mb-2">Ảnh chân dung (3 ảnh)</label>
                         <div className="d-flex gap-3 justify-content-center flex-wrap">
-                            {["portrait1","portrait2","portrait3"].map(p=>(
+                            {["portrait1", "portrait2", "portrait3"].map(p => (
                                 <div key={p} className="text-center">
-                                    <input type="file" className="form-control mb-2" onChange={e=>handleFileChange(e,p)} style={{borderRadius:"12px"}} />
+                                    <input type="file" className="form-control mb-2" onChange={e => handleFileChange(e, p)} style={{ borderRadius: "12px" }} />
                                     {formik.touched[p] && formik.errors[p] && <div className="text-danger small mt-1">{formik.errors[p]}</div>}
-                                    {portraitPreviews[p] && <img src={portraitPreviews[p]} alt={p} className="rounded shadow-sm mt-1" style={{width:"120px",height:"120px",objectFit:"cover",border:"2px solid #e75480"}} />}
+                                    {portraitPreviews[p] && <img src={portraitPreviews[p]} alt={p} className="rounded shadow-sm mt-1" style={{ width: "120px", height: "120px", objectFit: "cover", border: "2px solid #e75480" }} />}
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <button type="submit" className="btn w-100 fw-semibold shadow-sm" style={{background:"linear-gradient(45deg,#ff6b9f,#e75480)",color:"white",border:"none",borderRadius:"50px",padding:"14px",fontSize:"1.15rem",transition:"all 0.3s ease"}} onMouseOver={e=>e.target.style.opacity="0.85"} onMouseOut={e=>e.target.style.opacity="1"}>💾 Lưu thay đổi</button>
+                    <button type="submit" className="btn w-100 fw-semibold shadow-sm" style={{ background: "linear-gradient(45deg,#ff6b9f,#e75480)", color: "white", border: "none", borderRadius: "50px", padding: "14px", fontSize: "1.15rem", transition: "all 0.3s ease" }} onMouseOver={e => e.target.style.opacity = "0.85"} onMouseOut={e => e.target.style.opacity = "1"}>💾 Lưu thay đổi</button>
                 </form>
             </div>
         </div>

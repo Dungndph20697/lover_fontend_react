@@ -11,15 +11,17 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
 
+
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
+
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
 
 const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
 
-
 const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
+
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;

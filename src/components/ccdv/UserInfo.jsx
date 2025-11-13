@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PersonalInfoForm from "./PersonalProfile";
 import { getProfileByUserId } from "../../service/ccdvProfileService/ccdvProfileService";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from "sweetalert2";
 
 export default function UserInfo() {
   const [profile, setProfile] = useState(null);
@@ -25,7 +25,16 @@ export default function UserInfo() {
         setProfile(data);
         localStorage.setItem(`ccdvProfile_${user.id}`, JSON.stringify(data));
       })
-      .catch((err) => console.error("Lỗi lấy CCDV profile:", err))
+      .catch((error) => {
+        Swal.fire({
+            icon: "info",
+            title: error,
+            toast: true,
+            position: "top-end",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+      })
       .finally(() => setLoading(false));
   }, []);
 
