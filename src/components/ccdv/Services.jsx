@@ -24,7 +24,7 @@ import {
   findAllService,
   saveSelectedServices,
   getUserServices,
-  updateUserServicePrice
+  updateUserServicePrice,
 } from "../../service/ccdv/serviceApi";
 import { findUserByToken } from "../../service/user/login.js";
 
@@ -72,13 +72,14 @@ export default function ServiceTypeList() {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
-
   };
 
   const handleSave = async () => {
+    const userInfo = await findUserByToken(token);
+
     setSaving(true);
     try {
-      await saveSelectedServices(userId, selected, token);
+      await saveSelectedServices(userInfo.id, selected, token);
       toast.success("✅ Cập nhật dịch vụ thành công!");
       loadData();
     } catch (err) {
@@ -101,8 +102,9 @@ export default function ServiceTypeList() {
           return (
             <Col key={sv.id}>
               <Card
-                className={`service-card shadow-sm ${checked ? "selected" : ""
-                  }`}
+                className={`service-card shadow-sm ${
+                  checked ? "selected" : ""
+                }`}
                 onClick={() => handleCheck(sv)}
               >
                 <div className="d-flex justify-content-between align-items-center">
@@ -137,15 +139,15 @@ export default function ServiceTypeList() {
                       sv.type === "BASIC"
                         ? "primary"
                         : sv.type === "FREE"
-                          ? "success"
-                          : "danger"
+                        ? "success"
+                        : "danger"
                     }
                   >
                     {sv.type === "BASIC"
                       ? "Cơ bản"
                       : sv.type === "FREE"
-                        ? "Miễn phí"
-                        : "Mở rộng"}
+                      ? "Miễn phí"
+                      : "Mở rộng"}
                   </Badge>
                 </div>
               </Card>
@@ -176,8 +178,9 @@ export default function ServiceTypeList() {
               <Button
                 key={type}
                 variant={activeType === type ? "primary" : "outline-secondary"}
-                className={`category-btn ${activeType === type ? "active" : ""
-                  }`}
+                className={`category-btn ${
+                  activeType === type ? "active" : ""
+                }`}
                 onClick={() => setActiveType(type)}
               >
                 {type === "BASIC" && " Cơ bản"}
@@ -221,8 +224,6 @@ export default function ServiceTypeList() {
         services={userServices}
         refresh={loadData}
       />
-
-
     </div>
   );
 }
