@@ -14,6 +14,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Explore from "./components/user/Explore";
 
+import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
+
 // import "./App.css";
 
 function App() {
@@ -74,6 +76,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/ccdv-profile" element={<PersonalProfile />}/>
+        <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route

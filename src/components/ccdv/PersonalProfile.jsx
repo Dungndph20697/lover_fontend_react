@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createCcdvProfile } from "../../service/ccdvProfileService/ccdvProfileService";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function CcdvProfileForm() {
+export default function CcdvProfileForm({ setProfile }) {
     const [files, setFiles] = useState({
         avatar: null,
         portrait1: null,
@@ -144,13 +144,35 @@ export default function CcdvProfileForm() {
 
             // 🔸 Tạo FormData
             const formData = new FormData();
-            Object.entries(values).forEach(([key, value]) => formData.append(key, value));
-            Object.entries(files).forEach(([key, value]) => formData.append(key, value));
+
+            // 🧾 Dữ liệu dạng text
+            const textFields = [
+                "fullName", "yearOfBirth", "gender", "city",
+                "nationality", "height", "weight", "hobbies",
+                "description", "requirement", "facebookLink",
+                "createdAt", "hireCount"
+            ];
+            textFields.forEach(key => formData.append(key, values[key]));
             formData.append("userId", userId);
+
+            // 🖼️ Dữ liệu file
+            Object.entries(files).forEach(([key, file]) => {
+                if (file) formData.append(key, file);
+            });
+
+            console.log("🧾 FormData preview:");
+            for (let [k, v] of formData.entries()) console.log(k, v);
 
             try {
                 const data = await createCcdvProfile(formData, token);
                 setMessage("✅ Đăng thông tin thành công!");
+
+                // 🔸 Lưu hồ sơ vào localStorage
+                localStorage.setItem(`ccdvProfile_${userId}`, JSON.stringify(values));
+
+                // 🔸 Gọi callback để cập nhật view cha (UserInfo)
+                if (typeof setProfile === "function") setProfile(values);
+
                 console.log("Phản hồi:", data);
             } catch (err) {
                 setMessage("❌ Lỗi khi gửi form: " + err.message);

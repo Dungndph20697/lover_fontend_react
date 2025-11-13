@@ -1,9 +1,26 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { User, Briefcase, ClipboardList } from "lucide-react";
 
 export default function Sidebar({ selected, setSelected }) {
+  const [hasProfile, setHasProfile] = useState(false);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (!userData) {
+      setHasProfile(false);
+      return;
+    }
+    const user = JSON.parse(userData);
+    const key = `ccdvProfile_${user.id}`;
+    const profile = localStorage.getItem(key);
+
+    // fallback: nếu chưa có key per-user nhưng còn key cũ 'ccdvProfile', không mặc định true
+    setHasProfile(!!profile);
+  }, []);
+
   const menuItems = [
-    { id: "userinfo", label: "Thông tin cá nhân", icon: <User size={18} /> },
+    { id: "userinfo", label: hasProfile ? "Thông tin cá nhân" : "Đăng ký thông tin cá nhân", icon: <User size={18} /> },
     { id: "services", label: "Dịch vụ của tôi", icon: <Briefcase size={18} /> },
     {
       id: "quanlydon",
@@ -16,7 +33,7 @@ export default function Sidebar({ selected, setSelected }) {
     <div
       className="d-flex flex-column bg-white shadow-sm p-3"
       style={{
-        width: "230px",
+        width: "300px",
         height: "100vh",
         borderRight: "1px solid #eee",
       }}

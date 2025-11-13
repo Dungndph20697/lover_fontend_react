@@ -9,6 +9,10 @@ export default function Header() {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState(null);
 
+  const handleGoToProfile = () => {
+    navigate("/ccdv-profile-edit"); // đường dẫn tới trang edit profile
+  };
+
   // Lấy thông tin người dùng khi có token
   useEffect(() => {
     const fetchUser = async () => {
@@ -78,7 +82,7 @@ export default function Header() {
             aria-labelledby="userDropdown"
           >
             <li>
-              <button className="dropdown-item">Thông tin cá nhân</button>
+              <button className="dropdown-item" onClick={handleGoToProfile}>Thông tin cá nhân</button>
             </li>
             <li>
               <hr className="dropdown-divider" />
