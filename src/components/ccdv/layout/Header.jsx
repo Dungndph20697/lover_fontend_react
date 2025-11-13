@@ -10,7 +10,7 @@ export default function Header() {
   const [user, setUser] = useState(null);
 
   const handleGoToProfile = () => {
-    navigate("/user-info"); // đường dẫn tới trang user-info
+    navigate("/ccdv"); // đường dẫn tới trang user-info
   };
 
   // Lấy thông tin người dùng khi có token
