@@ -1,9 +1,10 @@
+import React from "react";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
-
 
 import PersonalProfile from "./components/ccdv/PersonalProfile";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,6 +15,9 @@ import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Explore from "./components/user/Explore";
+
+import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
+import UserInfo from "./components/ccdv/UserInfo";
 
 // import "./App.css";
 
@@ -44,13 +48,15 @@ function App() {
 
   // Component bảo vệ route
   const ProtectedRoute = ({ children, allowedRoles }) => {
-    console.log("Checking access for roles:", allowedRoles);
-    console.log("Current user:", user);
-    if (loading) return <div>Đang tải...</div>;
+    if (loading) return <div className="text-center mt-5">Đang tải...</div>;
 
-    // if (!token || !user) return <Navigate to="/login" />;
+    if (!token || !user) return <Navigate to="/login" />;
 
-    if (!allowedRoles.includes(user.role.name)) {
+    // Xử lý trường hợp chưa có role hoặc mismatch
+    const roleName = user?.role?.name?.toLowerCase() || "";
+    const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
+
+    if (!normalizedAllowed.includes(roleName)) {
       Swal.fire({
         icon: "error",
         title: "Bạn không có quyền truy cập!",
@@ -64,8 +70,8 @@ function App() {
 
     return children;
   };
-  return (
 
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -73,18 +79,22 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
 
+        <Route path="/ccdv-profile" element={<PersonalProfile />}/>
+        <Route path="/user-info" element={<UserInfo />}/>
+        <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
+
+
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
           path="/ccdv"
           element={
-            <ProtectedRoute allowedRoles={["Service_provider"]}>
+            <ProtectedRoute allowedRoles={["SERVICE_PROVIDER"]}>
               <CCDVHome />
             </ProtectedRoute>
           }
         />
       </Routes>
     </BrowserRouter>
-
   );
 }
 
