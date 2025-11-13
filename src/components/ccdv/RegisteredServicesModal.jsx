@@ -92,7 +92,8 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
                                                         <Form.Control
                                                             type="number"
                                                             placeholder="Giá mới"
-                                                            className="w-50"
+                                                            className="price-input"
+
                                                             value={editingPrice[serviceId] || ""}
                                                             onChange={(e) =>
                                                                 setEditingPrice({
@@ -133,4 +134,5 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
             </Modal.Body>
         </Modal>
     );
+
 }

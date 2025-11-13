@@ -10,6 +10,10 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
+
+
+const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
+
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
 
 const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
@@ -18,4 +22,30 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
 
-export { apiURL, apiUser, apiUserLogin, apiFindUserByToken, apiCcdvProfiles, apiServices, apiServicesTypeDetail,apiCcdvProfileByUserId, apiUpdateCcdvProfile };
+
+// các endpoint check unique
+const apiCheckUsername = `${apiUser}/exists`;
+const apiCheckEmail = `${apiUser}/check-email`;
+const apiCheckPhone = `${apiUser}/check-phone`;
+const apiCheckCccd = `${apiUser}/check-cccd`;
+
+
+
+export {
+    apiURL,
+    apiUser,
+    apiUserLogin,
+    apiFindUserByToken,
+    apiCcdvProfiles,
+    apiServices,
+    apiServicesTypeDetail,
+    apiHireSession,
+    apiCheckUsername,
+    apiCheckEmail,
+    apiCheckPhone,
+
+    apiCheckCccd,
+    apiCcdvProfileByUserId,
+    apiUpdateCcdvProfile,
+
+};

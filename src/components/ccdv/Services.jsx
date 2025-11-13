@@ -24,7 +24,7 @@ import {
   findAllService,
   saveSelectedServices,
   getUserServices,
-  updateUserServicePrice
+  updateUserServicePrice,
 } from "../../service/ccdv/serviceApi";
 import { findUserByToken } from "../../service/user/login.js";
 
@@ -72,13 +72,14 @@ export default function ServiceTypeList() {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
-
   };
 
   const handleSave = async () => {
+    const userInfo = await findUserByToken(token);
+
     setSaving(true);
     try {
-      await saveSelectedServices(userId, selected, token);
+      await saveSelectedServices(userInfo.id, selected, token);
       toast.success("✅ Cập nhật dịch vụ thành công!");
       loadData();
     } catch (err) {
@@ -163,9 +164,7 @@ export default function ServiceTypeList() {
       <section className="hero py-5 text-center text-white mb-4">
         <Container>
           <h1 className="fw-bold display-6 mb-2">Dịch vụ của bạn</h1>
-          <p className="text-white-50">
-            Quản lý và cập nhật các dịch vụ bạn cung cấp.
-          </p>
+          <p className="text-white-50">Quản lý và cập nhật các dịch vụ bạn cung cấp.</p>
         </Container>
       </section>
 
@@ -194,14 +193,15 @@ export default function ServiceTypeList() {
             renderCardList(filtered)
           )}
 
-          <div className="text-center mt-5 d-flex flex-column align-items-center gap-3">
+          <div className="service-actions">
             <Button
-              className="modern-btn px-4 py-2 fw-semibold"
+              className="modern-btn fw-semibold"
               disabled={saving}
               onClick={handleSave}
             >
               {saving ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
+
             {userServices.length > 0 && (
               <button
                 className="view-services-btn fw-semibold"
@@ -212,6 +212,7 @@ export default function ServiceTypeList() {
               </button>
             )}
           </div>
+
         </Card>
       </Container>
 
@@ -221,8 +222,6 @@ export default function ServiceTypeList() {
         services={userServices}
         refresh={loadData}
       />
-
-
     </div>
   );
 }
