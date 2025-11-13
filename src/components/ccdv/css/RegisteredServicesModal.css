@@ -1,4 +1,4 @@
-/* 🌈 Hiệu ứng mở mượt */
+/* 🌈 Hiệu ứng fade mượt khi mở */
 .fade-in {
     animation: fadeIn 0.4s ease-out;
 }
@@ -15,7 +15,7 @@
     }
 }
 
-/* 🌌 Nền blur nhẹ như Facebook Messenger */
+/* 🌌 Nền blur lung linh */
 .modal-blur {
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.4);
@@ -34,19 +34,31 @@
     box-shadow: 0 10px 40px rgba(24, 119, 242, 0.2);
     overflow: hidden;
     border: none;
+    transition: all 0.3s ease;
 }
 
 /* 📋 Bảng dịch vụ */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 .modern-table th {
     background: #f8f9fb;
-    color: #555;
+    color: #444;
     font-weight: 600;
     border: none;
+    text-align: center;
+    font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .modern-table td {
     border: none;
-    padding: 12px 16px;
+    padding: 12px 14px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.95rem;
 }
 
 .modern-table tbody tr {
@@ -58,15 +70,15 @@
     transform: scale(1.005);
 }
 
-/* ✨ Hiệu ứng bo tròn bảng */
+/* ✨ Bảng bo tròn */
 .table-wrapper {
     border-radius: 1rem;
     overflow: hidden;
 }
 
-/* 💠 Scroll trong modal mượt */
+/* 💠 Scroll trong modal */
 .modal-body {
-    max-height: 60vh;
+    max-height: 65vh;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #a8b2ff transparent;
@@ -79,4 +91,95 @@
 .modal-body::-webkit-scrollbar-thumb {
     background-color: #a8b2ff;
     border-radius: 3px;
+}
+
+/* 📱 Responsive cho tablet & mobile */
+@media (max-width: 992px) {
+    .registered-modal .modal-dialog {
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .gradient-header {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .modern-table th,
+    .modern-table td {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
+
+    .modern-table th:nth-child(3),
+    .modern-table td:nth-child(3),
+    .modern-table th:nth-child(4),
+    .modern-table td:nth-child(4) {
+        white-space: nowrap;
+    }
+
+    .modal-body {
+        max-height: 55vh;
+    }
+}
+
+@media (max-width: 576px) {
+    .registered-modal .modal-dialog {
+        max-width: 95%;
+        margin: auto;
+    }
+
+    .gradient-header {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+
+    .modern-table {
+        font-size: 0.8rem;
+    }
+
+    .modern-table th,
+    .modern-table td {
+        padding: 6px 8px;
+    }
+
+    .form-control.w-50 {
+        width: 100% !important;
+    }
+
+    .modern-table button {
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    /* 🌈 Giảm bóng đổ trên mobile */
+    .registered-modal .modal-content {
+        box-shadow: 0 5px 15px rgba(24, 119, 242, 0.15);
+    }
+}
+
+/* 🔆 Glow effect cho header */
+.gradient-header {
+    box-shadow: 0 0 15px rgba(252, 92, 125, 0.4);
+
+    .price-input {
+        width: 50%;
+    }
+
+    @media (max-width: 576px) {
+        .price-input {
+            width: 100% !important;
+        }
+    }
+
+}
+
+.price-input {
+    width: 50%;
+}
+
+@media (max-width: 576px) {
+    .price-input {
+        width: 100% !important;
+    }
 }

@@ -51,10 +51,10 @@ export default function Header() {
   return (
     <header
       className="navbar navbar-expand-lg bg-white shadow-sm"
-      
+
     >
       <div className="container">
-        
+
         <Link className="navbar-brand text-danger fw-bold fs-4" to="/">
           ❤️ Lover
         </Link>
@@ -97,10 +97,15 @@ export default function Header() {
                 aria-labelledby="accountDropdown"
               >
                 <li>
-                  <Link className="dropdown-item" to="/">
-                    Thông tin cá nhân
-                  </Link>
+                  {user && user.role?.name === "SERVICE_PROVIDER" && (
+                    <li>
+                      <Link className="dropdown-item" to="/ccdv">
+                        Thông tin cá nhân
+                      </Link>
+                    </li>
+                  )}
                 </li>
+
                 <li>
                   <hr className="dropdown-divider" />
                 </li>

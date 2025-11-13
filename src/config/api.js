@@ -27,6 +27,8 @@ const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
+
+
 export {
     apiURL,
     apiUser,
@@ -39,6 +41,9 @@ export {
     apiCheckUsername,
     apiCheckEmail,
     apiCheckPhone,
-    apiCcdvProfileByUserId, apiUpdateCcdvProfile,
-    apiCheckCccd
+
+    apiCheckCccd,
+    apiCcdvProfileByUserId,
+    apiUpdateCcdvProfile,
+
 };
