@@ -25,6 +25,7 @@ import {
   saveSelectedServices,
   getUserServices,
 } from "../../service/ccdv/serviceApi";
+import { findUserByToken } from "../../service/user/login.js";
 
 export default function ServiceTypeList() {
   const [services, setServices] = useState([]);
@@ -45,13 +46,16 @@ export default function ServiceTypeList() {
 
   const loadData = async () => {
     setLoading(true);
+    const userInfo = await findUserByToken(token);
+    console.log("User info:", userInfo);
     try {
       const [allServices, userRegistered] = await Promise.all([
         findAllService(token),
-        getUserServices(userId, token),
+        getUserServices(userInfo.id, token),
       ]);
       setServices(allServices);
       setUserServices(userRegistered);
+
       const registeredIds = userRegistered.map((item) => item.serviceType?.id);
       setSelected(registeredIds);
     } catch (error) {
@@ -67,6 +71,7 @@ export default function ServiceTypeList() {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
+
   };
 
   const handleSave = async () => {
@@ -180,7 +185,6 @@ export default function ServiceTypeList() {
               </Button>
             ))}
           </div>
-
           {loading ? (
             <div className="text-center py-5">
               <Spinner animation="border" />
@@ -197,7 +201,6 @@ export default function ServiceTypeList() {
             >
               {saving ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
-
             {userServices.length > 0 && (
               <button
                 className="view-services-btn fw-semibold"
