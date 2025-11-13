@@ -1,3 +1,5 @@
+import React from "react";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./components/auth/Login";
@@ -76,9 +78,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
+
         <Route path="/ccdv-profile" element={<PersonalProfile />}/>
         <Route path="/user-info" element={<UserInfo />}/>
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
+
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
