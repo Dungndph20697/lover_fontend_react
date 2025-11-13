@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login, findUserByToken } from "../../service/user/login.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../user/layout/Header.jsx";
 import Footer from "../user/layout/Footer.jsx";
@@ -11,6 +11,9 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  if (token) return <Navigate to="/" />;
 
   const Toast = Swal.mixin({
     toast: true,

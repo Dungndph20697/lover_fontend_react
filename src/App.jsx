@@ -21,7 +21,10 @@ import UserInfo from "./components/ccdv/UserInfo";
 
 // import "./App.css";
 
-function App() {
+
+
+// Component bảo vệ route
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
@@ -46,30 +49,31 @@ function App() {
     fetchUser();
   }, [token]);
 
-  // Component bảo vệ route
-  const ProtectedRoute = ({ children, allowedRoles }) => {
-    if (loading) return <div className="text-center mt-5">Đang tải...</div>;
+  console.log('ProtectedRoute user', children, allowedRoles);
+  if (loading) return <div className="text-center mt-5">Đang tải...</div>;
 
-    if (!token || !user) return <Navigate to="/login" />;
+  if (!token || !user) return <Navigate to="/login" />;
 
-    // Xử lý trường hợp chưa có role hoặc mismatch
-    const roleName = user?.role?.name?.toLowerCase() || "";
-    const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
+  // Xử lý trường hợp chưa có role hoặc mismatch
+  const roleName = user?.role?.name?.toLowerCase() || "";
+  const normalizedAllowed = allowedRoles.map((r) => r.toLowerCase());
 
-    if (!normalizedAllowed.includes(roleName)) {
-      Swal.fire({
-        icon: "error",
-        title: "Bạn không có quyền truy cập!",
-        toast: true,
-        position: "top-end",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      return <Navigate to="/" />;
-    }
+  if (!normalizedAllowed.includes(roleName)) {
+    Swal.fire({
+      icon: "error",
+      title: "Bạn không có quyền truy cập!",
+      toast: true,
+      position: "top-end",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    return <Navigate to="/" />;
+  }
+  console.log('children', children)
+  return children;
+};
 
-    return children;
-  };
+function App() {
 
   return (
     <BrowserRouter>
@@ -79,8 +83,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
 
-        <Route path="/ccdv-profile" element={<PersonalProfile />}/>
-        <Route path="/user-info" element={<UserInfo />}/>
+        <Route path="/ccdv-profile" element={<PersonalProfile />} />
+        <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
 
 
