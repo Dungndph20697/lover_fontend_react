@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createCcdvProfile } from "../../service/ccdvProfileService/ccdvProfileService";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function CcdvProfileForm() {
+export default function CcdvProfileForm({ setProfile }) {
     const [files, setFiles] = useState({
         avatar: null,
         portrait1: null,
@@ -144,13 +144,35 @@ export default function CcdvProfileForm() {
 
             // 🔸 Tạo FormData
             const formData = new FormData();
-            Object.entries(values).forEach(([key, value]) => formData.append(key, value));
-            Object.entries(files).forEach(([key, value]) => formData.append(key, value));
+
+            // 🧾 Dữ liệu dạng text
+            const textFields = [
+                "fullName", "yearOfBirth", "gender", "city",
+                "nationality", "height", "weight", "hobbies",
+                "description", "requirement", "facebookLink",
+                "createdAt", "hireCount"
+            ];
+            textFields.forEach(key => formData.append(key, values[key]));
             formData.append("userId", userId);
+
+            // 🖼️ Dữ liệu file
+            Object.entries(files).forEach(([key, file]) => {
+                if (file) formData.append(key, file);
+            });
+
+            console.log("🧾 FormData preview:");
+            for (let [k, v] of formData.entries()) console.log(k, v);
 
             try {
                 const data = await createCcdvProfile(formData, token);
                 setMessage("✅ Đăng thông tin thành công!");
+
+                // 🔸 Lưu hồ sơ vào localStorage
+                localStorage.setItem(`ccdvProfile_${userId}`, JSON.stringify(values));
+
+                // 🔸 Gọi callback để cập nhật view cha (UserInfo)
+                if (typeof setProfile === "function") setProfile(values);
+
                 console.log("Phản hồi:", data);
             } catch (err) {
                 setMessage("❌ Lỗi khi gửi form: " + err.message);
@@ -174,35 +196,23 @@ export default function CcdvProfileForm() {
 
     return (
         <div
-            className="min-vh-100 d-flex align-items-center justify-content-center"
-            style={{
-                background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)",
-                fontFamily: "'Poppins', sans-serif",
-                padding: "40px 0",
-            }}
+            className="min-vh-100 d-flex align-items-center justify-content-center p-4"
+            style={{ background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)", fontFamily: "'Poppins', sans-serif" }}
         >
-            <div
-                className="card shadow-lg p-4"
-                style={{
-                    maxWidth: "800px",
-                    width: "100%",
-                    borderRadius: "20px",
-                    backgroundColor: "white",
-                }}
-            >
+            <div className="card shadow-lg p-4" style={{ maxWidth: "850px", width: "100%", borderRadius: "20px", backgroundColor: "white" }}>
                 <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>
                     💕 Đăng Thông Tin Cá Nhân CCDV 💕
                 </h2>
 
                 {message && (
-                    <div className="alert alert-info text-center" style={{ borderRadius: "10px" }}>
+                    <div className="alert alert-info text-center rounded-3">
                         {message}
                     </div>
                 )}
 
                 <form onSubmit={formik.handleSubmit}>
                     {/* Họ tên + Năm sinh */}
-                    <div className="row mb-3">
+                    <div className="row g-3 mb-3">
                         <div className="col-md-6">
                             <label className="form-label">Họ và tên *</label>
                             <input
@@ -230,27 +240,45 @@ export default function CcdvProfileForm() {
                     </div>
 
                     {/* Giới tính - Thành phố - Quốc tịch */}
-                    <div className="row mb-3">
+                    <div className="row g-3 mb-3">
                         <div className="col-md-4">
-                            <label className="form-label">Giới tính *</label>
-                            <input
-                                type="text"
-                                name="gender"
-                                className={`form-control ${formik.touched.gender && formik.errors.gender ? "is-invalid" : ""}`}
-                                {...formik.getFieldProps("gender")}
-                            />
+                            <label className="form-label d-block">Giới tính *</label>
+                            {["Nam", "Nữ", "Khác"].map((g) => (
+                                <div className="form-check form-check-inline" key={g}>
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        name="gender"
+                                        value={g}
+                                        checked={formik.values.gender === g}
+                                        onChange={() => formik.setFieldValue("gender", g)}
+                                    />
+                                    <label className="form-check-label">{g}</label>
+                                </div>
+                            ))}
                             {formik.touched.gender && formik.errors.gender && (
-                                <div className="invalid-feedback">{formik.errors.gender}</div>
+                                <div className="text-danger mt-1">{formik.errors.gender}</div>
                             )}
                         </div>
                         <div className="col-md-4">
                             <label className="form-label">Thành phố *</label>
-                            <input
-                                type="text"
+                            <select
                                 name="city"
-                                className={`form-control ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
+                                className={`form-select ${formik.touched.city && formik.errors.city ? "is-invalid" : ""}`}
                                 {...formik.getFieldProps("city")}
-                            />
+                            >
+                                <option value="">Chọn thành phố</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
+                                <option value="Hải Phòng">Hải Phòng</option>
+                                <option value="Cần Thơ">Cần Thơ</option>
+                                <option value="Nha Trang">Nha Trang</option>
+                                <option value="Huế">Huế</option>
+                                <option value="Vũng Tàu">Vũng Tàu</option>
+                                <option value="Quy Nhơn">Quy Nhơn</option>
+                                {/* Bạn có thể thêm các thành phố khác */}
+                            </select>
                             {formik.touched.city && formik.errors.city && (
                                 <div className="invalid-feedback">{formik.errors.city}</div>
                             )}
@@ -270,7 +298,7 @@ export default function CcdvProfileForm() {
                     </div>
 
                     {/* Chiều cao - Cân nặng */}
-                    <div className="row mb-3">
+                    <div className="row g-3 mb-3">
                         <div className="col-md-6">
                             <label className="form-label">Chiều cao (cm)</label>
                             <input
@@ -297,7 +325,7 @@ export default function CcdvProfileForm() {
                         </div>
                     </div>
 
-                    {/* Sở thích, Mô tả, Yêu cầu */}
+                    {/* Sở thích */}
                     <div className="mb-3">
                         <label className="form-label">Sở thích</label>
                         <textarea
@@ -311,7 +339,7 @@ export default function CcdvProfileForm() {
                         )}
                     </div>
 
-                    {/* Mô tả bản thân */}
+                    {/* Mô tả + Yêu cầu */}
                     <div className="mb-3">
                         <label className="form-label">Mô tả về bản thân *</label>
                         <textarea
@@ -325,7 +353,6 @@ export default function CcdvProfileForm() {
                         )}
                     </div>
 
-                    {/* Yêu cầu với người thuê */}
                     <div className="mb-3">
                         <label className="form-label">Yêu cầu với người thuê *</label>
                         <textarea
@@ -353,50 +380,40 @@ export default function CcdvProfileForm() {
                         )}
                     </div>
 
-                    {/* Avatar + ảnh chân dung */}
-                    <div className="mb-3 text-center">
+                    {/* Avatar */}
+                    <div className="mb-4 text-center">
                         <label className="form-label fw-semibold">Ảnh đại diện *</label>
-                        <input type="file" name="avatar" className="form-control mb-3" onChange={handleFileChange} />
+                        <input type="file" name="avatar" className="form-control mb-2" onChange={handleFileChange} />
                         {avatarPreview && (
                             <img
                                 src={avatarPreview}
                                 alt="avatar preview"
                                 className="rounded-circle shadow-sm"
-                                style={{
-                                    width: "120px",
-                                    height: "120px",
-                                    objectFit: "cover",
-                                    border: "3px solid #e75480",
-                                }}
+                                style={{ width: "120px", height: "120px", objectFit: "cover", border: "3px solid #e75480" }}
                             />
-                        )}
-                        {formik.touched.avatar && formik.errors.avatar && (
-                            <div className="text-danger mt-2">{formik.errors.avatar}</div>
                         )}
                     </div>
 
-                    <div className="mb-3">
+                    {/* Portraits */}
+                    <div className="mb-4">
                         <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) *</label>
                         <div className="d-flex gap-2 flex-wrap">
                             <input type="file" name="portrait1" className="form-control" onChange={handleFileChange} />
                             <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
                             <input type="file" name="portrait3" className="form-control" onChange={handleFileChange} />
                         </div>
-                        {formik.touched.portrait1 && formik.errors.portrait1 && (
-                            <div className="text-danger mt-2">{formik.errors.portrait1}</div>
-                        )}
                     </div>
 
-                    {/* Thông tin hệ thống */}
+                    {/* Hệ thống */}
                     <div className="mb-3 text-muted small">
                         <p>📅 Ngày tham gia: <strong>{formik.values.createdAt}</strong></p>
-                        <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong> (tự động cập nhật)</p>
+                        <p>🧾 Số lần được thuê: <strong>{formik.values.hireCount}</strong></p>
                     </div>
 
                     {/* Nút submit */}
                     <button
                         type="submit"
-                        className="btn w-100 mt-3 fw-semibold"
+                        className="btn w-100 mt-3 fw-semibold shadow-sm"
                         style={{
                             background: "linear-gradient(45deg, #ff6b9f, #e75480)",
                             color: "white",
