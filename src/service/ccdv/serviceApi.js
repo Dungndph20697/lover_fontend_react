@@ -36,4 +36,27 @@ const getUserServices = async (userId, token) => {
     return response.data;
 };
 
-export { findAllService, saveSelectedServices, getUserServices };
+// thêm hàm gọi API sửa giá dịch vụ mở rộng cho ccdv
+const updateUserServicePrice = async (userId, serviceId, newPrice, token) => {
+    try {
+        const response = await axios.put(
+            `${apiServicesTypeDetail}/update-price`, // ✅ đúng endpoint controller
+            {
+                userId,
+                serviceId,
+                price: newPrice,
+            },
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi cập nhật giá dịch vụ:", error);
+        throw error.response?.data?.message || "Không thể cập nhật giá dịch vụ";
+    }
+};
+
+
+
+export { findAllService, saveSelectedServices, getUserServices, updateUserServicePrice };

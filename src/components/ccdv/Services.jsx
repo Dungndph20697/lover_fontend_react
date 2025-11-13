@@ -24,6 +24,7 @@ import {
   findAllService,
   saveSelectedServices,
   getUserServices,
+  updateUserServicePrice
 } from "../../service/ccdv/serviceApi";
 import { findUserByToken } from "../../service/user/login.js";
 
@@ -218,6 +219,7 @@ export default function ServiceTypeList() {
         show={showModal}
         onHide={() => setShowModal(false)}
         services={userServices}
+        refresh={loadData}
       />
 
 
