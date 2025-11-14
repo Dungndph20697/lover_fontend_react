@@ -1,45 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Table, Badge, Button, Form, Spinner } from "react-bootstrap";
 import { FaTimesCircle, FaRegSmile } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { updateUserServicePrice } from "../../service/ccdv/serviceApi";
+import { findUserByToken } from "../../service/user/login";
+import * as Yup from "yup";
 import "../ccdv/css/RegisteredServicesModal.css";
 
 export default function RegisteredServicesModal({ show, onHide, services, refresh }) {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-
+    const [userId, setUserId] = useState(null);
     const [editingPrice, setEditingPrice] = useState({});
     const [loadingId, setLoadingId] = useState(null);
+
+
+    const priceSchema = Yup.number()
+        .typeError("Giá phải là số")
+        .required("Vui lòng nhập giá")
+        .min(10000, "Giá phải lớn hơn hoặc bằng 10.000₫")
+        .max(10000000, "Giá không được vượt quá 10.000.000₫");
+
+    // ✅ Lấy userId từ token khi mở modal
+    useEffect(() => {
+        const fetchUserId = async () => {
+            if (!token) return;
+            try {
+                const res = await findUserByToken(token);
+                setUserId(res.id);
+            } catch (err) {
+                console.error("Lỗi khi lấy thông tin user:", err);
+            }
+        };
+        fetchUserId();
+    }, [token]);
 
     // ✅ Hàm cập nhật giá
     const handleUpdatePrice = async (serviceId) => {
         const newPrice = editingPrice[serviceId];
-        if (!newPrice || isNaN(newPrice)) {
-            toast.warn("💡 Vui lòng nhập giá hợp lệ!");
+
+        if (!userId) {
+            toast.error("Không xác định được người dùng. Vui lòng đăng nhập lại!");
             return;
         }
 
         try {
+            // ✅ Kiểm tra dữ liệu bằng Yup
+            await priceSchema.validate(newPrice);
+
             setLoadingId(serviceId);
             await updateUserServicePrice(userId, serviceId, newPrice, token);
-            toast.success("✅ Cập nhật giá dịch vụ thành công!");
+            toast.success("Cập nhật giá dịch vụ thành công!");
 
-            // 🔄 Gọi lại API để cập nhật danh sách mới nhất
-            if (typeof refresh === "function") {
-                await refresh();
-            }
+            if (typeof refresh === "function") await refresh();
 
-            // ✨ Reset input sau khi lưu
             setEditingPrice((prev) => ({ ...prev, [serviceId]: "" }));
         } catch (err) {
-            console.error("Chi tiết lỗi backend:", err.response?.data || err.message);
-            toast.error("❌ Lỗi khi cập nhật: " + (err.response?.data || err.message));
+            if (err.name === "ValidationError") {
+                toast.warn("⚠️ " + err.message);
+            } else {
+                console.error("Chi tiết lỗi backend:", err.response?.data || err.message);
+                toast.error("❌ Lỗi khi cập nhật: " + (err.response?.data || err.message));
+            }
         } finally {
             setLoadingId(null);
         }
     };
-
     return (
         <Modal
             show={show}
@@ -72,8 +97,15 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
                                     const type = item.serviceType?.type;
                                     const serviceId = item.serviceType?.id;
 
-                                    // ✅ Cho phép sửa giá cho BASIC & EXTENDED
                                     const canEditPrice = type === "BASIC" || type === "EXTENDED";
+
+                                    // 💡 Tính chênh lệch (chỉ áp dụng nếu không phải FREE)
+                                    const defaultPrice = item.serviceType?.pricePerHour || 0;
+                                    const currentPrice = item.totalPrice || 0;
+                                    const diffPercent =
+                                        defaultPrice > 0
+                                            ? (((currentPrice - defaultPrice) / defaultPrice) * 100).toFixed(0)
+                                            : 0;
 
                                     return (
                                         <tr key={item.id} className="row-hover">
@@ -83,9 +115,32 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
                                                 {type === "FREE" && <Badge bg="success">Miễn phí</Badge>}
                                                 {type === "EXTENDED" && <Badge bg="danger">Mở rộng</Badge>}
                                             </td>
-                                            <td className="fw-bold text-primary">
-                                                {item.totalPrice?.toLocaleString("vi-VN") || 0}₫
+
+                                            {/* ✅ Nếu là FREE → chỉ hiển thị Miễn phí, không so sánh giá */}
+                                            <td>
+                                                {type === "FREE" ? (
+                                                    <div className="fw-bold text-success">Miễn phí</div>
+                                                ) : (
+                                                    <>
+                                                        <div className="fw-bold text-primary">
+                                                            {currentPrice.toLocaleString("vi-VN")}₫
+                                                        </div>
+                                                        <div className="text-muted small">
+                                                            Giá gốc: {defaultPrice.toLocaleString("vi-VN")}₫{" "}
+                                                            {diffPercent > 0 && (
+                                                                <span className="text-danger">(+{diffPercent}%)</span>
+                                                            )}
+                                                            {diffPercent < 0 && (
+                                                                <span className="text-success">({diffPercent}%)</span>
+                                                            )}
+                                                            {diffPercent === 0 && (
+                                                                <span className="text-secondary">(=)</span>
+                                                            )}
+                                                        </div>
+                                                    </>
+                                                )}
                                             </td>
+
                                             <td className="text-center">
                                                 {canEditPrice ? (
                                                     <div className="d-flex justify-content-center align-items-center gap-2">
@@ -93,7 +148,6 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
                                                             type="number"
                                                             placeholder="Giá mới"
                                                             className="price-input"
-
                                                             value={editingPrice[serviceId] || ""}
                                                             onChange={(e) =>
                                                                 setEditingPrice({
@@ -123,6 +177,7 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
                                     );
                                 })}
                             </tbody>
+
                         </Table>
                     </div>
                 ) : (
@@ -134,5 +189,4 @@ export default function RegisteredServicesModal({ show, onHide, services, refres
             </Modal.Body>
         </Modal>
     );
-
 }

@@ -36,6 +36,8 @@ export default function ServiceTypeList() {
   const [userServices, setUserServices] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [activeType, setActiveType] = useState("BASIC");
+  const [isNewUser, setIsNewUser] = useState(false);
+
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -48,23 +50,35 @@ export default function ServiceTypeList() {
   const loadData = async () => {
     setLoading(true);
     const userInfo = await findUserByToken(token);
-    console.log("User info:", userInfo);
+
     try {
       const [allServices, userRegistered] = await Promise.all([
         findAllService(token),
         getUserServices(userInfo.id, token),
       ]);
+
       setServices(allServices);
       setUserServices(userRegistered);
 
-      const registeredIds = userRegistered.map((item) => item.serviceType?.id);
-      setSelected(registeredIds);
+      // ✅ Nếu user chưa có dịch vụ nào → là tài khoản mới
+      if (userRegistered.length === 0) {
+        setIsNewUser(true);
+        setSelected([]); // không tick gì cả
+      } else {
+        const registeredIds = userRegistered.map((item) => item.serviceType?.id);
+        setSelected(registeredIds);
+        setIsNewUser(false);
+      }
     } catch (error) {
+      console.error(error);
       toast.error("Lỗi khi tải dữ liệu, vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
   };
+
+
+
 
   const handleCheck = (service) => {
     const { id, type } = service;
@@ -165,6 +179,7 @@ export default function ServiceTypeList() {
         <Container>
           <h1 className="fw-bold display-6 mb-2">Dịch vụ của bạn</h1>
           <p className="text-white-50">Quản lý và cập nhật các dịch vụ bạn cung cấp.</p>
+          <p className="text-white-50">*Lưu ý: dịch vụ cơ bản là bắt buộc!*</p>
         </Container>
       </section>
 
@@ -199,8 +214,13 @@ export default function ServiceTypeList() {
               disabled={saving}
               onClick={handleSave}
             >
-              {saving ? "Đang lưu..." : "Lưu thay đổi"}
+              {saving
+                ? "Đang xử lý..."
+                : isNewUser
+                  ? "Cung cấp dịch vụ"
+                  : "Lưu thay đổi"}
             </Button>
+
 
             {userServices.length > 0 && (
               <button
