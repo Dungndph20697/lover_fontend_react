@@ -27,6 +27,9 @@ const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
 const apiTopRecent = `${apiCcdv}/top-recent/`;
 const apiGetFullInfoUser = `${apiCcdv}/getfullinfouser/`;
+const apiToggleStatus = `${apiURL}/ccdv-profiles/toggle-status`;
+
+
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -40,42 +43,43 @@ const apitLoadDichVuByIdCcdv = `${apiUser}/service/`;
 // THÊM MỚI: API cho User Hire Sessions
 const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
 const apiUserHireStatistics = (userId) =>
-  `${apiUserHireSessions}/statistics/${userId}`;
+    `${apiUserHireSessions}/statistics/${userId}`;
 const apiUserHireComplete = (sessionId) =>
-  `${apiUserHireSessions}/${sessionId}/complete`;
+    `${apiUserHireSessions}/${sessionId}/complete`;
 const apiUserHireCancel = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
 const apiUserHireReport = (sessionId) =>
-  `${apiUserHireSessions}/${sessionId}/report`;
+    `${apiUserHireSessions}/${sessionId}/report`;
 const apiUserHireDetail = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
 const apiUserHireUpdateStatus = (sessionId) =>
-  `${apiUserHireSessions}/${sessionId}/status`;
+    `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
-  apiURL,
-  apiUser,
-  apiUserLogin,
-  apiFindUserByToken,
-  apiCcdvProfiles,
-  apiServices,
-  apiServicesTypeDetail,
-  apiHireSession,
-  apiCheckUsername,
-  apiCheckEmail,
-  apiCheckPhone,
-  apiCheckCccd,
-  apiCcdvProfileByUserId,
-  apiUpdateCcdvProfile,
-  apiTopRequent,
-  apiTopRecent,
-  apiUserHireSessions,
-  apiUserHireStatistics,
-  apiUserHireComplete,
-  apiUserHireCancel,
-  apiUserHireReport,
-  apiUserHireDetail,
-  apiUserHireUpdateStatus,
-  apiRevnue,
-  apiGetFullInfoUser,
-  apitLoadCcdvDetail,
-  apitLoadDichVuByIdCcdv,
+    apiURL,
+    apiUser,
+    apiUserLogin,
+    apiFindUserByToken,
+    apiCcdvProfiles,
+    apiServices,
+    apiServicesTypeDetail,
+    apiHireSession,
+    apiCheckUsername,
+    apiCheckEmail,
+    apiCheckPhone,
+    apiCheckCccd,
+    apiCcdvProfileByUserId,
+    apiUpdateCcdvProfile,
+    apiTopRequent,
+    apiTopRecent,
+    apiUserHireSessions,
+    apiUserHireStatistics,
+    apiUserHireComplete,
+    apiUserHireCancel,
+    apiUserHireReport,
+    apiUserHireDetail,
+    apiUserHireUpdateStatus,
+    apiRevnue,
+    apiGetFullInfoUser,
+    apitLoadCcdvDetail,
+    apitLoadDichVuByIdCcdv,
+    apiToggleStatus,
 };
