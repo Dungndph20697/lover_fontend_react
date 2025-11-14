@@ -3,14 +3,13 @@ import axios from "axios";
 const apiURL = "http://localhost:8080/api";
 
 const apiUser = `${apiURL}/users`;
+const apiCcdv = `${apiURL}/ccdv`;
 
 const apiUserLogin = `${apiURL}/users/login`;
 
 const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
-
-
 
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
@@ -20,8 +19,11 @@ const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
 
 const apiServices = `${apiURL}/ccdv/service-types`;
 
-const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
+const apiServicesTypeDetail = `${apiCcdv}/ccdv/ccdv-service-details`;
 
+//top 3 user đã thuê
+const apiTopRequent = `${apiURL}/top-frequent/`;
+const apiTopRecent = `${apiURL}/top-recent/`;
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -29,23 +31,21 @@ const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
-
-
 export {
-    apiURL,
-    apiUser,
-    apiUserLogin,
-    apiFindUserByToken,
-    apiCcdvProfiles,
-    apiServices,
-    apiServicesTypeDetail,
-    apiHireSession,
-    apiCheckUsername,
-    apiCheckEmail,
-    apiCheckPhone,
-
-    apiCheckCccd,
-    apiCcdvProfileByUserId,
-    apiUpdateCcdvProfile,
-
+  apiURL,
+  apiUser,
+  apiUserLogin,
+  apiFindUserByToken,
+  apiCcdvProfiles,
+  apiServices,
+  apiServicesTypeDetail,
+  apiHireSession,
+  apiCheckUsername,
+  apiCheckEmail,
+  apiCheckPhone,
+  apiCheckCccd,
+  apiCcdvProfileByUserId,
+  apiUpdateCcdvProfile,
+  apiTopRequent,
+  apiTopRecent,
 };

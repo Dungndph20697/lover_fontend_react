@@ -5,11 +5,10 @@ import UserInfo from "./UserInfo";
 import Services from "./Services";
 import QuanLyDon from "./QuanLyDon";
 import Footer from "./layout/Footer";
-import PersonalInfoForm from "./PersonalProfile";
+import CcdvTopCustomers from "./CcdvTopCustomers";
 
 export default function CCDVDashboard() {
   const [selected, setSelected] = useState("userinfo");
-
 
   const renderContent = () => {
     switch (selected) {
@@ -21,7 +20,8 @@ export default function CCDVDashboard() {
         return <QuanLyDon />;
       case "personalInfo":
         return <PersonalInfoForm />;
-
+      case "lichsuthue":
+        return <CcdvTopCustomers />;
       default:
         return <UserInfo />;
     }
