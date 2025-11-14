@@ -2,6 +2,7 @@ import axios from "axios";
 import { apiCcdvProfiles } from "../../config/api";
 import { apiCcdvProfileByUserId } from "../../config/api";
 import { apiUpdateCcdvProfile } from "../../config/api";
+import { apiToggleStatus } from "../../config/api";
 
 /**
  * Gửi thông tin profile CCDV lên server
@@ -82,4 +83,15 @@ export async function updateCcdvProfile(profileId, formData, token) {
         if (err.response) console.error("RESPONSE DATA:", err.response.data);
         throw err;
     }
+}
+
+// Call API trạng thái CCDV
+export async function toggleCcdvStatus(userId, token) {
+    const res = await axios.put(
+        `${apiToggleStatus}/${userId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    return res.data;
 }

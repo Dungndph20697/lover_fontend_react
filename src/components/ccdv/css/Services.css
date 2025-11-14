@@ -150,4 +150,41 @@
         padding: 0.9rem;
         font-size: 1rem;
     }
+
+    .guide-button {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 0.8rem 1.6rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        z-index: 1050;
+        transition: all 0.3s ease;
+    }
+
+    .guide-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(250, 100, 150, 0.6);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
 }
