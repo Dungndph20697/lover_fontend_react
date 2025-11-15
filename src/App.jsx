@@ -18,6 +18,8 @@ import Explore from "./components/user/Explore";
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
 import UserInfo from "./components/ccdv/UserInfo";
 
+import RevenueForm from "./components/ccdv/TongDoanhThu";
+
 // import "./App.css";
 
 
@@ -85,6 +87,7 @@ function App() {
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
+        <Route path="/revenue-form" element={<RevenueForm />} />
 
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
