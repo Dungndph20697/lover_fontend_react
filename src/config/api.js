@@ -10,7 +10,7 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
-
+const apiRevnue = `${apiURL}/revenue`;
 
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
@@ -48,4 +48,5 @@ export {
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
 
+    apiRevnue
 };

@@ -27,6 +27,7 @@ export default function Sidebar({ selected, setSelected }) {
       label: "Quản lý đơn",
       icon: <ClipboardList size={18} />,
     },
+    { id: "revenueForm", label: "Tổng doanh thu", icon: <ClipboardList size={18} /> },
   ];
 
   return (
