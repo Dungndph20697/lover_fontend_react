@@ -11,6 +11,8 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
+const apiRevnue = `${apiURL}/revenue`;
+
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
@@ -32,9 +34,21 @@ const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
-//(màn user)api load ccdv detail
 const apitLoadCcdvDetail = `${apiUser}/profiles/`;
 const apitLoadDichVuByIdCcdv = `${apiUser}/service/`;
+
+// THÊM MỚI: API cho User Hire Sessions
+const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
+const apiUserHireStatistics = (userId) =>
+  `${apiUserHireSessions}/statistics/${userId}`;
+const apiUserHireComplete = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/complete`;
+const apiUserHireCancel = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireReport = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/report`;
+const apiUserHireDetail = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireUpdateStatus = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
   apiURL,
@@ -53,6 +67,14 @@ export {
   apiUpdateCcdvProfile,
   apiTopRequent,
   apiTopRecent,
+  apiUserHireSessions,
+  apiUserHireStatistics,
+  apiUserHireComplete,
+  apiUserHireCancel,
+  apiUserHireReport,
+  apiUserHireDetail,
+  apiUserHireUpdateStatus,
+  apiRevnue,
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,

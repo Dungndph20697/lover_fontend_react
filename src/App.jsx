@@ -17,6 +17,11 @@ import Explore from "./components/user/Explore";
 
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
 import UserInfo from "./components/ccdv/UserInfo";
+import UserQuanLiDon from "./components/user/UserQuanLiDon";
+import ChiTietDonThue from "./components/user/ChiTietDonThue";
+import BaoCaoDonThue from "./components/user/BaoCaoDonThue";
+
+import RevenueForm from "./components/ccdv/TongDoanhThu";
 
 import ProfileDetail from "./components/user/ProfileDetail";
 
@@ -82,7 +87,20 @@ function App() {
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
+        <Route path="/revenue-form" element={<RevenueForm />} />
 
+
+        {/* User đơn đã thuê */}
+        <Route
+          path="/user/don-thue"
+          element={
+            <ProtectedRoute allowedRoles={["USER", "CUSTOMER"]}>
+              <UserQuanLiDon />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/user/don-thue/chi-tiet/:sessionId" element={<ChiTietDonThue />} />
+        <Route path="/user/don-thue/bao-cao/:sessionId" element={<BaoCaoDonThue />} />
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
           path="/ccdv"
