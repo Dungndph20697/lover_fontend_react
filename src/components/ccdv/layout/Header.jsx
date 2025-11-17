@@ -84,7 +84,7 @@ export default function Header() {
             aria-labelledby="userDropdown"
           >
             <li>
-              <button className="dropdown-item" onClick={handleGoToProfile}>Thông tin cá nhân</button>
+              <button className="dropdown-item" onClick={handleGoToProfile}>Quản lí cung cấp dịch vụ</button>
             </li>
             <li>
               <hr className="dropdown-divider" />

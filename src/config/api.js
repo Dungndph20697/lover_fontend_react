@@ -10,8 +10,6 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
-
-
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
@@ -22,14 +20,20 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
 
-
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
 const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
-
+// THÊM MỚI: API cho User Hire Sessions
+const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
+const apiUserHireStatistics = (userId) => `${apiUserHireSessions}/statistics/${userId}`;
+const apiUserHireComplete = (sessionId) => `${apiUserHireSessions}/${sessionId}/complete`;
+const apiUserHireCancel = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireReport = (sessionId) => `${apiUserHireSessions}/${sessionId}/report`;
+const apiUserHireDetail = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireUpdateStatus = (sessionId) => `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
     apiURL,
@@ -43,9 +47,15 @@ export {
     apiCheckUsername,
     apiCheckEmail,
     apiCheckPhone,
-
     apiCheckCccd,
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
-
+    // Export thêm các API mới
+    apiUserHireSessions,
+    apiUserHireStatistics,
+    apiUserHireComplete,
+    apiUserHireCancel,
+    apiUserHireReport,
+    apiUserHireDetail,
+    apiUserHireUpdateStatus,
 };
