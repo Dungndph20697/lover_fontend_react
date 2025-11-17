@@ -22,6 +22,8 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
 
+const apiHomeUserLovers = `${apiURL}/home`;
+
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -48,5 +50,6 @@ export {
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
 
-    apiRevnue
+    apiRevnue,
+    apiHomeUserLovers
 };

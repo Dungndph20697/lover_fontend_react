@@ -26,9 +26,9 @@ export default function FeaturedLovers({ lovers }) {
             >
               <div className="position-relative">
                 <img
-                  src={lover.image}
+                  src={lover.avatar}
                   className="card-img-top"
-                  alt={lover.name}
+                  alt={lover.fullName}
                   style={{
                     height: "320px",
                     objectFit: "cover",
@@ -40,14 +40,14 @@ export default function FeaturedLovers({ lovers }) {
                   className="position-absolute top-0 end-0 m-3 badge bg-danger fs-6"
                   style={{ borderRadius: "10px" }}
                 >
-                  ❤️ {lover.age}
+                  ❤️ {lover.hireCount}
                 </span>
               </div>
 
               <div className="card-body text-center">
-                <h5 className="fw-bold text-dark mb-1">{lover.name}</h5>
+                <h5 className="fw-bold text-dark mb-1">{lover.fullName}</h5>
                 <p className="text-muted mb-3">
-                  {lover.city || "Đang cập nhật"} 🌆
+                  {lover.description || "Đang cập nhật"} 🌆
                 </p>
                 <Link
                   to={`/lover/${lover.id}`}
