@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Calendar, Clock, MapPin, DollarSign, User, CheckCircle, Edit2, Save, X } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, MapPin, DollarSign, User, Edit2, Save, X } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { fetchSessionDetail, handleUpdateFeedback } from "../../service/quan_li_don_thue/QuanLiDonThue";
 
@@ -18,6 +18,7 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
         setLoading(true);
         try {
             const data = await fetchSessionDetail(sessionId);
+            // API trả về object session trực tiếp
             setSession(data);
             setFeedbackText(data.userReport || "");
         } catch {
@@ -186,16 +187,10 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
                             </div>
 
                             {/* Dịch vụ */}
-                            {session.services && session.services.length > 0 && (
+                            {session.serviceType && (
                                 <div className="mb-3 p-3 bg-light rounded">
                                     <strong className="d-block mb-2">Dịch vụ được thuê</strong>
-                                    <div className="d-flex flex-wrap gap-2">
-                                        {session.services.map((service, index) => (
-                                            <span key={index} className="badge bg-info">
-                                                {service}
-                                            </span>
-                                        ))}
-                                    </div>
+                                    <span className="badge bg-info">{session.serviceType.name}</span>
                                 </div>
                             )}
                         </div>

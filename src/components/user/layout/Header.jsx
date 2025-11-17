@@ -97,14 +97,26 @@ export default function Header() {
                 aria-labelledby="accountDropdown"
               >
                 <li>
+                  {/* Nếu là người cung cấp dịch vụ */}
                   {user && user.role?.name === "SERVICE_PROVIDER" && (
                     <li>
                       <Link className="dropdown-item" to="/ccdv">
-                        Thông tin cá nhân
+                        Quản lí cung cấp dịch vụ
                       </Link>
                     </li>
                   )}
                 </li>
+
+                {/* Chỉ user thường mới thấy mục "Đơn đã thuê" */}
+                {user && user.role?.name === "USER" && (
+                  <li>
+                    <Link className="dropdown-item" to="/user/don-thue">
+                      <i className="bi bi-list-check me-2"></i>
+                      Đơn đã thuê
+                    </Link>
+                  </li>
+                )}
+
 
                 <li>
                   <hr className="dropdown-divider" />

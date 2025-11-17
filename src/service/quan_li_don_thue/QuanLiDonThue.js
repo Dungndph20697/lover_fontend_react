@@ -76,11 +76,15 @@ const updateFeedback = async (sessionId, ccdvId, feedback) => {
 // Lấy danh sách đơn thuê
 export const fetchHireSessions = async (ccdvId) => {
     try {
-        const data = await getSessions(ccdvId);
-        return data.success ? data.data : [];
-    } catch (error) {
-        console.error("Lỗi khi tải danh sách đơn thuê:", error);
-        throw error;
+        const res = await axios.get(`${apiHireSession}/${ccdvId}`, getAuthHeader());
+        console.log("API hire-sessions response:", res.data);
+        // Nếu backend trả về { success: true, data: [...] } thì dùng:
+        return res.data.success ? res.data.data : [];
+        // Nếu backend trả về trực tiếp mảng thì dùng:
+        // return res.data || [];
+    } catch (err) {
+        console.error(err);
+        return [];
     }
 };
 
