@@ -20,8 +20,6 @@ import UserInfo from "./components/ccdv/UserInfo";
 
 // import "./App.css";
 
-
-
 // Component bảo vệ route
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const [user, setUser] = useState(null);
@@ -48,7 +46,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     fetchUser();
   }, [token]);
 
-  console.log('ProtectedRoute user', children, allowedRoles);
   if (loading) return <div className="text-center mt-5">Đang tải...</div>;
 
   if (!token || !user) return <Navigate to="/login" />;
@@ -68,12 +65,10 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     });
     return <Navigate to="/" />;
   }
-  console.log('children', children)
   return children;
 };
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -85,7 +80,6 @@ function App() {
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
-
 
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route

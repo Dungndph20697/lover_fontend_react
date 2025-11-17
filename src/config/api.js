@@ -22,8 +22,9 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 const apiServicesTypeDetail = `${apiCcdv}/ccdv/ccdv-service-details`;
 
 //top 3 user đã thuê
-const apiTopRequent = `${apiURL}/top-frequent/`;
-const apiTopRecent = `${apiURL}/top-recent/`;
+const apiTopRequent = `${apiCcdv}/top-frequent/`;
+const apiTopRecent = `${apiCcdv}/top-recent/`;
+const apiGetFullInfoUser = `${apiCcdv}/getfullinfouser/`;
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -48,4 +49,5 @@ export {
   apiUpdateCcdvProfile,
   apiTopRequent,
   apiTopRecent,
+  apiGetFullInfoUser,
 };
