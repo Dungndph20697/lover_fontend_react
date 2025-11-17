@@ -18,6 +18,8 @@ import Explore from "./components/user/Explore";
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
 import UserInfo from "./components/ccdv/UserInfo";
 
+import ProfileDetail from "./components/user/ProfileDetail";
+
 // import "./App.css";
 
 // Component bảo vệ route
@@ -76,7 +78,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
-
+        <Route path="/profile/:id" element={<ProfileDetail />} />
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />

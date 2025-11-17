@@ -19,7 +19,7 @@ const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
 
 const apiServices = `${apiURL}/ccdv/service-types`;
 
-const apiServicesTypeDetail = `${apiCcdv}/ccdv/ccdv-service-details`;
+const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
@@ -31,6 +31,10 @@ const apiCheckUsername = `${apiUser}/exists`;
 const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
+
+//(màn user)api load ccdv detail
+const apitLoadCcdvDetail = `${apiUser}/profiles/`;
+const apitLoadDichVuByIdCcdv = `${apiUser}/service/`;
 
 export {
   apiURL,
@@ -50,4 +54,6 @@ export {
   apiTopRequent,
   apiTopRecent,
   apiGetFullInfoUser,
+  apitLoadCcdvDetail,
+  apitLoadDichVuByIdCcdv,
 };
