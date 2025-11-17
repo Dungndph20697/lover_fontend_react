@@ -10,6 +10,10 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
+
+const apiRevnue = `${apiURL}/revenue`;
+
+
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
@@ -50,7 +54,8 @@ export {
     apiCheckCccd,
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
-    // Export thêm các API mới
+
+
     apiUserHireSessions,
     apiUserHireStatistics,
     apiUserHireComplete,
@@ -58,4 +63,6 @@ export {
     apiUserHireReport,
     apiUserHireDetail,
     apiUserHireUpdateStatus,
+  apiRevnue,
 };
+

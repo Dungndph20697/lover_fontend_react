@@ -21,6 +21,8 @@ import UserQuanLiDon from "./components/user/UserQuanLiDon";
 import ChiTietDonThue from "./components/user/ChiTietDonThue";
 import BaoCaoDonThue from "./components/user/BaoCaoDonThue";
 
+import RevenueForm from "./components/ccdv/TongDoanhThu";
+
 // import "./App.css";
 
 
@@ -88,6 +90,7 @@ function App() {
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
+        <Route path="/revenue-form" element={<RevenueForm />} />
 
         {/* User đơn đã thuê */}
         <Route
