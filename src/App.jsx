@@ -17,12 +17,18 @@ import Explore from "./components/user/Explore";
 
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
 import UserInfo from "./components/ccdv/UserInfo";
+import UserQuanLiDon from "./components/user/UserQuanLiDon";
+import ChiTietDonThue from "./components/user/ChiTietDonThue";
+import BaoCaoDonThue from "./components/user/BaoCaoDonThue";
 
 import RevenueForm from "./components/ccdv/TongDoanhThu";
 
+import ProfileDetail from "./components/user/ProfileDetail";
+import AdminDashboard from "./components/admin/AdminDashboard";
+
+import UserChatPage from "./components/user/chat/UserChatPage";
+
 // import "./App.css";
-
-
 
 // Component bảo vệ route
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -50,7 +56,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     fetchUser();
   }, [token]);
 
-  console.log('ProtectedRoute user', children, allowedRoles);
   if (loading) return <div className="text-center mt-5">Đang tải...</div>;
 
   if (!token || !user) return <Navigate to="/login" />;
@@ -70,12 +75,10 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     });
     return <Navigate to="/" />;
   }
-  console.log('children', children)
   return children;
 };
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -83,13 +86,43 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
-
+        <Route path="/profile/:id" element={<ProfileDetail />} />
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
         <Route path="/revenue-form" element={<RevenueForm />} />
 
+        <Route
+          path="/user/chat"
+          element={
+            <ProtectedRoute allowedRoles={["USER", "CUSTOMER"]}>
+              <UserChatPage />
+            </ProtectedRoute>
+          }
+        />
 
+
+        <Route path="/admin" element={<AdminDashboard />} />
+
+
+
+        {/* User đơn đã thuê */}
+        <Route
+          path="/user/don-thue"
+          element={
+            <ProtectedRoute allowedRoles={["USER", "CUSTOMER"]}>
+              <UserQuanLiDon />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/don-thue/chi-tiet/:sessionId"
+          element={<ChiTietDonThue />}
+        />
+        <Route
+          path="/user/don-thue/bao-cao/:sessionId"
+          element={<BaoCaoDonThue />}
+        />
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
           path="/ccdv"

@@ -1,6 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { User, Briefcase, ClipboardList } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  ClipboardList,
+  History,
+  MessageCircle,
+} from "lucide-react";
 
 export default function Sidebar({ selected, setSelected }) {
   const [hasProfile, setHasProfile] = useState(false);
@@ -20,14 +26,38 @@ export default function Sidebar({ selected, setSelected }) {
   }, []);
 
   const menuItems = [
-    { id: "userinfo", label: hasProfile ? "Thông tin cá nhân" : "Đăng ký thông tin cá nhân", icon: <User size={18} /> },
+    {
+      id: "userinfo",
+      label: hasProfile ? "Thông tin cá nhân" : "Đăng ký thông tin cá nhân",
+      icon: <User size={18} />,
+    },
     { id: "services", label: "Dịch vụ của tôi", icon: <Briefcase size={18} /> },
+    { id: "withdrawRequest", label: "Rút tiền", icon: <i className='bi bi-cash-stack'></i> },
+    { id: "withdrawHistory", label: "Lịch sử rút tiền", icon: <i className='bi bi-clock-history'></i> },
+
+
     {
       id: "quanlydon",
       label: "Quản lý đơn",
       icon: <ClipboardList size={18} />,
     },
-    { id: "revenueForm", label: "Tổng doanh thu", icon: <ClipboardList size={18} /> },
+
+    {
+      id: "lichsuthue",
+      label: "Lịch sử thuê",
+      icon: <History size={18} />,
+    },
+
+    {
+      id: "revenueForm",
+      label: "Tổng doanh thu",
+      icon: <ClipboardList size={18} />,
+    },
+    {
+      id: "chat",
+      label: "Chat",
+      icon: <MessageCircle size={18} />,
+    },
   ];
 
   return (
