@@ -26,6 +26,10 @@ export default function Sidebar({ selected, setSelected }) {
       icon: <User size={18} />,
     },
     { id: "services", label: "Dịch vụ của tôi", icon: <Briefcase size={18} /> },
+    { id: "withdrawRequest", label: "Rút tiền", icon: <i className='bi bi-cash-stack'></i> },
+    { id: "withdrawHistory", label: "Lịch sử rút tiền", icon: <i className='bi bi-clock-history'></i> },
+
+
     {
       id: "quanlydon",
       label: "Quản lý đơn",
@@ -59,11 +63,10 @@ export default function Sidebar({ selected, setSelected }) {
         {menuItems.map((item) => (
           <li key={item.id} className="nav-item">
             <button
-              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${
-                selected === item.id
+              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${selected === item.id
                   ? "btn-danger text-white"
                   : "btn-outline-danger bg-white"
-              }`}
+                }`}
               onClick={() => setSelected(item.id)}
               style={{
                 borderRadius: "10px",

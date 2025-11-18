@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./css/Services.css";
+import GuideModal from "./GuideModal";
+
 import {
   Container,
   Card,
@@ -37,7 +39,7 @@ export default function ServiceTypeList() {
   const [showModal, setShowModal] = useState(false);
   const [activeType, setActiveType] = useState("BASIC");
   const [isNewUser, setIsNewUser] = useState(false);
-
+  const [showGuide, setShowGuide] = useState(false); // state hien thị modal huong dan
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -70,7 +72,6 @@ export default function ServiceTypeList() {
         setIsNewUser(false);
       }
     } catch (error) {
-      console.error(error);
       toast.error("Lỗi khi tải dữ liệu, vui lòng thử lại!");
     } finally {
       setLoading(false);
@@ -186,12 +187,11 @@ export default function ServiceTypeList() {
       <Container className="pb-5">
         <Card className="border-0 shadow-lg rounded-4 p-4 modern-wrapper">
           <div className="d-flex justify-content-center gap-3 mb-4 flex-wrap">
-            {["BASIC", "FREE", "EXTENDED"].map((type) => (
+            {(isNewUser ? ["BASIC"] : ["BASIC", "FREE", "EXTENDED"]).map((type) => (
               <Button
                 key={type}
                 variant={activeType === type ? "primary" : "outline-secondary"}
-                className={`category-btn ${activeType === type ? "active" : ""
-                  }`}
+                className={`category-btn ${activeType === type ? "active" : ""}`}
                 onClick={() => setActiveType(type)}
               >
                 {type === "BASIC" && " Cơ bản"}
@@ -242,6 +242,17 @@ export default function ServiceTypeList() {
         services={userServices}
         refresh={loadData}
       />
+
+      <Button
+        variant="info"
+        className="guide-button"
+        onClick={() => setShowGuide(true)}
+      >
+        💡 Hướng dẫn
+      </Button>
+
+      {/* 🪄 Modal hướng dẫn */}
+      <GuideModal show={showGuide} onHide={() => setShowGuide(false)} />
     </div>
   );
 }
