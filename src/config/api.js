@@ -26,6 +26,8 @@ const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
 const apiHomeUserLovers = `${apiURL}/home`;
 
+const apiTopViewedLovers = `${apiURL}/users`;
+
 
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
@@ -84,6 +86,7 @@ const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
 export {
 
 
+
   apiURL,
   apiUser,
   apiUserLogin,
@@ -111,11 +114,10 @@ export {
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,
-
+apiTopViewedLovers
   apiGetConversation,
   apiGetChatUsers,
 
-apiRevnue,
     apiHomeUserLovers
  apiToggleStatus,
     apiWalletBalance,

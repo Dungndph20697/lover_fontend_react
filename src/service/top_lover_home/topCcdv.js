@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiHomeUserLovers } from "../../config/api";
+import { apiHomeUserLovers, apiTopViewedLovers } from "../../config/api";
 
 export const getTopLoverHome = async () => {
     try {
@@ -11,6 +11,34 @@ export const getTopLoverHome = async () => {
         return response.data;
     } catch (error) {
         console.error("Error fetching top lovers:", error);
+        throw error;
+    }
+};
+
+export const getTopViewedLoverHome = async () => {
+    try {
+        const response = await axios.get(`${apiTopViewedLovers}/top-ccdv-view`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching top viewed lovers:", error);
+        throw error;
+    }
+}
+
+export const increaseView = async (id) => {
+    try {
+        const response = await axios.post(`${apiTopViewedLovers}/${id}/view`, null, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error increasing view:", error);
         throw error;
     }
 };
