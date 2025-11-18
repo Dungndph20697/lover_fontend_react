@@ -11,8 +11,12 @@ import CcdvTopCustomers from "./lichsudathue/CcdvTopCustomers";
 import PersonalInfoForm from "./PersonalProfile";
 import RevenueForm from "./TongDoanhThu";
 
+import CcdvChatPage from "./chat/CcdvChatPage";
+
+
 import WithdrawRequest from "../wallet/WithdrawRequest";
 import WithdrawHistory from "../wallet/WithdrawHistory";
+
 
 export default function CCDVDashboard() {
   const [selected, setSelected] = useState("userinfo");
@@ -38,6 +42,8 @@ export default function CCDVDashboard() {
 
       case "revenueForm":
         return <RevenueForm />;
+      case "chat":
+        return <CcdvChatPage />;
       default:
         return <UserInfo />;
     }

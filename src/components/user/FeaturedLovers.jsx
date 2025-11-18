@@ -55,6 +55,12 @@ export default function FeaturedLovers({ lovers }) {
                 >
                   Xem hồ sơ
                 </Link>
+                <Link
+                  to={`/user/chat?to=${lover.id}`}
+                  className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
+                >
+                  Chat ngay
+                </Link>
               </div>
             </div>
           </div>
