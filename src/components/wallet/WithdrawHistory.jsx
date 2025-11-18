@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getWithdrawHistory } from "../../service/user/withdraw";
 
+const statusTranslations = {
+  APPROVED: { label: "Đã chuyển", className: "text-success" },
+  REJECTED: { label: "Bị từ chối", className: "text-danger" },
+  PENDING: { label: "Chờ duyệt", className: "text-warning" },
+  OTP_PENDING: { label: "Chờ OTP", className: "text-info" },
+  PROCESSING: { label: "Đang xử lý", className: "text-primary" },
+};
+
+const translateStatus = (status) => {
+  if (!status) return { label: "Không xác định", className: "text-muted" };
+  const normalized = status.toUpperCase();
+  return statusTranslations[normalized] || { label: status, className: "text-muted" };
+};
+
 export default function WithdrawHistory({ token }) {
   const [history, setHistory] = useState([]);
 
@@ -34,27 +48,20 @@ export default function WithdrawHistory({ token }) {
             </tr>
           </thead>
           <tbody>
-            {history.map((h) => (
-              <tr key={h.id}>
-                <td>{h.amount}</td>
-                <td>{h.amountReceived}</td>
-                <td>{h.fee}</td>
-                <td>
-                  <span
-                    className={
-                      h.status === "APPROVED"
-                        ? "text-success"
-                        : h.status === "REJECTED"
-                          ? "text-danger"
-                          : "text-warning"
-                    }
-                  >
-                    {h.status}
-                  </span>
-                </td>
-                <td>{h.createdAt?.replace("T", " ")}</td>
-              </tr>
-            ))}
+            {history.map((h) => {
+              const statusInfo = translateStatus(h.status);
+              return (
+                <tr key={h.id}>
+                  <td>{h.amount}</td>
+                  <td>{h.amountReceived}</td>
+                  <td>{h.fee}</td>
+                  <td>
+                    <span className={statusInfo.className}>{statusInfo.label}</span>
+                  </td>
+                  <td>{h.createdAt?.replace("T", " ")}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

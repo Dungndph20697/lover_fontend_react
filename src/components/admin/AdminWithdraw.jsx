@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import {
   adminApprove,
   adminGetList,
-  adminSearchWithdraw,
   adminReject,
 } from "../../service/user/withdraw";
 
@@ -15,18 +14,9 @@ const statusMeta = {
   REJECTED: { label: "Đã từ chối", className: "badge text-bg-danger" },
 };
 
-const typeBadges = {
-  FAST: { label: "Chi nhanh 2h", className: "badge text-bg-danger" },
-  STANDARD: { label: "Chuẩn 24h", className: "badge text-bg-secondary" },
-  SCHEDULED: { label: "Hẹn giờ", className: "badge text-bg-info text-dark" },
-};
-
 const statusFilters = [
   { id: "ALL", label: "Tất cả" },
   { id: "PENDING", label: "Chờ duyệt" },
-  { id: "OTP_PENDING", label: "Chờ OTP" },
-  { id: "PROCESSING", label: "Đang xử lý" },
-  { id: "APPROVED", label: "Đã chuyển" },
   { id: "REJECTED", label: "Từ chối" },
 ];
 
@@ -49,6 +39,15 @@ const getNetAmount = (request) => {
   if (!request) return 0;
   return toNumber(request.amount) - toNumber(request.fee);
 };
+
+const sortParamMap = {
+  NEWEST: "createdAt,desc",
+  OLDEST: "createdAt,asc",
+  AMOUNT_DESC: "amount,desc",
+  AMOUNT_ASC: "amount,asc",
+};
+
+const mapSortOption = (option) => sortParamMap[option] || null;
 
 const normalizeRequest = (item = {}) => {
   const providerInfo =
@@ -125,20 +124,62 @@ export default function AdminWithdraw() {
   const [loading, setLoading] = useState(true);
   const [showActionModal, setShowActionModal] = useState(false);
   const [currentAction, setCurrentAction] = useState(null);
-  const [actionNote, setActionNote] = useState("");
   const [actionSubmitting, setActionSubmitting] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [query, setQuery] = useState("");
 
   const loadRequests = useCallback(
-    async ({ showLoading = true, search = "" } = {}) => {
+    async ({
+      showLoading = true,
+      page: pageParam = 0,
+      size = 10,
+      search = "",
+      status = "ALL",
+      sort = "NEWEST",
+    } = {}) => {
       if (showLoading) setLoading(true);
       try {
-        const keyword = search?.trim();
-        const res = keyword
-          ? await adminSearchWithdraw(keyword)
-          : await adminGetList();
-        const payload = res?.data ?? [];
-        const list = extractRequests(payload).map((item) => normalizeRequest(item));
-        setRequests(list);
+        const params = {
+          page: pageParam,
+          size,
+        };
+        if (search) params.search = search;
+        if (status && status !== "ALL") params.status = status;
+        const sortParam = mapSortOption(sort);
+        if (sortParam) params.sort = sortParam;
+
+        const res = await adminGetList(params);
+        const payload = res?.data ?? {};
+        const list = extractRequests(
+          payload.content ?? payload.items ?? payload.data ?? payload
+        ).map((item) => normalizeRequest(item));
+        const hasServerPagination =
+          payload.content !== undefined ||
+          payload.totalElements !== undefined ||
+          payload.total !== undefined ||
+          payload.totalPages !== undefined ||
+          payload.pageable !== undefined;
+
+        let finalList = list;
+        let total = payload.totalElements ?? payload.total ?? payload.count;
+        if (!hasServerPagination) {
+          total = list.length;
+          finalList = list.slice(pageParam * size, pageParam * size + size);
+        }
+
+        setRequests(finalList);
+
+        const resolvedTotal = total ?? finalList.length;
+        setTotalRecords(resolvedTotal);
+        const totalPageCount = hasServerPagination
+          ? payload.totalPages ??
+          payload.totalPage ??
+          ((resolvedTotal ? Math.ceil(resolvedTotal / size) : 0) || 1)
+          : Math.max(Math.ceil((resolvedTotal || 0) / size), 1) || 1;
+        setTotalPages(totalPageCount);
       } catch (error) {
         console.error("Failed to load withdraw requests", error);
         Swal.fire("Lỗi", parseErrorMessage(error), "error");
@@ -150,83 +191,45 @@ export default function AdminWithdraw() {
   );
 
   useEffect(() => {
-    loadRequests();
-  }, [loadRequests]);
-
-  const searchInitialized = useRef(false);
-
-  useEffect(() => {
-    if (!searchInitialized.current) {
-      searchInitialized.current = true;
-      return;
-    }
-    const keyword = searchTerm.trim();
-    if (!keyword) {
-      loadRequests({ search: "" });
-      return;
-    }
-
     const handler = setTimeout(() => {
-      loadRequests({ search: keyword });
+      setPage(0);
+      setQuery(searchTerm.trim());
     }, 400);
-
     return () => clearTimeout(handler);
-  }, [searchTerm, loadRequests]);
-
-  const safeLower = (value) =>
-    typeof value === "string"
-      ? value.toLowerCase()
-      : value !== undefined && value !== null
-      ? String(value).toLowerCase()
-      : "";
-
-  const processedRequests = useMemo(() => {
-    let data = [...requests];
-
-    if (statusFilter !== "ALL") {
-      data = data.filter((item) => item.status === statusFilter);
-    }
-
-    if (searchTerm.trim()) {
-      const keyword = searchTerm.trim().toLowerCase();
-      data = data.filter((item) => {
-        const bank = item.bank || {};
-        return (
-          safeLower(item.id).includes(keyword) ||
-          safeLower(item.providerName).includes(keyword) ||
-          safeLower(item.providerCode).includes(keyword) ||
-          safeLower(bank.accountNumber).includes(keyword) ||
-          safeLower(bank.accountName).includes(keyword)
-        );
-      });
-    }
-
-    data.sort((a, b) => {
-      if (sortOption === "AMOUNT_DESC") return b.amount - a.amount;
-      if (sortOption === "AMOUNT_ASC") return a.amount - b.amount;
-      if (sortOption === "OLDEST") {
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      }
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-
-    return data;
-  }, [requests, statusFilter, sortOption, searchTerm]);
+  }, [searchTerm]);
 
   useEffect(() => {
-    if (processedRequests.length === 0) {
+    loadRequests({
+      page,
+      size: pageSize,
+      search: query,
+      status: statusFilter,
+      sort: sortOption,
+    });
+  }, [page, pageSize, query, statusFilter, sortOption, loadRequests]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [statusFilter, sortOption]);
+
+  useEffect(() => {
+    if (page >= totalPages && totalPages > 0) {
+      setPage(Math.max(totalPages - 1, 0));
+    }
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (requests.length === 0) {
       if (selectedRequestId !== null) {
         setSelectedRequestId(null);
       }
       return;
     }
-    const currentExists = processedRequests.some(
-      (item) => item.id === selectedRequestId
-    );
+    const currentExists = requests.some((item) => item.id === selectedRequestId);
     if (!currentExists) {
-      setSelectedRequestId(processedRequests[0].id);
+      setSelectedRequestId(requests[0].id);
     }
-  }, [processedRequests, selectedRequestId]);
+  }, [requests, selectedRequestId]);
 
   const activeRequest = useMemo(
     () => requests.find((item) => item.id === selectedRequestId) || null,
@@ -247,18 +250,18 @@ export default function AdminWithdraw() {
       { total: 0, totalAmount: 0, approvedAmount: 0 }
     );
   }, [requests]);
+  const startItem = totalRecords === 0 ? 0 : page * pageSize + 1;
+  const endItem = totalRecords === 0 ? 0 : page * pageSize + requests.length;
 
   const startAction = (type, request) => {
     setCurrentAction({ type, request });
     setSelectedRequestId(request.id);
-    setActionNote("");
     setShowActionModal(true);
   };
 
   const closeActionModal = () => {
     setShowActionModal(false);
     setCurrentAction(null);
-    setActionNote("");
   };
 
   const handleConfirmAction = async () => {
@@ -279,7 +282,13 @@ export default function AdminWithdraw() {
         icon: isApprove ? "success" : "info",
         title: isApprove ? "Đã duyệt yêu cầu" : "Đã từ chối yêu cầu",
       });
-      await loadRequests();
+      await loadRequests({
+        page,
+        size: pageSize,
+        search: query,
+        status: statusFilter,
+        sort: sortOption,
+      });
       closeActionModal();
     } catch (error) {
       console.error("Action failed", error);
@@ -292,7 +301,14 @@ export default function AdminWithdraw() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      await loadRequests({ showLoading: false, search: searchTerm.trim() });
+      await loadRequests({
+        showLoading: false,
+        page,
+        size: pageSize,
+        search: query,
+        status: statusFilter,
+        sort: sortOption,
+      });
     } finally {
       setRefreshing(false);
     }
@@ -377,9 +393,8 @@ export default function AdminWithdraw() {
                   <button
                     key={option.id}
                     type="button"
-                    className={`btn btn-sm ${
-                      statusFilter === option.id ? "btn-danger" : "btn-outline-secondary"
-                    }`}
+                    className={`btn btn-sm ${statusFilter === option.id ? "btn-danger" : "btn-outline-secondary"
+                      }`}
                     onClick={() => setStatusFilter(option.id)}
                   >
                     {option.label}
@@ -426,16 +441,15 @@ export default function AdminWithdraw() {
                         </div>
                       </td>
                     </tr>
-                  ) : processedRequests.length === 0 ? (
+                  ) : requests.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center text-muted py-5">
                         Không có yêu cầu phù hợp bộ lọc hiện tại.
                       </td>
                     </tr>
                   ) : (
-                    processedRequests.map((request) => {
+                    requests.map((request) => {
                       const status = statusMeta[request.status] || null;
-                      const typeBadge = request.type && typeBadges[request.type];
                       return (
                         <tr
                           key={request.id}
@@ -450,7 +464,6 @@ export default function AdminWithdraw() {
                             <div className="text-muted small">{request.providerCode}</div>
                             <div className="d-flex gap-2 mt-1">
                               {status && <span className={status.className}>{status.label}</span>}
-                              {typeBadge && <span className={typeBadge.className}>{typeBadge.label}</span>}
                             </div>
                           </td>
                           <td>
@@ -507,6 +520,49 @@ export default function AdminWithdraw() {
                 </tbody>
               </table>
             </div>
+            {!loading && requests.length > 0 && (
+              <div className="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+                <div className="text-muted small">
+                  Hiển thị {startItem}-{endItem} / {totalRecords}
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <select
+                    className="form-select form-select-sm"
+                    style={{ width: "120px" }}
+                    value={pageSize}
+                    onChange={(e) => {
+                      setPage(0);
+                      setPageSize(Number(e.target.value));
+                    }}
+                  >
+                    {[5, 10, 20, 50].map((sizeOption) => (
+                      <option key={sizeOption} value={sizeOption}>
+                        {sizeOption} / trang
+                      </option>
+                    ))}
+                  </select>
+                  <div className="btn-group btn-group-sm">
+                    <button
+                      className="btn btn-outline-secondary"
+                      onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                      disabled={page === 0}
+                    >
+                      Trước
+                    </button>
+                    <span className="btn btn-outline-secondary disabled">
+                      Trang {totalPages ? page + 1 : 0}/{Math.max(totalPages, 1)}
+                    </span>
+                    <button
+                      className="btn btn-outline-secondary"
+                      onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                      disabled={page + 1 >= totalPages}
+                    >
+                      Sau
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="col-lg-4">
@@ -618,24 +674,16 @@ export default function AdminWithdraw() {
                     <strong>{currentAction.request.providerName}</strong>.
                   </p>
                   <p className="text-muted small">
-                    Vui lòng lưu ý nhập ghi chú để CCDV nắm được quyết định của admin.
+                    Hãy chắc chắn rằng bạn đã kiểm tra thông tin ngân hàng trước khi xác nhận.
                   </p>
-                  <textarea
-                    className="form-control"
-                    rows={3}
-                    placeholder="Ghi chú hiển thị cho CCDV..."
-                    value={actionNote}
-                    onChange={(e) => setActionNote(e.target.value)}
-                  />
                 </div>
                 <div className="modal-footer">
                   <button className="btn btn-outline-secondary" onClick={closeActionModal}>
                     Huỷ
                   </button>
                   <button
-                    className={`btn ${
-                      currentAction.type === "APPROVE" ? "btn-success" : "btn-danger"
-                    }`}
+                    className={`btn ${currentAction.type === "APPROVE" ? "btn-success" : "btn-danger"
+                      }`}
                     onClick={handleConfirmAction}
                     disabled={actionSubmitting}
                   >
