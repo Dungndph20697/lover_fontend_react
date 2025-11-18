@@ -23,10 +23,15 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
+
+const apiHomeUserLovers = `${apiURL}/home`;
+
+
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
 const apiTopRecent = `${apiCcdv}/top-recent/`;
 const apiGetFullInfoUser = `${apiCcdv}/getfullinfouser/`;
+
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -51,6 +56,7 @@ const apiUserHireUpdateStatus = (sessionId) =>
   `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
+
   apiURL,
   apiUser,
   apiUserLogin,
@@ -78,4 +84,6 @@ export {
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,
+apiRevnue,
+    apiHomeUserLovers
 };
