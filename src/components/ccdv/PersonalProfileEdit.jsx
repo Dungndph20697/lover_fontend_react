@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
-import { getProfileByUserId, updateCcdvProfile } from "../../service/ccdvProfileService/ccdvProfileService";
+import { getProfileByUserId, updateCcdvProfile, toggleCcdvStatus } from "../../service/ccdvProfileService/ccdvProfileService";
+import { findUserByToken } from "../../service/user/login.js";
+import { toast } from "react-toastify"; // nếu đang dùng toast
+
+
 
 export default function CcdvProfileEditForm() {
     const [existingProfile, setExistingProfile] = useState(null);
@@ -12,6 +16,8 @@ export default function CcdvProfileEditForm() {
     const [files, setFiles] = useState({ avatar: null, portrait1: null, portrait2: null, portrait3: null });
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
+    const [saving, setSaving] = useState(false);
+
 
     const Toast = Swal.mixin({
         toast: true,
@@ -137,6 +143,40 @@ export default function CcdvProfileEditForm() {
         }
     });
 
+    // hàm chuyển đổi trạng thái động CCDV (active/inactive)
+    const handleToggleStatus = async () => {
+        const token = localStorage.getItem("token");
+
+        // 👉 1. Lấy thông tin user ngoài try để tránh bị bắt nhầm lỗi
+        const userInfo = await findUserByToken(token);
+
+        try {
+            // 👉 2. Gọi API đổi trạng thái
+            const res = await toggleCcdvStatus(userInfo.id, token);
+
+            Toast.fire({
+                icon: "success",
+                title: res.message
+            });
+
+            // 👉 3. Cập nhật lại giao diện
+            setExistingProfile(prev => ({
+                ...prev,
+                status: res.newStatus
+            }));
+
+        } catch (err) {
+            console.error("❌ Lỗi đổi trạng thái CCDV:", err);
+
+            Toast.fire({
+                icon: "error",
+                title: "Không thể thay đổi trạng thái, vui lòng thử lại!"
+            });
+        }
+    };
+
+
+
     const handleFileChange = (e, field) => {
         const file = e.target.files[0];
         setFiles(prev => ({ ...prev, [field]: file }));
@@ -163,17 +203,32 @@ export default function CcdvProfileEditForm() {
             <div className="card shadow-lg p-4" style={{ maxWidth: "900px", width: "100%", borderRadius: "25px", backgroundColor: "rgba(255,255,255,0.95)" }}>
                 <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480", letterSpacing: "1px" }}>✏️ Chỉnh sửa Hồ sơ CCDV ✏️</h2>
                 {message && <div className="alert alert-info text-center" style={{ borderRadius: "10px", fontWeight: "500" }}>{message}</div>}
+                <div className="text-end mb-3">
+                    {existingProfile && (
+                        <button
+                            type="button"
+                            className={`btn fw-semibold ${existingProfile.status === "ACTIVE" ? "btn-danger" : "btn-success"
+                                }`}
+                            onClick={handleToggleStatus}
+                            style={{ borderRadius: "20px", padding: "10px 20px" }}
+                        >
+                            {existingProfile.status === "ACTIVE"
+                                ? "🚫 Tạm ngưng cung cấp dịch vụ"
+                                : "✅ Kích hoạt lại dịch vụ"}
+                        </button>
+                    )}
+                </div>
 
                 <form onSubmit={formik.handleSubmit}>
                     {["fullName", "yearOfBirth"].map(f => (
                         <div key={f} className="mb-3">
                             <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g, " $1")}</label>
-                            <input 
-                                type={f === "yearOfBirth" ? "number" : "text"} 
-                                className="form-control shadow-sm" 
-                                placeholder={f === "fullName" ? "Nhập họ và tên" : "Nhập năm sinh"} 
-                                {...formik.getFieldProps(f)} 
-                                style={{ borderRadius: "12px", padding: "10px" }} 
+                            <input
+                                type={f === "yearOfBirth" ? "number" : "text"}
+                                className="form-control shadow-sm"
+                                placeholder={f === "fullName" ? "Nhập họ và tên" : "Nhập năm sinh"}
+                                {...formik.getFieldProps(f)}
+                                style={{ borderRadius: "12px", padding: "10px" }}
                             />
                             {formik.touched[f] && formik.errors[f] && <div className="text-danger small mt-1">{formik.errors[f]}</div>}
                         </div>
@@ -213,24 +268,24 @@ export default function CcdvProfileEditForm() {
                         <div key={f} className="mb-3">
                             <label className="form-label fw-semibold text-capitalize">{f.replace(/([A-Z])/g, " $1")}</label>
                             {["hobbies", "description", "requirement"].includes(f) ?
-                                <textarea 
-                                    className="form-control shadow-sm" 
-                                    rows={f === "hobbies" ? 2 : 3} 
-                                    placeholder={f === "hobbies" ? "Nhập sở thích" : f === "description" ? "Nhập mô tả" : "Nhập yêu cầu"} 
-                                    {...formik.getFieldProps(f)} 
-                                    style={{ borderRadius: "12px", padding: "10px" }} 
+                                <textarea
+                                    className="form-control shadow-sm"
+                                    rows={f === "hobbies" ? 2 : 3}
+                                    placeholder={f === "hobbies" ? "Nhập sở thích" : f === "description" ? "Nhập mô tả" : "Nhập yêu cầu"}
+                                    {...formik.getFieldProps(f)}
+                                    style={{ borderRadius: "12px", padding: "10px" }}
                                 /> :
-                                <input 
-                                    type={["height", "weight"].includes(f) ? "number" : "text"} 
-                                    className="form-control shadow-sm" 
+                                <input
+                                    type={["height", "weight"].includes(f) ? "number" : "text"}
+                                    className="form-control shadow-sm"
                                     placeholder={
-                                        f === "nationality" ? "Nhập quốc tịch" : 
-                                        f === "height" ? "Nhập chiều cao (cm)" : 
-                                        f === "weight" ? "Nhập cân nặng (kg)" : 
-                                        f === "facebookLink" ? "Nhập link Facebook" : ""
-                                    } 
-                                    {...formik.getFieldProps(f)} 
-                                    style={{ borderRadius: "12px", padding: "10px" }} 
+                                        f === "nationality" ? "Nhập quốc tịch" :
+                                            f === "height" ? "Nhập chiều cao (cm)" :
+                                                f === "weight" ? "Nhập cân nặng (kg)" :
+                                                    f === "facebookLink" ? "Nhập link Facebook" : ""
+                                    }
+                                    {...formik.getFieldProps(f)}
+                                    style={{ borderRadius: "12px", padding: "10px" }}
                                 />
                             }
                             {formik.touched[f] && formik.errors[f] && <div className="text-danger small mt-1">{formik.errors[f]}</div>}

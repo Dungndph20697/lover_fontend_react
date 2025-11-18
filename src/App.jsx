@@ -24,6 +24,7 @@ import BaoCaoDonThue from "./components/user/BaoCaoDonThue";
 import RevenueForm from "./components/ccdv/TongDoanhThu";
 
 import ProfileDetail from "./components/user/ProfileDetail";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 import UserChatPage from "./components/user/chat/UserChatPage";
 
@@ -90,6 +91,7 @@ function App() {
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
         <Route path="/revenue-form" element={<RevenueForm />} />
+
         <Route
           path="/user/chat"
           element={
@@ -98,6 +100,11 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+
+        <Route path="/admin" element={<AdminDashboard />} />
+
+
 
         {/* User đơn đã thuê */}
         <Route

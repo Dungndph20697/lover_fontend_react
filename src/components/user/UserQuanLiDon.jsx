@@ -15,6 +15,8 @@ import {
   coTheHuy,
 } from "../../service/user_quan_li_don/UserQuanLiDon";
 import { findUserByToken } from "../../service/user/login";
+import Footer from "./layout/Footer";
+import Header from "./layout/Header";
 
 export default function UserQuanLiDon() {
   const navigate = useNavigate();
@@ -31,6 +33,7 @@ export default function UserQuanLiDon() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
+      console.log("🔵 Token:", token);
       if (!token) {
         Swal.fire({
           icon: "error",
@@ -46,6 +49,7 @@ export default function UserQuanLiDon() {
 
       try {
         const user = await findUserByToken(token);
+        console.log("🔵 User from token:", user);
         setUserId(user.id);
       } catch (err) {
         console.error(err);
@@ -65,10 +69,15 @@ export default function UserQuanLiDon() {
     fetchUser();
   }, [navigate]);
 
-  // Load sessions + statistics khi có userId
+  // Load sessions + statistics khi có userId (Thống kê)
   useEffect(() => {
+    console.log("🔵 useEffect loadStatistics triggered, userId:", userId);
     if (!userId) return;
     loadSessions();
+  }, [userId, filter, page]);
+
+  useEffect(() => {
+    if (!userId) return;
     loadStatistics();
   }, [userId, filter, page]);
 
@@ -79,6 +88,7 @@ export default function UserQuanLiDon() {
     const result = await getDanhSachDonThue(userId, filter || null, page, 10);
     if (result.success) {
       setSessions(result.data.content);
+      console.log(result.data.content);
       setTotalPages(result.data.totalPages);
     } else {
       setError(result.message || "Không thể tải danh sách đơn thuê");
@@ -89,7 +99,9 @@ export default function UserQuanLiDon() {
 
   const loadStatistics = async () => {
     const result = await getThongKeDonThue(userId);
+    console.log("Thống kê API response:", result);
     if (result.success) {
+      console.log("Dữ liệu thống kê:", result.data);
       setStatistics(result.data);
     }
   };
@@ -179,6 +191,16 @@ export default function UserQuanLiDon() {
         <i className="bi bi-heart-fill me-2"></i>
         Danh sách đơn đã thuê
       </h2>
+      {/* Nút quay lại trang chủ */}
+      <div className="mb-4">
+        <button
+          className="btn btn-secondary"
+          onClick={() => navigate("/")}
+        >
+          <i className="bi bi-house-door me-2"></i>
+          Quay lại trang chủ
+        </button>
+      </div>
 
       {/* Thống kê */}
       {statistics && (
@@ -195,7 +217,7 @@ export default function UserQuanLiDon() {
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Chờ phản hồi</h6>
-                <h3 className="text-warning mb-0">{statistics.pending}</h3>
+                <h3 className="text-warning mb-0">{statistics.waiting}</h3>
               </div>
             </div>
           </div>
@@ -288,100 +310,87 @@ export default function UserQuanLiDon() {
         <div className="alert alert-info">Không có đơn thuê nào</div>
       ) : (
         <div className="row g-3">
-          {sessions.map((session) => (
-            <div key={session.id} className="col-12">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body">
-                  <div className="row align-items-center">
-                    {/* Thông tin CCDV */}
-                    <div className="col-md-3">
-                      <div className="d-flex align-items-center">
-                        <div className="me-3">
-                          <img
-                            src={session.ccdv.avatar || "/default-avatar.png"}
-                            alt={session.ccdv.fullName}
-                            className="rounded-circle"
-                            style={{
-                              width: "60px",
-                              height: "60px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <h6 className="mb-1">{session.ccdv.fullName}</h6>
-                          <span
-                            className={`badge ${getStatusClass(session.status)}`}
-                          >
-                            {getStatusText(session.status)}
-                          </span>
+          {sessions.map((session) => {
+            const ccdv = session.ccdv || {};
+            const serviceType = session.serviceType || {};
+
+            return (
+              <div key={session.id} className="col-12">
+                <div className="card border-0 shadow-sm">
+                  <div className="card-body">
+                    <div className="row align-items-center">
+                      {/* Thông tin CCDV */}
+                      <div className="col-md-3">
+                        <div className="d-flex align-items-center">
+                          <div className="me-3">
+                            <img
+                              src={ccdv.avatar || "/default-avatar.png"}
+                              alt={ccdv.fullName || "CCDV"}
+                              className="rounded-circle"
+                              style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                            />
+                          </div>
+                          <div>
+                            <h6 className="mb-1">{ccdv.fullName || "Chưa có tên"}</h6>
+                            <span className={`badge ${getStatusClass(session.status)}`}>
+                              {getStatusText(session.status)}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Thông tin đơn */}
-                    <div className="col-md-5">
-                      <p className="mb-1">
-                        <i className="bi bi-briefcase text-muted me-2"></i>
-                        <strong>Dịch vụ:</strong> {session.serviceType.name}
-                      </p>
-                      <p className="mb-1">
-                        <i className="bi bi-clock text-muted me-2"></i>
-                        <strong>Thời gian:</strong>{" "}
-                        {formatNgayGio(session.startTime)}
-                      </p>
-                      <p className="mb-1">
-                        <i className="bi bi-hourglass text-muted me-2"></i>
-                        <strong>Thời lượng:</strong>{" "}
-                        {tinhThoiLuong(session.startTime, session.endTime)} giờ
-                      </p>
-                      <p className="mb-0">
-                        <i className="bi bi-geo-alt text-muted me-2"></i>
-                        <strong>Địa chỉ:</strong> {session.address}
-                      </p>
-                    </div>
+                      {/* Thông tin đơn */}
+                      <div className="col-md-5">
+                        <p className="mb-1">
+                          <i className="bi bi-briefcase text-muted me-2"></i>
+                          <strong>Dịch vụ:</strong> {serviceType.name || "N/A"}
+                        </p>
+                        <p className="mb-1">
+                          <i className="bi bi-clock text-muted me-2"></i>
+                          <strong>Thời gian:</strong> {formatNgayGio(session.startTime)}
+                        </p>
+                        <p className="mb-1">
+                          <i className="bi bi-hourglass text-muted me-2"></i>
+                          <strong>Thời lượng:</strong> {tinhThoiLuong(session.startTime, session.endTime)} giờ
+                        </p>
+                        <p className="mb-0">
+                          <i className="bi bi-geo-alt text-muted me-2"></i>
+                          <strong>Địa chỉ:</strong> {session.address || "Chưa có địa chỉ"}
+                        </p>
+                      </div>
 
-                    {/* Giá và hành động */}
-                    <div className="col-md-4 text-end">
-                      <h4 className="text-danger mb-3">
-                        {formatGiaTien(session.totalPrice)}
-                      </h4>
+                      {/* Giá và hành động */}
+                      <div className="col-md-4 text-end">
+                        <h4 className="text-danger mb-3">{formatGiaTien(session.totalPrice)}</h4>
 
-                      <div className="d-grid gap-2">
-                        {/* NÚT XEM CHI TIẾT */}
-                        <Link
-                          to={`/user/don-thue/chi-tiet/${session.id}`}
-                          className="btn btn-outline-primary"
-                        >
-                          <i className="bi bi-eye me-2"></i>
-                          Xem chi tiết
-                        </Link>
-
-                        {/* NÚT HOÀN THÀNH */}
-                        {coTheHoanThanh(session.status) && (
-                          <button
-                            className="btn btn-success"
-                            onClick={() => handleComplete(session.id)}
+                        <div className="d-grid gap-2">
+                          {/* Xem chi tiết */}
+                          <Link
+                            to={`/user/don-thue/chi-tiet/${session.id}`}
+                            className="btn btn-outline-primary"
                           >
-                            <i className="bi bi-check-circle me-2"></i>
-                            Hoàn thành
-                          </button>
-                        )}
+                            <i className="bi bi-eye me-2"></i>
+                            Xem chi tiết
+                          </Link>
 
-                        {/* NÚT HỦY ĐƠN */}
-                        {coTheHuy(session.status) && (
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => handleCancel(session.id)}
-                          >
-                            <i className="bi bi-x-circle me-2"></i>
-                            Hủy đơn
-                          </button>
-                        )}
+                          {/* Hoàn thành */}
+                          {coTheHoanThanh(session.status) && (
+                            <button className="btn btn-success" onClick={() => handleComplete(session.id)}>
+                              <i className="bi bi-check-circle me-2"></i>
+                              Hoàn thành
+                            </button>
+                          )}
 
-                        {/* NÚT THÊM BÁO CÁO */}
-                        {session.status === "COMPLETED" &&
-                          !session.userReport && (
+                          {/* Hủy đơn */}
+                          {coTheHuy(session.status) && (
+                            <button className="btn btn-danger" onClick={() => handleCancel(session.id)}>
+                              <i className="bi bi-x-circle me-2"></i>
+                              Hủy đơn
+                            </button>
+                          )}
+
+                          {/* Thêm báo cáo */}
+                          {session.status === "COMPLETED" && !session.userReport && (
                             <Link
                               to={`/user/don-thue/bao-cao/${session.id}`}
                               className="btn btn-info"
@@ -391,21 +400,23 @@ export default function UserQuanLiDon() {
                             </Link>
                           )}
 
-                        {/* HIỂN THỊ BÁO CÁO NẾU CÓ */}
-                        {session.userReport && (
-                          <div className="alert alert-secondary mb-0 mt-2 small text-start">
-                            <i className="bi bi-chat-left-dots me-2"></i>
-                            <strong>Báo cáo:</strong> {session.userReport}
-                          </div>
-                        )}
+                          {/* Hiển thị báo cáo nếu có */}
+                          {session.userReport && (
+                            <div className="alert alert-secondary mb-0 mt-2 small text-start">
+                              <i className="bi bi-chat-left-dots me-2"></i>
+                              <strong>Báo cáo:</strong> {session.userReport}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
       )}
 
       {/* Phân trang */}

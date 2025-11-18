@@ -43,6 +43,8 @@ export default function Login() {
         navigate("/");
       } else if (userData.role.name === "SERVICE_PROVIDER") {
         navigate("/ccdv");
+      } else if (userData.role.name === "ADMIN") {
+        navigate("/admin");
       }
     } catch (error) {
       console.log("Login error:", error);
