@@ -5,8 +5,10 @@ import Swal from "sweetalert2";
 import {
     verifyPassword,
     getRevenueToday,
-    getRevenueMonth,
+    getRevenueByWeek,
     getRevenueRange,
+    formatLocalDate,
+    getRevenueByDay
 } from "../../service/tong_doanh_thu_ccdv/revenueService";
 
 import {
@@ -53,16 +55,40 @@ export default function RevenueForm() {
                     return;
                 }
 
-                let data;
+                let data, items = [], total = 0;
+
                 if (values.type === "today") {
                     data = await getRevenueToday();
-                    setChartData([{ name: "Hôm nay", value: Number(data.revenue) }]);
+                    total = Number(data.revenue);
+                    items = [{ name: "Hôm nay", value: total }];
+                    setChartData({ type: "today", items, total });
+
                 } else if (values.type === "month") {
-                    data = await getRevenueMonth();
-                    setChartData([{ name: "Tháng này", value: Number(data.revenue) }]);
+                    // Tháng này → xem theo tuần
+                    const today = new Date();
+                    const start = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+                    const startAt = formatLocalDate(start);
+                    const endAt = formatLocalDate(end);
+                    data = await getRevenueByDay(startAt, endAt);
+
+                    items = (data.data || []).map(w => ({
+                        name: w.date,
+                        value: Number(w.revenue)
+                    }));
+
+                    const total = items.reduce((sum, i) => sum + i.value, 0);
+                    setChartData({ type: "month", items, total });
                 } else if (values.type === "range") {
-                    data = await getRevenueRange(values.start, values.end);
-                    setChartData([{ name: `${values.start} → ${values.end}`, value: Number(data.revenue) }]);
+                    // Khoảng ngày → xem theo tháng
+                    data = await getRevenueByDay(values.start, values.end); // gọi /day-range
+                    items = (data.data || []).map(d => ({
+                        name: d.date,        // yyyy-MM-dd
+                        value: Number(d.revenue)
+                    }));
+                    total = items.reduce((sum, i) => sum + i.value, 0);
+                    setChartData({ type: "range", items, total })
                 }
             } catch (err) {
                 console.error(err);
@@ -143,35 +169,37 @@ export default function RevenueForm() {
                     {chartData && (
                         <div className="mt-5">
                             <h5 className="text-center mb-3">Biểu đồ doanh thu</h5>
-                            <div style={{ width: "100%", height: "500px" }}>
+
+                            <div style={{ width: "100%", height: 450 }}>
                                 <ResponsiveContainer>
-                                    {chartData.length === 1 ? (
-                                        <BarChart data={chartData}>
-                                            <defs>
-                                                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#0d6efd" stopOpacity={0.8} />
-                                                    <stop offset="95%" stopColor="#0d6efd" stopOpacity={0} />
-                                                </linearGradient>
-                                            </defs>
+                                    {/* RANGE = LINE CHART */}
+                                    {chartData.type === "range" ? (
+                                        <BarChart data={chartData.items}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
                                             <YAxis />
-                                            <Tooltip formatter={(value) => value.toLocaleString()} />
+                                            <Tooltip formatter={(v) => v.toLocaleString()} />
                                             <Legend />
-                                            <Bar dataKey="value" fill="url(#colorRevenue)" label={{ position: 'top' }} />
+                                            <Bar dataKey="value" fill="#0d6efd" label={{ position: "top" }} />
                                         </BarChart>
                                     ) : (
-                                        <LineChart data={chartData}>
+                                        // TODAY + MONTH use BarChart
+                                        <BarChart data={chartData.items}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
                                             <YAxis />
-                                            <Tooltip formatter={(value) => value.toLocaleString()} />
+                                            <Tooltip formatter={(v) => v.toLocaleString()} />
                                             <Legend />
-                                            <Line type="monotone" dataKey="value" stroke="#0d6efd" dot={{ r: 4 }} />
-                                        </LineChart>
+                                            <Bar dataKey="value" fill="#0d6efd" label={{ position: "top" }} />
+                                        </BarChart>
                                     )}
                                 </ResponsiveContainer>
                             </div>
+
+                            {/* TOTAL */}
+                            <h5 className="text-center mt-3 text-primary">
+                                Tổng: {chartData.total.toLocaleString()} VND
+                            </h5>
                         </div>
                     )}
                 </div>
