@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function FeaturedLovers({ lovers }) {
   return (
     <section className="container my-5">
-      <h2 className="text-center fw-bold mb-5 text-danger">💕 Gợi ý nổi bật</h2>
+      <h2 className="text-center fw-bold mb-5 text-danger">💕 Top 12 người được thuê nhiều nhất</h2>
 
       <div className="row g-4 justify-content-center">
         {lovers.map((lover) => (
