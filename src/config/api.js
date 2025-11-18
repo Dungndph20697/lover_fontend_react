@@ -50,6 +50,14 @@ const apiUserHireDetail = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
 const apiUserHireUpdateStatus = (sessionId) =>
   `${apiUserHireSessions}/${sessionId}/status`;
 
+// const apiURL = "http://localhost:8080/api";
+//chat
+// GET /api/messages/{u1}/{u2}
+const apiGetConversation = `${apiURL}/messages/chat-users/`;
+
+// GET /api/messages/chat-users/{id}
+const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
+
 export {
   apiURL,
   apiUser,
@@ -78,4 +86,6 @@ export {
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,
+  apiGetConversation,
+  apiGetChatUsers,
 };

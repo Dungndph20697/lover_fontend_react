@@ -49,12 +49,8 @@ export default function Header() {
   };
 
   return (
-    <header
-      className="navbar navbar-expand-lg bg-white shadow-sm"
-
-    >
+    <header className="navbar navbar-expand-lg bg-white shadow-sm">
       <div className="container">
-
         <Link className="navbar-brand text-danger fw-bold fs-4" to="/">
           ❤️ Lover
         </Link>
@@ -70,6 +66,11 @@ export default function Header() {
           <li className="nav-item">
             <Link className="nav-link" to="/explore">
               Khám phá
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/user/chat">
+              Tin nhắn
             </Link>
           </li>
 
@@ -116,7 +117,6 @@ export default function Header() {
                     </Link>
                   </li>
                 )}
-
 
                 <li>
                   <hr className="dropdown-divider" />

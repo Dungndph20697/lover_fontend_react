@@ -25,6 +25,8 @@ import RevenueForm from "./components/ccdv/TongDoanhThu";
 
 import ProfileDetail from "./components/user/ProfileDetail";
 
+import UserChatPage from "./components/user/chat/UserChatPage";
+
 // import "./App.css";
 
 // Component bảo vệ route
@@ -88,7 +90,14 @@ function App() {
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />
         <Route path="/revenue-form" element={<RevenueForm />} />
-
+        <Route
+          path="/user/chat"
+          element={
+            <ProtectedRoute allowedRoles={["USER", "CUSTOMER"]}>
+              <UserChatPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* User đơn đã thuê */}
         <Route
@@ -99,8 +108,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/user/don-thue/chi-tiet/:sessionId" element={<ChiTietDonThue />} />
-        <Route path="/user/don-thue/bao-cao/:sessionId" element={<BaoCaoDonThue />} />
+        <Route
+          path="/user/don-thue/chi-tiet/:sessionId"
+          element={<ChiTietDonThue />}
+        />
+        <Route
+          path="/user/don-thue/bao-cao/:sessionId"
+          element={<BaoCaoDonThue />}
+        />
         {/* Route /ccdv chỉ cho phép role CCDV */}
         <Route
           path="/ccdv"

@@ -1,6 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { User, Briefcase, ClipboardList, History } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  ClipboardList,
+  History,
+  MessageCircle,
+} from "lucide-react";
 
 export default function Sidebar({ selected, setSelected }) {
   const [hasProfile, setHasProfile] = useState(false);
@@ -38,8 +44,16 @@ export default function Sidebar({ selected, setSelected }) {
       icon: <History size={18} />,
     },
 
-    { id: "revenueForm", label: "Tổng doanh thu", icon: <ClipboardList size={18} /> },
-
+    {
+      id: "revenueForm",
+      label: "Tổng doanh thu",
+      icon: <ClipboardList size={18} />,
+    },
+    {
+      id: "chat",
+      label: "Chat",
+      icon: <MessageCircle size={18} />,
+    },
   ];
 
   return (
