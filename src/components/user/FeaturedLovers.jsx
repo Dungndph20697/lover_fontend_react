@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { findUser } from "../../service/user/home";
 
 export default function FeaturedLovers({ lovers }) {
+
+  useEffect(() => {
+    const loadData = async () => {
+      const res = await findUser();
+      console.log("res", res);
+    };
+    loadData();
+  }, []);
+
+  const currentYear = new Date().getFullYear();
+
   return (
     <section className="container my-5">
       <h2 className="text-center fw-bold mb-5 text-danger">💕 Gợi ý nổi bật</h2>
@@ -26,9 +38,9 @@ export default function FeaturedLovers({ lovers }) {
             >
               <div className="position-relative">
                 <img
-                  src={lover.image}
+                  src={lover.avatar}
                   className="card-img-top"
-                  alt={lover.name}
+                  alt={lover.fullName}
                   style={{
                     height: "320px",
                     objectFit: "cover",
@@ -40,12 +52,12 @@ export default function FeaturedLovers({ lovers }) {
                   className="position-absolute top-0 end-0 m-3 badge bg-danger fs-6"
                   style={{ borderRadius: "10px" }}
                 >
-                  ❤️ {lover.age}
+                  ❤️ {currentYear - lover.yearOfBirth}
                 </span>
               </div>
 
               <div className="card-body text-center">
-                <h5 className="fw-bold text-dark mb-1">{lover.name}</h5>
+                <h5 className="fw-bold text-dark mb-1">{lover.fullName}</h5>
                 <p className="text-muted mb-3">
                   {lover.city || "Đang cập nhật"} 🌆
                 </p>

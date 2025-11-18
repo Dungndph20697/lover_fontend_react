@@ -10,8 +10,6 @@ const apiFindUserByToken = `${apiURL}/users/me`;
 
 const apiCcdvProfiles = `${apiURL}/ccdv-profiles/create`;
 
-
-
 const apiHireSession = `${apiURL}/ccdv/hire-sessions`;
 
 const apiCcdvProfileByUserId = `${apiURL}/ccdv-profiles/user`;
@@ -29,7 +27,8 @@ const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
-
+//hien thi trang chu
+const apiHomePage = `${apiUser}/providers/latest`;
 
 export {
     apiURL,
@@ -47,5 +46,5 @@ export {
     apiCheckCccd,
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
-
+apiHomePage,
 };
