@@ -5,8 +5,6 @@ import Swal from "sweetalert2";
 import {
     verifyPassword,
     getRevenueToday,
-    getRevenueByWeek,
-    getRevenueRange,
     formatLocalDate,
     getRevenueByDay
 } from "../../service/tong_doanh_thu_ccdv/revenueService";
