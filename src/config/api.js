@@ -23,6 +23,10 @@ const apiServices = `${apiURL}/ccdv/service-types`;
 
 const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
+
+const apiHomeUserLovers = `${apiURL}/home`;
+
+
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
 const apiTopRecent = `${apiCcdv}/top-recent/`;
@@ -32,6 +36,7 @@ const apiToggleStatus = `${apiURL}/ccdv-profiles/toggle-status`;
 
 // lấy số dư ví
 const apiWalletBalance = `${apiURL}/wallet/balance`;
+
 
 
 
@@ -69,34 +74,38 @@ const apiUserHireUpdateStatus = (sessionId) =>
     `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
-    apiURL,
-    apiUser,
-    apiUserLogin,
-    apiFindUserByToken,
-    apiCcdvProfiles,
-    apiServices,
-    apiServicesTypeDetail,
-    apiHireSession,
-    apiCheckUsername,
-    apiCheckEmail,
-    apiCheckPhone,
-    apiCheckCccd,
-    apiCcdvProfileByUserId,
-    apiUpdateCcdvProfile,
-    apiTopRequent,
-    apiTopRecent,
-    apiUserHireSessions,
-    apiUserHireStatistics,
-    apiUserHireComplete,
-    apiUserHireCancel,
-    apiUserHireReport,
-    apiUserHireDetail,
-    apiUserHireUpdateStatus,
-    apiRevnue,
-    apiGetFullInfoUser,
-    apitLoadCcdvDetail,
-    apitLoadDichVuByIdCcdv,
-    apiToggleStatus,
+
+
+  apiURL,
+  apiUser,
+  apiUserLogin,
+  apiFindUserByToken,
+  apiCcdvProfiles,
+  apiServices,
+  apiServicesTypeDetail,
+  apiHireSession,
+  apiCheckUsername,
+  apiCheckEmail,
+  apiCheckPhone,
+  apiCheckCccd,
+  apiCcdvProfileByUserId,
+  apiUpdateCcdvProfile,
+  apiTopRequent,
+  apiTopRecent,
+  apiUserHireSessions,
+  apiUserHireStatistics,
+  apiUserHireComplete,
+  apiUserHireCancel,
+  apiUserHireReport,
+  apiUserHireDetail,
+  apiUserHireUpdateStatus,
+  apiRevnue,
+  apiGetFullInfoUser,
+  apitLoadCcdvDetail,
+  apitLoadDichVuByIdCcdv,
+apiRevnue,
+    apiHomeUserLovers
+ apiToggleStatus,
     apiWalletBalance,
     apiWithdrawRequest,
     apiWithdrawVerifyOtp,
