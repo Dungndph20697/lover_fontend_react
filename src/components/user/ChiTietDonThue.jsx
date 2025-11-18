@@ -188,7 +188,7 @@ export default function ChiTietDonThue() {
           Quay lại
         </Link>
       </div>
-
+  
       <div className="row">
         {/* Cột trái - Thông tin chi tiết */}
         <div className="col-md-8">
@@ -203,60 +203,66 @@ export default function ChiTietDonThue() {
                   {getStatusText(session.status)}
                 </span>
               </div>
-
+  
               {/* Thông tin CCDV */}
-              <div className="mb-4">
-                <h6 className="text-muted mb-3">Thông tin người cung cấp dịch vụ</h6>
-                <div className="d-flex align-items-center">
-                  <img
-                    src={session.ccdv.avatar || "/default-avatar.png"}
-                    alt={session.ccdv.fullName}
-                    className="rounded-circle me-3"
-                    style={{ width: "80px", height: "80px", objectFit: "cover" }}
-                  />
-                  <div>
-                    <h5 className="mb-1">{session.ccdv.fullName}</h5>
-                    <p className="text-muted mb-0">
-                      <i className="bi bi-telephone me-2"></i>
-                      {session.ccdv.phone || "Chưa có số điện thoại"}
-                    </p>
-                    <p className="text-muted mb-0">
-                      <i className="bi bi-envelope me-2"></i>
-                      {session.ccdv.email || "Chưa có email"}
-                    </p>
+              {session.ccdv && (
+                <div className="mb-4">
+                  <h6 className="text-muted mb-3">Thông tin người cung cấp dịch vụ</h6>
+                  <div className="d-flex align-items-center">
+                    <img
+                      src={session.ccdv.avatar || "/default-avatar.png"}
+                      alt={session.ccdv.fullName || "CCDV"}
+                      className="rounded-circle me-3"
+                      style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                    />
+                    <div>
+                      <h5 className="mb-1">{session.ccdv.fullName || "Chưa có tên"}</h5>
+                      <p className="text-muted mb-0">
+                        <i className="bi bi-telephone me-2"></i>
+                        {session.ccdv.phone || "Chưa có số điện thoại"}
+                      </p>
+                      <p className="text-muted mb-0">
+                        <i className="bi bi-envelope me-2"></i>
+                        {session.ccdv.email || "Chưa có email"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-
+              )}
+  
               <hr />
-
+  
               {/* Thông tin dịch vụ */}
-              <div className="mb-4">
-                <h6 className="text-muted mb-3">Thông tin dịch vụ</h6>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <div className="d-flex">
-                      <i className="bi bi-briefcase text-primary me-3 fs-5"></i>
-                      <div>
-                        <small className="text-muted d-block">Dịch vụ</small>
-                        <strong>{session.serviceType.name}</strong>
+              {session.serviceType && (
+                <div className="mb-4">
+                  <h6 className="text-muted mb-3">Thông tin dịch vụ</h6>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <div className="d-flex">
+                        <i className="bi bi-briefcase text-primary me-3 fs-5"></i>
+                        <div>
+                          <small className="text-muted d-block">Dịch vụ</small>
+                          <strong>{session.serviceType.name || "N/A"}</strong>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <div className="d-flex">
-                      <i className="bi bi-cash-stack text-success me-3 fs-5"></i>
-                      <div>
-                        <small className="text-muted d-block">Đơn giá</small>
-                        <strong>{formatGiaTien(session.serviceType.pricePerHour)}/giờ</strong>
+                    <div className="col-md-6 mb-3">
+                      <div className="d-flex">
+                        <i className="bi bi-cash-stack text-success me-3 fs-5"></i>
+                        <div>
+                          <small className="text-muted d-block">Đơn giá</small>
+                          <strong>
+                            {formatGiaTien(session.serviceType.pricePerHour || 0)}/giờ
+                          </strong>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
+              )}
+  
               <hr />
-
+  
               {/* Thông tin thời gian */}
               <div className="mb-4">
                 <h6 className="text-muted mb-3">Thông tin thời gian</h6>
@@ -292,20 +298,20 @@ export default function ChiTietDonThue() {
                   </div>
                 </div>
               </div>
-
+  
               <hr />
-
+  
               {/* Địa chỉ */}
               <div className="mb-3">
                 <h6 className="text-muted mb-3">Địa chỉ</h6>
                 <div className="d-flex">
                   <i className="bi bi-geo-alt text-danger me-3 fs-5"></i>
                   <div>
-                    <strong>{session.address}</strong>
+                    <strong>{session.address || "Chưa có địa chỉ"}</strong>
                   </div>
                 </div>
               </div>
-
+  
               {/* Báo cáo nếu có */}
               {session.userReport && (
                 <>
@@ -322,14 +328,14 @@ export default function ChiTietDonThue() {
             </div>
           </div>
         </div>
-
+  
         {/* Cột phải - Tổng tiền và hành động */}
         <div className="col-md-4">
           <div className="card border-0 shadow-sm sticky-top" style={{ top: "20px" }}>
             <div className="card-body">
               <h6 className="text-muted mb-3">Tổng thanh toán</h6>
               <h2 className="text-danger mb-4">{formatGiaTien(session.totalPrice)}</h2>
-
+  
               <div className="d-grid gap-2">
                 {coTheHoanThanh(session.status) && (
                   <button className="btn btn-success btn-lg" onClick={handleComplete}>
@@ -337,14 +343,14 @@ export default function ChiTietDonThue() {
                     Hoàn thành
                   </button>
                 )}
-
+  
                 {coTheHuy(session.status) && (
                   <button className="btn btn-danger btn-lg" onClick={handleCancel}>
                     <i className="bi bi-x-circle me-2"></i>
                     Hủy đơn
                   </button>
                 )}
-
+  
                 {session.status === "COMPLETED" && !session.userReport && (
                   <Link
                     to={`/user/don-thue/bao-cao/${session.id}`}
@@ -354,13 +360,13 @@ export default function ChiTietDonThue() {
                     Thêm báo cáo
                   </Link>
                 )}
-
+  
                 <Link to="/user/don-thue" className="btn btn-outline-secondary">
                   <i className="bi bi-arrow-left me-2"></i>
                   Quay lại danh sách
                 </Link>
               </div>
-
+  
               {/* Timeline */}
               <hr className="my-4" />
               <h6 className="text-muted mb-3">Lịch sử</h6>
@@ -386,4 +392,5 @@ export default function ChiTietDonThue() {
       </div>
     </div>
   );
+  
 }
