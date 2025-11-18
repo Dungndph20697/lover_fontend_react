@@ -3,6 +3,7 @@ import axios from "axios";
 const apiURL = "http://localhost:8080/api";
 
 const apiUser = `${apiURL}/users`;
+const apiCcdv = `${apiURL}/ccdv`;
 
 const apiUserLogin = `${apiURL}/users/login`;
 
@@ -20,9 +21,16 @@ const apiUpdateCcdvProfile = `${apiURL}/ccdv-profiles/update`;
 
 const apiServices = `${apiURL}/ccdv/service-types`;
 
-const apiServicesTypeDetail = `${apiURL}/ccdv/ccdv-service-details`;
+const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
+
 
 const apiHomeUserLovers = `${apiURL}/home`;
+
+
+//top 3 user đã thuê
+const apiTopRequent = `${apiCcdv}/top-frequent/`;
+const apiTopRecent = `${apiCcdv}/top-recent/`;
+const apiGetFullInfoUser = `${apiCcdv}/getfullinfouser/`;
 
 
 // các endpoint check unique
@@ -31,25 +39,51 @@ const apiCheckEmail = `${apiUser}/check-email`;
 const apiCheckPhone = `${apiUser}/check-phone`;
 const apiCheckCccd = `${apiUser}/check-cccd`;
 
+const apitLoadCcdvDetail = `${apiUser}/profiles/`;
+const apitLoadDichVuByIdCcdv = `${apiUser}/service/`;
 
+// THÊM MỚI: API cho User Hire Sessions
+const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
+const apiUserHireStatistics = (userId) =>
+  `${apiUserHireSessions}/statistics/${userId}`;
+const apiUserHireComplete = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/complete`;
+const apiUserHireCancel = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireReport = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/report`;
+const apiUserHireDetail = (sessionId) => `${apiUserHireSessions}/${sessionId}`;
+const apiUserHireUpdateStatus = (sessionId) =>
+  `${apiUserHireSessions}/${sessionId}/status`;
 
 export {
-    apiURL,
-    apiUser,
-    apiUserLogin,
-    apiFindUserByToken,
-    apiCcdvProfiles,
-    apiServices,
-    apiServicesTypeDetail,
-    apiHireSession,
-    apiCheckUsername,
-    apiCheckEmail,
-    apiCheckPhone,
 
-    apiCheckCccd,
-    apiCcdvProfileByUserId,
-    apiUpdateCcdvProfile,
-
-    apiRevnue,
+  apiURL,
+  apiUser,
+  apiUserLogin,
+  apiFindUserByToken,
+  apiCcdvProfiles,
+  apiServices,
+  apiServicesTypeDetail,
+  apiHireSession,
+  apiCheckUsername,
+  apiCheckEmail,
+  apiCheckPhone,
+  apiCheckCccd,
+  apiCcdvProfileByUserId,
+  apiUpdateCcdvProfile,
+  apiTopRequent,
+  apiTopRecent,
+  apiUserHireSessions,
+  apiUserHireStatistics,
+  apiUserHireComplete,
+  apiUserHireCancel,
+  apiUserHireReport,
+  apiUserHireDetail,
+  apiUserHireUpdateStatus,
+  apiRevnue,
+  apiGetFullInfoUser,
+  apitLoadCcdvDetail,
+  apitLoadDichVuByIdCcdv,
+apiRevnue,
     apiHomeUserLovers
 };

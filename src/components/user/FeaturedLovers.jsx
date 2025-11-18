@@ -50,7 +50,7 @@ export default function FeaturedLovers({ lovers }) {
                   {lover.description || "Đang cập nhật"} 🌆
                 </p>
                 <Link
-                  to={`/lover/${lover.id}`}
+                  to={`/profile/${lover.id}`}
                   className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold"
                 >
                   Xem hồ sơ
