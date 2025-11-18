@@ -4,11 +4,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Swal from "sweetalert2";
 import { findUserByToken } from "../../../service/user/login.js";
+import { getBalance } from "../../../service/user/wallet.js";
+import TopupQRModal from "../../user/TopupQRModal.jsx";
 
 export default function Header() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [user, setUser] = useState(null);
+  const [topupAmount, setTopupAmount] = useState("");
+  const [balance, setBalance] = useState(0);
+
+
 
   // Lấy thông tin người dùng khi có token
   useEffect(() => {
@@ -17,6 +23,13 @@ export default function Header() {
         try {
           const res = await findUserByToken(token);
           setUser(res);
+
+          // lưu thông tin uptoCode 
+          localStorage.setItem("userData", JSON.stringify(res));
+
+          // Lấy số dư ví
+          const walletBalance = await getBalance(token);
+          setBalance(walletBalance ?? 0);
         } catch (error) {
           localStorage.removeItem("token");
           setUser(null);
@@ -90,7 +103,8 @@ export default function Header() {
                 aria-expanded="false"
               >
                 {/* {user.username || "Người dùng"} */}
-                {displayName}
+                {displayName} — 💰 {balance.toLocaleString()}đ
+
               </button>
               <ul
                 className="dropdown-menu dropdown-menu-end"
@@ -105,6 +119,15 @@ export default function Header() {
                       </Link>
                     </li>
                   )}
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#qrTopupModal"
+                  >
+                    💳 Nạp tiền
+                  </button>
                 </li>
 
                 {/* Chỉ user thường mới thấy mục "Đơn đã thuê" */}
@@ -134,6 +157,8 @@ export default function Header() {
           )}
         </ul>
       </div>
+      {/* Modal QR */}
+      <TopupQRModal topupAmount={topupAmount} setTopupAmount={setTopupAmount} />
     </header>
   );
 }

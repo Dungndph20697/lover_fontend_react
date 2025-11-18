@@ -30,6 +30,11 @@ const apiGetFullInfoUser = `${apiCcdv}/getfullinfouser/`;
 const apiToggleStatus = `${apiURL}/ccdv-profiles/toggle-status`;
 
 
+// lấy số dư ví
+const apiWalletBalance = `${apiURL}/wallet/balance`;
+
+
+
 
 // các endpoint check unique
 const apiCheckUsername = `${apiUser}/exists`;
@@ -39,6 +44,16 @@ const apiCheckCccd = `${apiUser}/check-cccd`;
 
 const apitLoadCcdvDetail = `${apiUser}/profiles/`;
 const apitLoadDichVuByIdCcdv = `${apiUser}/service/`;
+//  WITHDRAW API (api rut tien)
+const apiWithdrawRequest = `${apiURL}/withdraw/request`;
+const apiWithdrawVerifyOtp = `${apiURL}/withdraw/verify-otp`;
+const apiWithdrawHistory = `${apiURL}/withdraw/history`;
+
+// ADMIN WITHDRAW
+const apiAdminWithdrawList = `${apiURL}/admin/withdraw/list`;
+const apiAdminApproveWithdraw = (id) => `${apiURL}/admin/withdraw/approve/${id}`;
+const apiAdminRejectWithdraw = (id) => `${apiURL}/admin/withdraw/reject/${id}`;
+
 
 // THÊM MỚI: API cho User Hire Sessions
 const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
@@ -82,4 +97,11 @@ export {
     apitLoadCcdvDetail,
     apitLoadDichVuByIdCcdv,
     apiToggleStatus,
+    apiWalletBalance,
+    apiWithdrawRequest,
+    apiWithdrawVerifyOtp,
+    apiWithdrawHistory,
+    apiAdminWithdrawList,
+    apiAdminApproveWithdraw,
+    apiAdminRejectWithdraw,
 };
