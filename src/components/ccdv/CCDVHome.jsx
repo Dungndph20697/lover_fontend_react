@@ -5,12 +5,21 @@ import UserInfo from "./UserInfo";
 import Services from "./Services";
 import QuanLyDon from "./QuanLyDon";
 import Footer from "./layout/Footer";
+
+import CcdvTopCustomers from "./lichsudathue/CcdvTopCustomers";
+
 import PersonalInfoForm from "./PersonalProfile";
 import RevenueForm from "./TongDoanhThu";
 
+import CcdvChatPage from "./chat/CcdvChatPage";
+
+
+import WithdrawRequest from "../wallet/WithdrawRequest";
+import WithdrawHistory from "../wallet/WithdrawHistory";
+
+
 export default function CCDVDashboard() {
   const [selected, setSelected] = useState("userinfo");
-
 
   const renderContent = () => {
     switch (selected) {
@@ -22,9 +31,19 @@ export default function CCDVDashboard() {
         return <QuanLyDon />;
       case "personalInfo":
         return <PersonalInfoForm />;
+      case "withdrawRequest":
+        return <WithdrawRequest />;
+      case "withdrawHistory":
+        return <WithdrawHistory />;
+
+
+      case "lichsuthue":
+        return <CcdvTopCustomers />;
+
       case "revenueForm":
         return <RevenueForm />;
-
+      case "chat":
+        return <CcdvChatPage />;
       default:
         return <UserInfo />;
     }

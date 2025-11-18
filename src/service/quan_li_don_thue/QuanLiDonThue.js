@@ -48,12 +48,16 @@ const completeSession = async (sessionId, ccdvId) => {
 // Báo cáo đơn thuê
 const reportSession = async (sessionId, ccdvId, reportText) => {
     const res = await axios.put(
-        `${apiHireSession}/${sessionId}/report?ccdvId=${ccdvId}`,
-        { report: reportText },
+        `${apiHireSession}/${sessionId}/report`,
+        {
+            ccdvId: ccdvId,
+            report: reportText
+        },
         getAuthHeader()
     );
     return res.data;
 };
+
 
 // Lấy chi tiết đơn thuê
 const getSessionDetail = async (sessionId) => {
@@ -64,23 +68,31 @@ const getSessionDetail = async (sessionId) => {
 // Cập nhật phản hồi về người thuê
 const updateFeedback = async (sessionId, ccdvId, feedback) => {
     const res = await axios.put(
-        `${apiHireSession}/${sessionId}/feedback?ccdvId=${ccdvId}`,
-        { feedback: feedback },
+        `${apiHireSession}/${sessionId}/feedback`,
+        {
+            ccdvId: ccdvId,
+            feedback: feedback
+        },
         getAuthHeader()
     );
     return res.data;
 };
+
 
 // PUBLIC SERVICE FUNCTIONS (Export)
 
 // Lấy danh sách đơn thuê
 export const fetchHireSessions = async (ccdvId) => {
     try {
-        const data = await getSessions(ccdvId);
-        return data.success ? data.data : [];
-    } catch (error) {
-        console.error("Lỗi khi tải danh sách đơn thuê:", error);
-        throw error;
+        const res = await axios.get(`${apiHireSession}/${ccdvId}`, getAuthHeader());
+        console.log("API hire-sessions response:", res.data);
+        // Nếu backend trả về { success: true, data: [...] } thì dùng:
+        return res.data.success ? res.data.data : [];
+        // Nếu backend trả về trực tiếp mảng thì dùng:
+        // return res.data || [];
+    } catch (err) {
+        console.error(err);
+        return [];
     }
 };
 
