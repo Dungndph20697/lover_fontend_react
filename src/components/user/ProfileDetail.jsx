@@ -10,6 +10,7 @@ import {
   loadCcdvDetail,
   loadDichVuByCcdvId,
 } from "../../service/user/LoadCcdvDetail";
+import { Link } from "react-router-dom";
 
 export default function ProfileDetail() {
   const { id } = useParams();
@@ -180,6 +181,12 @@ export default function ProfileDetail() {
           >
             Thuê ngay ❤️
           </button>
+          <Link
+            to={`/user/chat?to=${id}`}
+            className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
+          >
+            Chat ngay
+          </Link>
         </div>
       </div>
       <HireModal
