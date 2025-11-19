@@ -151,7 +151,7 @@ export default function CcdvTopCustomers() {
                           item.avatar
                             ? item.avatar
                             : "https://ui-avatars.com/api/?name=" +
-                              formatName(item.user)
+                            formatName(item.user)
                         }
                         alt="avatar"
                         style={{
@@ -184,12 +184,12 @@ export default function CcdvTopCustomers() {
 
                     {/* Actions + Count */}
                     <div className="text-end">
-                      <button
+                      {/* <button
                         className="btn btn-sm btn-outline-pink me-2"
                         onClick={() => handleView(item.user.id)}
                       >
                         Xem
-                      </button>
+                      </button> */}
 
                       <div
                         className="fw-bold"
@@ -263,7 +263,7 @@ export default function CcdvTopCustomers() {
                           item.avatar
                             ? item.avatar
                             : "https://ui-avatars.com/api/?name=" +
-                              formatName(item.user)
+                            formatName(item.user)
                         }
                         alt="avatar"
                         style={{
@@ -295,12 +295,12 @@ export default function CcdvTopCustomers() {
 
                     {/* Time + View */}
                     <div className="text-end">
-                      <button
+                      {/* <button
                         className="btn btn-sm btn-outline-success me-2"
                         onClick={() => handleView(item.user.id)}
                       >
                         Xem
-                      </button>
+                      </button> */}
 
                       <div className="fw-semibold" style={{ color: "#2b8a3e" }}>
                         {new Date(item.lastHireTime).toLocaleTimeString(

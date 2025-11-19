@@ -124,7 +124,20 @@ export default function HireModal({ show, onClose, ccdvId }) {
                   },
                 })
                 .then((res) => {
-                  Swal.fire("Thành công!", res.data, "success");
+                  Swal.fire({
+                    icon: "success",
+                    title: "Thuê thành công!",
+                    html: `
+                      <div style="font-size: 16px; margin-top: 10px;">
+                          <b>Dịch vụ đã được xác nhận.</b><br/>
+                          Tổng tiền thanh toán: 
+                          <span style="color: red; font-weight: bold;">
+                              ${formatMoney(totalPrice)} ₫
+                          </span>
+                      </div>
+                  `,
+                    confirmButtonText: "OK"
+                  });
                   onClose();
                 })
                 .catch((err) => {
