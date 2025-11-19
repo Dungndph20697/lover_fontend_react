@@ -7,12 +7,21 @@ import WithdrawStatus from "./WithdrawStatus";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { getBalance } from "../../service/user/wallet";
 
+// Fake danh sách ngân hàng — có thể replace bằng API từ backend
+const bankList = [
+    { code: "VCB", name: "Vietcombank" },
+    { code: "TCB", name: "Techcombank" },
+    { code: "ACB", name: "ACB" },
+    { code: "MB", name: "MB Bank" },
+    { code: "VTB", name: "VietinBank" },
+];
+
 const withdrawSchema = Yup.object().shape({
     amount: Yup.number()
         .typeError("Số tiền phải là số")
         .positive("Số tiền phải lớn hơn 0")
         .required("Vui lòng nhập số tiền"),
-    bankName: Yup.string().trim().required("Vui lòng nhập tên ngân hàng"),
+    bankName: Yup.string().required("Vui lòng chọn ngân hàng"),
     bankAccountNumber: Yup.string()
         .trim()
         .matches(/^[0-9]{6,20}$/, "Số tài khoản không hợp lệ")
@@ -37,6 +46,10 @@ export default function WithdrawRequest() {
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
 
+    // Tính phí rút tiền 5%
+    const fee = amount ? Math.floor(amount * 0.05) : 0;
+    const received = amount ? amount - fee : 0;
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) return;
@@ -48,8 +61,9 @@ export default function WithdrawRequest() {
                 setBalance(amount);
                 setBalanceError("");
             } catch (err) {
-                console.error("Failed to load balance", err);
-                setBalanceError(err.response?.data?.message || "Không thể tải số dư ví");
+                setBalanceError(
+                    err.response?.data?.message || "Không thể tải số dư ví"
+                );
             } finally {
                 setBalanceLoading(false);
             }
@@ -58,7 +72,6 @@ export default function WithdrawRequest() {
         fetchBalance();
     }, []);
 
-    // gửi yêu cầu rút tiền
     const handleRequest = async () => {
         const numericAmount = Number(amount);
 
@@ -72,6 +85,7 @@ export default function WithdrawRequest() {
                 },
                 { abortEarly: false }
             );
+
             setErrors({});
         } catch (validationError) {
             const nextErrors = {};
@@ -85,7 +99,7 @@ export default function WithdrawRequest() {
         if (balance !== null && numericAmount > balance) {
             return Swal.fire(
                 "Lỗi",
-                "Số tiền vượt quá số dư khả dụng. Vui lòng nhập lại.",
+                "Số tiền vượt quá số dư khả dụng.",
                 "warning"
             );
         }
@@ -104,117 +118,130 @@ export default function WithdrawRequest() {
             localStorage.setItem("withdrawRequestId", res.data.requestId);
             setCurrentRequestId(res.data.requestId);
             setShowOtpModal(true);
-
         } catch (err) {
             Swal.fire("Lỗi", err.response?.data?.message || "Có lỗi xảy ra", "error");
         } finally {
             setSubmitting(false);
         }
     };
+
     const handleOtpVerified = () => {
         setShowOtpModal(false);
         localStorage.removeItem("withdrawRequestId");
-        setStatusRefreshKey(prev => prev + 1);
+        setStatusRefreshKey((prev) => prev + 1);
     };
 
     return (
         <>
             <div className="card p-4 shadow-sm">
-                <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div className="d-flex justify-content-between align-items-start">
                     <div>
                         <h4>💸 Rút tiền</h4>
-                        <small className="text-muted">Nhập thông tin ngân hàng để nhận tiền.</small>
+                        <small className="text-muted">
+                            Nhập thông tin ngân hàng để nhận tiền nhanh chóng.
+                        </small>
                     </div>
+
                     <div className="text-end">
                         <div className="text-uppercase text-muted small">Số dư khả dụng</div>
                         {balanceLoading ? (
-                            <div className="spinner-border spinner-border-sm text-danger" role="status" />
+                            <div className="spinner-border spinner-border-sm text-danger" />
                         ) : balanceError ? (
                             <div className="text-danger small">{balanceError}</div>
                         ) : (
                             <div className="fw-bold text-danger">
-                                {balance !== null ? balance.toLocaleString("vi-VN") : "--"}đ
+                                {balance?.toLocaleString("vi-VN")}đ
                             </div>
                         )}
                     </div>
                 </div>
 
+                {/* Số tiền */}
                 <input
-                    type="number"
+                    type="text"
                     className={`form-control mt-3 ${errors.amount ? "is-invalid" : ""}`}
-                    placeholder="Nhập số tiền muốn rút..."
-                    value={amount}
+                    placeholder="Nhập số tiền muốn rút"
+                    value={amount.toLocaleString("vi-VN")}
                     onChange={(e) => {
-                        setAmount(e.target.value);
-                        if (errors.amount) setErrors((prev) => ({ ...prev, amount: "" }));
+                        const raw = e.target.value.replace(/\D/g, "");
+                        setAmount(raw);
                     }}
                 />
                 {errors.amount && <div className="invalid-feedback d-block">{errors.amount}</div>}
 
-                <input
-                    type="text"
-                    className="form-control mt-3"
-                    placeholder="Tên ngân hàng (VD: Vietcombank)"
+                {/* Hiển thị phí + nhận thực tế */}
+                {amount && (
+                    <div className="mt-2 small text-muted">
+                        Phí rút tiền (5%): {fee.toLocaleString("vi-VN")}đ
+                        <br />
+                        <span className="fw-bold text-success">
+                            Nhận thực tế: {received.toLocaleString("vi-VN")}đ
+                        </span>
+                    </div>
+                )}
+
+                {/* Chọn ngân hàng */}
+                <select
+                    className={`form-select mt-3 ${errors.bankName ? "is-invalid" : ""}`}
                     value={bankName}
-                    onChange={(e) => {
-                        setBankName(e.target.value);
-                        if (errors.bankName) setErrors((prev) => ({ ...prev, bankName: "" }));
-                    }}
-                    style={errors.bankName ? { borderColor: "#dc3545" } : undefined}
-                />
+                    onChange={(e) => setBankName(e.target.value)}
+                >
+                    <option value="">-- Chọn ngân hàng --</option>
+                    {bankList.map((b) => (
+                        <option key={b.code} value={b.name}>
+                            {b.name}
+                        </option>
+                    ))}
+                </select>
                 {errors.bankName && (
                     <div className="invalid-feedback d-block">{errors.bankName}</div>
                 )}
 
+                {/* Số tài khoản */}
                 <input
                     type="text"
-                    className="form-control mt-3"
+                    className={`form-control mt-3 ${errors.bankAccountNumber ? "is-invalid" : ""}`}
                     placeholder="Số tài khoản"
                     value={bankAccountNumber}
                     onChange={(e) => {
                         setBankAccountNumber(e.target.value);
-                        if (errors.bankAccountNumber)
-                            setErrors((prev) => ({ ...prev, bankAccountNumber: "" }));
                     }}
-                    style={errors.bankAccountNumber ? { borderColor: "#dc3545" } : undefined}
                 />
                 {errors.bankAccountNumber && (
                     <div className="invalid-feedback d-block">{errors.bankAccountNumber}</div>
                 )}
 
+                {/* Chủ tài khoản */}
                 <input
                     type="text"
-                    className="form-control mt-3"
+                    className={`form-control mt-3 ${errors.bankAccountName ? "is-invalid" : ""}`}
                     placeholder="Tên chủ tài khoản"
                     value={bankAccountName}
                     onChange={(e) => {
                         setBankAccountName(e.target.value);
-                        if (errors.bankAccountName)
-                            setErrors((prev) => ({ ...prev, bankAccountName: "" }));
                     }}
-                    style={errors.bankAccountName ? { borderColor: "#dc3545" } : undefined}
                 />
                 {errors.bankAccountName && (
                     <div className="invalid-feedback d-block">{errors.bankAccountName}</div>
                 )}
 
+                {/* Nút gửi */}
                 <button
                     className="btn btn-danger mt-3 d-flex align-items-center justify-content-center gap-2"
                     onClick={handleRequest}
                     disabled={submitting || showOtpModal}
                 >
                     {submitting && (
-                        <span className="spinner-border spinner-border-sm" role="status" />
+                        <span className="spinner-border spinner-border-sm" />
                     )}
                     Gửi yêu cầu rút tiền
                 </button>
-                {showOtpModal && (
-                    <div className="text-warning small mt-2">
-                        Vui lòng xác nhận OTP trước khi gửi yêu cầu mới.
-                    </div>
-                )}
             </div>
+
+            {/* Lịch sử */}
             <WithdrawStatus key={statusRefreshKey} />
+
+            {/* OTP */}
             <WithdrawOtp
                 requestId={currentRequestId}
                 show={showOtpModal}
