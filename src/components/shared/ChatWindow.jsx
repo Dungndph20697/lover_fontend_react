@@ -77,14 +77,12 @@ export default function ChatWindow({
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`d-flex mb-2 ${
-              m.senderId === me.id ? "justify-content-end" : ""
-            }`}
+            className={`d-flex mb-2 ${m.senderId === me.id ? "justify-content-end" : ""
+              }`}
           >
             <div
-              className={`p-2 rounded ${
-                m.senderId === me.id ? "bg-primary text-white" : "bg-light"
-              }`}
+              className={`p-2 rounded ${m.senderId === me.id ? "bg-primary text-white" : "bg-light"
+                }`}
             >
               {m.content}
             </div>
@@ -99,6 +97,12 @@ export default function ChatWindow({
           placeholder="Nhập tin nhắn..."
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault(); // tránh xuống dòng
+              send();
+            }
+          }}
         />
         <button className="btn btn-primary ms-2" onClick={send}>
           Gửi
