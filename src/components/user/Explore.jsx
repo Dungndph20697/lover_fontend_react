@@ -26,6 +26,13 @@ export default function Explore() {
                 khác thuê. Chúng tôi giúp bạn dễ dàng tìm kiếm, giao tiếp và
                 trải nghiệm dịch vụ an toàn.
               </p>
+              <Link
+                  to={`/provider/${provider.id}`}
+                  className="btn btn-danger w-100 fw-bold"
+                  style={{ borderRadius: "10px" }}
+                >
+                  Xem chi tiết
+                </Link>
             </div>
           </div>
         </section>

@@ -1,11 +1,11 @@
 import React from "react";
 
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
-
 import PersonalProfile from "./components/ccdv/PersonalProfile";
 
 import CCDVHome from "./components/ccdv/CCDVHome";
@@ -13,6 +13,8 @@ import { findUserByToken } from "./service/user/login";
 import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import ProviderDetail from "./components/user/ProviderDetail";
+
 import Explore from "./components/user/Explore";
 
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
@@ -82,6 +84,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/explore" element={<Explore />} />
 
+        <Route path="/lover/:id" element={<ProviderDetail />} />
         <Route path="/ccdv-profile" element={<PersonalProfile />} />
         <Route path="/user-info" element={<UserInfo />} />
         <Route path="/ccdv-profile-edit" element={<PersonalProfileEdit />} />

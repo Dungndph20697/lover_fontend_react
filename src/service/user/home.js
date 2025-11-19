@@ -1,8 +1,7 @@
 import axios from "axios";
 import { apiHomePage } from "../../config/api.js";
 import axiosClient from "../../config/axiosClient";
-
-
+import { apiUser } from "../../config/api";
 
 
 const findUser = async () => {
@@ -22,4 +21,9 @@ export const getLatestProviders = async () => {
   const res = await axiosClient.get(apiHomePage);
   return res.data;
 };
+export const getProviderDetail = async (id) => {
+  const res = await axiosClient.get(`${apiUser}/providers/${id}`);
+  return res.data;
+};
+
 export { findUser };

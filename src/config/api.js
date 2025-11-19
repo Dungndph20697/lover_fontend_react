@@ -29,6 +29,8 @@ const apiCheckCccd = `${apiUser}/check-cccd`;
 
 //hien thi trang chu
 const apiHomePage = `${apiUser}/providers/latest`;
+const apiProviderDetail = (id) => `${apiUser}/providers/${id}`;
+
 
 export {
     apiURL,
@@ -46,5 +48,6 @@ export {
     apiCheckCccd,
     apiCcdvProfileByUserId,
     apiUpdateCcdvProfile,
-apiHomePage,
+    apiHomePage,
+    apiProviderDetail,
 };
