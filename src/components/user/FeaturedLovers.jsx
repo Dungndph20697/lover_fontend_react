@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function FeaturedLovers({ lovers }) {
+export default function FeaturedLovers({ lovers, currentUser }) {
   return (
     <section className="container my-5">
-      <h2 className="text-center fw-bold mb-5 text-danger">💕 Top 12 người được thuê nhiều nhất</h2>
+      <h2 className="text-center fw-bold mb-5 text-danger">
+        💕 Top 12 người được thuê nhiều nhất
+      </h2>
 
       <div className="row g-4 justify-content-center">
         {lovers.map((lover) => (
@@ -55,12 +57,14 @@ export default function FeaturedLovers({ lovers }) {
                 >
                   Xem hồ sơ
                 </Link>
-                <Link
-                  to={`/user/chat?to=${lover.id}`}
-                  className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
-                >
-                  Chat ngay
-                </Link>
+                {(!currentUser || currentUser.id !== lover.userId) && (
+                  <Link
+                    to={`/user/chat?to=${lover.userId}`}
+                    className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
+                  >
+                    Chat ngay
+                  </Link>
+                )}
               </div>
             </div>
           </div>

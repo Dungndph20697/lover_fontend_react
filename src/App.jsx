@@ -95,16 +95,13 @@ function App() {
         <Route
           path="/user/chat"
           element={
-            <ProtectedRoute allowedRoles={["USER", "CUSTOMER"]}>
+            <ProtectedRoute allowedRoles={["USER", "SERVICE_PROVIDER"]}>
               <UserChatPage />
             </ProtectedRoute>
           }
         />
 
-
         <Route path="/admin" element={<AdminDashboard />} />
-
-
 
         {/* User đơn đã thuê */}
         <Route

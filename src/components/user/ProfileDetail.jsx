@@ -11,12 +11,30 @@ import {
   loadDichVuByCcdvId,
 } from "../../service/user/LoadCcdvDetail";
 import { Link } from "react-router-dom";
+import { findUserByToken } from "../../service/user/login";
 
 export default function ProfileDetail() {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
   const [services, setServices] = useState([]);
   const [showHireModal, setShowHireModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const data = await findUserByToken(token);
+        setCurrentUser(data);
+      } catch (e) {
+        console.log("Không lấy được user đăng nhập", e);
+      }
+    };
+
+    loadCurrentUser();
+  }, []);
 
   // Load profile
   useEffect(() => {
@@ -174,20 +192,24 @@ export default function ProfileDetail() {
         </div>
 
         {/* Nút thuê */}
-        <div className="text-center mt-5">
-          <button
-            className="btn btn-danger px-4 py-2"
-            onClick={() => setShowHireModal(true)}
-          >
-            Thuê ngay ❤️
-          </button>
-          <Link
-            to={`/user/chat?to=${id}`}
-            className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
-          >
-            Chat ngay
-          </Link>
-        </div>
+        {/* Nút thuê + chat */}
+        {(!currentUser || currentUser.id !== profile.user.id) && (
+          <div className="text-center mt-5">
+            <button
+              className="btn btn-danger px-4 py-2"
+              onClick={() => setShowHireModal(true)}
+            >
+              Thuê ngay ❤️
+            </button>
+
+            <Link
+              to={`/user/chat?to=${id}`}
+              className="btn btn-danger px-4 py-2 rounded-pill fw-semibold ms-3"
+            >
+              Chat ngay
+            </Link>
+          </div>
+        )}
       </div>
       <HireModal
         show={showHireModal}

@@ -2,7 +2,7 @@ import React from "react";
 import { increaseView } from "../../service/top_lover_home/topCcdv";
 import { Link } from "react-router-dom";
 
-export default function TopLovers({ lovers }) {
+export default function TopLovers({ lovers, currentUser }) {
   const handleClick = async (userId) => {
     if (!userId) return;
     try {
@@ -68,12 +68,14 @@ export default function TopLovers({ lovers }) {
                 >
                   Xem hồ sơ
                 </Link>
-                <Link
-                  to={`/user/chat?to=${lover.userId}`}
-                  className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
-                >
-                  Chat ngay
-                </Link>
+                {(!currentUser || currentUser.id !== lover.userId) && (
+                  <Link
+                    to={`/user/chat?to=${lover.userId}`}
+                    className="btn btn-danger px-4 py-2 rounded-pill fw-semibold ms-2"
+                  >
+                    Chat ngay
+                  </Link>
+                )}
               </div>
             </div>
           </div>

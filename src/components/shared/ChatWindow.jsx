@@ -45,7 +45,7 @@ export default function ChatWindow({
       receiverId: target.userId,
       content: text,
     };
-
+    console.log(message);
     sendMsg(message);
     // setMessages((prev) => [...prev, message]);
     setText("");
@@ -77,12 +77,14 @@ export default function ChatWindow({
         {messages.map((m, i) => (
           <div
             key={i}
-            className={`d-flex mb-2 ${m.senderId === me.id ? "justify-content-end" : ""
-              }`}
+            className={`d-flex mb-2 ${
+              m.senderId === me.id ? "justify-content-end" : ""
+            }`}
           >
             <div
-              className={`p-2 rounded ${m.senderId === me.id ? "bg-primary text-white" : "bg-light"
-                }`}
+              className={`p-2 rounded ${
+                m.senderId === me.id ? "bg-primary text-white" : "bg-light"
+              }`}
             >
               {m.content}
             </div>

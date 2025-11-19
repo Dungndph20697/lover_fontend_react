@@ -87,47 +87,49 @@ export default function HireModal({ show, onClose, ccdvId }) {
   if (!show) return null;
 
   return (
-    <div className="modal show fade d-block" tabIndex="-1">
-      <div className="modal-dialog modal-lg">
-        <div className="modal-content">
-          <Formik
-            initialValues={{
-              startTime: "",
-              endTime: "",
-              address: "",
-              message: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values) => {
-              if (selectedServices.length < 1) {
-                Swal.fire(
-                  "Thiếu thông tin",
-                  "Vui lòng chọn dịch vụ",
-                  "warning"
-                );
-                return;
-              }
+    <>
+      <div className="custom-backdrop"></div>
+      <div className="modal show fade d-block" tabIndex="-1">
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <Formik
+              initialValues={{
+                startTime: "",
+                endTime: "",
+                address: "",
+                message: "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={(values) => {
+                if (selectedServices.length < 1) {
+                  Swal.fire(
+                    "Thiếu thông tin",
+                    "Vui lòng chọn dịch vụ",
+                    "warning"
+                  );
+                  return;
+                }
 
-              const data = {
-                ccdvId: ccdvId,
-                serviceDetailIds: selectedServices,
-                startTime: values.startTime + ":00",
-                endTime: values.endTime + ":00",
-                address: values.address,
-                message: values.message,
-              };
+                const data = {
+                  ccdvId: ccdvId,
+                  serviceDetailIds: selectedServices,
+                  startTime: values.startTime + ":00",
+                  endTime: values.endTime + ":00",
+                  address: values.address,
+                  message: values.message,
+                };
 
-              axios
-                .post("http://localhost:8080/api/hire/create", data, {
-                  headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-                })
-                .then((res) => {
-                  Swal.fire({
-                    icon: "success",
-                    title: "Thuê thành công!",
-                    html: `
+                axios
+                  .post("http://localhost:8080/api/hire/create", data, {
+                    headers: {
+                      Authorization: "Bearer " + localStorage.getItem("token"),
+                    },
+                  })
+                  .then((res) => {
+                    Swal.fire({
+                      icon: "success",
+                      title: "Thuê thành công!",
+                      html: `
                       <div style="font-size: 16px; margin-top: 10px;">
                           <b>Dịch vụ đã được xác nhận.</b><br/>
                           Tổng tiền thanh toán: 
@@ -136,144 +138,145 @@ export default function HireModal({ show, onClose, ccdvId }) {
                           </span>
                       </div>
                   `,
-                    confirmButtonText: "OK"
+                      confirmButtonText: "OK",
+                    });
+                    onClose();
+                  })
+                  .catch((err) => {
+                    Swal.fire(
+                      "Lỗi",
+                      err.response?.data || "Thuê thất bại",
+                      "error"
+                    );
                   });
-                  onClose();
-                })
-                .catch((err) => {
-                  Swal.fire(
-                    "Lỗi",
-                    err.response?.data || "Thuê thất bại",
-                    "error"
-                  );
-                });
-            }}
-          >
-            {({ values, setFieldValue }) => (
-              <Form>
-                <div className="modal-header">
-                  <h5 className="modal-title">Thuê người CCDV</h5>
-                  <button className="btn-close" onClick={onClose}></button>
-                </div>
+              }}
+            >
+              {({ values, setFieldValue }) => (
+                <Form>
+                  <div className="modal-header">
+                    <h5 className="modal-title">Thuê người CCDV</h5>
+                    <button className="btn-close" onClick={onClose}></button>
+                  </div>
 
-                <div className="modal-body">
-                  {/* Dịch vụ */}
-                  <h5>Dịch vụ cung cấp</h5>
-                  <div className="row">
-                    {services.map((s) => (
-                      <div className="col-md-6 mb-2" key={s.id}>
-                        <label className="border rounded p-2 d-flex gap-2">
-                          <input
-                            type="checkbox"
-                            onChange={() =>
-                              toggleService(
-                                s.id,
-                                values.startTime,
-                                values.endTime
-                              )
-                            }
-                            checked={selectedServices.includes(s.id)}
-                          />
-                          <div>
-                            <strong>{s.serviceType.name}</strong>
-                            <div className="text-danger">
-                              {formatMoney(s.totalPrice)} ₫/giờ
+                  <div className="modal-body">
+                    {/* Dịch vụ */}
+                    <h5>Dịch vụ cung cấp</h5>
+                    <div className="row">
+                      {services.map((s) => (
+                        <div className="col-md-6 mb-2" key={s.id}>
+                          <label className="border rounded p-2 d-flex gap-2">
+                            <input
+                              type="checkbox"
+                              onChange={() =>
+                                toggleService(
+                                  s.id,
+                                  values.startTime,
+                                  values.endTime
+                                )
+                              }
+                              checked={selectedServices.includes(s.id)}
+                            />
+                            <div>
+                              <strong>{s.serviceType.name}</strong>
+                              <div className="text-danger">
+                                {formatMoney(s.totalPrice)} ₫/giờ
+                              </div>
                             </div>
-                          </div>
-                        </label>
-                      </div>
-                    ))}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Thời gian */}
+                    <div className="mt-3">
+                      <label>Thời gian bắt đầu:</label>
+                      <Field
+                        type="datetime-local"
+                        name="startTime"
+                        className="form-control"
+                        onChange={(e) => {
+                          setFieldValue("startTime", e.target.value);
+                          calculateTotal(e.target.value, values.endTime);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="startTime"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+
+                    <div className="mt-3">
+                      <label>Thời gian kết thúc:</label>
+                      <Field
+                        type="datetime-local"
+                        name="endTime"
+                        className="form-control"
+                        onChange={(e) => {
+                          setFieldValue("endTime", e.target.value);
+                          calculateTotal(values.startTime, e.target.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="endTime"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+
+                    {/* Địa chỉ */}
+                    <div className="mt-3">
+                      <label>Địa điểm gặp:</label>
+                      <Field
+                        type="text"
+                        name="address"
+                        className="form-control"
+                        placeholder="Nhập địa chỉ..."
+                      />
+                      <ErrorMessage
+                        name="address"
+                        component="div"
+                        className="text-danger"
+                      />
+                    </div>
+
+                    {/* Tin nhắn */}
+                    <div className="mt-3">
+                      <label>Tin nhắn gửi CCDV:</label>
+                      <Field
+                        as="textarea"
+                        rows="3"
+                        name="message"
+                        placeholder="Nhập tin nhắn..."
+                        className="form-control"
+                      />
+                    </div>
+
+                    {/* Tổng tiền */}
+                    <div className="mt-4 p-3 bg-light rounded border">
+                      <h5 className="m-0">
+                        Tổng tiền:{" "}
+                        <span className="text-danger fw-bold">
+                          {formatMoney(totalPrice)} ₫
+                        </span>
+                      </h5>
+                    </div>
                   </div>
 
-                  {/* Thời gian */}
-                  <div className="mt-3">
-                    <label>Thời gian bắt đầu:</label>
-                    <Field
-                      type="datetime-local"
-                      name="startTime"
-                      className="form-control"
-                      onChange={(e) => {
-                        setFieldValue("startTime", e.target.value);
-                        calculateTotal(e.target.value, values.endTime);
-                      }}
-                    />
-                    <ErrorMessage
-                      name="startTime"
-                      component="div"
-                      className="text-danger"
-                    />
+                  <div className="modal-footer">
+                    <button className="btn btn-secondary" onClick={onClose}>
+                      Đóng
+                    </button>
+                    <button type="submit" className="btn btn-danger">
+                      Xác nhận thuê ❤️
+                    </button>
                   </div>
-
-                  <div className="mt-3">
-                    <label>Thời gian kết thúc:</label>
-                    <Field
-                      type="datetime-local"
-                      name="endTime"
-                      className="form-control"
-                      onChange={(e) => {
-                        setFieldValue("endTime", e.target.value);
-                        calculateTotal(values.startTime, e.target.value);
-                      }}
-                    />
-                    <ErrorMessage
-                      name="endTime"
-                      component="div"
-                      className="text-danger"
-                    />
-                  </div>
-
-                  {/* Địa chỉ */}
-                  <div className="mt-3">
-                    <label>Địa điểm gặp:</label>
-                    <Field
-                      type="text"
-                      name="address"
-                      className="form-control"
-                      placeholder="Nhập địa chỉ..."
-                    />
-                    <ErrorMessage
-                      name="address"
-                      component="div"
-                      className="text-danger"
-                    />
-                  </div>
-
-                  {/* Tin nhắn */}
-                  <div className="mt-3">
-                    <label>Tin nhắn gửi CCDV:</label>
-                    <Field
-                      as="textarea"
-                      rows="3"
-                      name="message"
-                      placeholder="Nhập tin nhắn..."
-                      className="form-control"
-                    />
-                  </div>
-
-                  {/* Tổng tiền */}
-                  <div className="mt-4 p-3 bg-light rounded border">
-                    <h5 className="m-0">
-                      Tổng tiền:{" "}
-                      <span className="text-danger fw-bold">
-                        {formatMoney(totalPrice)} ₫
-                      </span>
-                    </h5>
-                  </div>
-                </div>
-
-                <div className="modal-footer">
-                  <button className="btn btn-secondary" onClick={onClose}>
-                    Đóng
-                  </button>
-                  <button type="submit" className="btn btn-danger">
-                    Xác nhận thuê ❤️
-                  </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
