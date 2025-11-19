@@ -25,7 +25,7 @@ const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
 const apiHomeUserLovers = `${apiURL}/home`;
 
-const apiTopViewedLovers = `${apiURL}/users`;
+const apiTopViewedLovers = `${apiURL}/toplover`;
 
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
