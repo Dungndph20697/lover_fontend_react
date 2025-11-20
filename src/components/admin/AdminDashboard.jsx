@@ -6,7 +6,7 @@ import AdminOverview from "./AdminOverview";
 import AdminUsers from "./AdminUsers";
 import AdminOrders from "./AdminOrders";
 import AdminReports from "./AdminReports";
-import AdminWithdraw from "./AdminWithdraw";
+import AdminWithdraw from "./duyet_rut_tien/AdminWithdraw";
 import AdminFooter from "./AdminFooter";
 
 const sectionMap = {
