@@ -74,7 +74,7 @@ export default function VipSuggestionList() {
                                                 key={idx}
                                                 className="badge bg-primary me-1 mb-1"
                                             >
-                                                {s}
+                                                {s.name} ({s.pricePerHour || "Đang cập nhật"}đ / giờ)
                                             </span>
                                         ))
                                     ) : (
@@ -83,10 +83,13 @@ export default function VipSuggestionList() {
                                 </p>
 
                                 {/* Giá */}
-                                <p className="fw-bold fs-5 text-danger mt-2">
-                                    {vip.pricePerHour
-                                        ? `${vip.pricePerHour}đ / giờ`
+                                {/* <p className="fw-bold fs-5 text-danger mt-2">
+                                    {vip.startingPricePerHour
+                                        ? `${vip.startingPricePerHour}đ / giờ`
                                         : "Giá đang cập nhật"}
+                                </p> */}
+                                <p className="fw-bold fs-6 text-danger mt-1">
+                                    Tổng giá dịch vụ: {vip.totalPrice || "Đang cập nhật"} đ
                                 </p>
 
                                 {/* Button */}
