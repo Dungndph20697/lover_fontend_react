@@ -82,6 +82,8 @@ const apiSearchUsersDetails = `${apiCcdv}`;
 
 const apiCities = `${apiCcdv}/cities`;
 
+const apiVipSuggestions = `${apiCcdv}`;
+
 export {
   apiRevnue,
   apiHomeUserLovers,
@@ -106,6 +108,7 @@ export {
   apiSearchUsers,
   apiSearchUsersDetails,
   apiCities,
+  apiVipSuggestions,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,

@@ -7,6 +7,7 @@ import FeaturedLovers from "./FeaturedLovers";
 import CallToAction from "./CallToAction";
 import Footer from "./layout/Footer";
 import TopLovers from "./TopLovers";
+import VipSuggestionList from "../user/VipSuggestionList";
 
 export default function Home() {
   const [lovers, setLovers] = useState([]);
@@ -43,6 +44,7 @@ export default function Home() {
       <Header />
       <HeroSection />
       <TopLovers lovers={topLovers}/>
+      <VipSuggestionList />
       <FeaturedLovers lovers={lovers} />
       <CallToAction />
       <Footer />
