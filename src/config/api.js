@@ -76,6 +76,12 @@ const apiGetConversation = `${apiURL}/messages/chat-users/`;
 // GET /api/messages/chat-users/{id}
 const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
 
+const apiSearchUsers = `${apiCcdv}/search`;
+
+const apiSearchUsersDetails = `${apiCcdv}`;
+
+const apiCities = `${apiCcdv}/cities`;
+
 export {
   apiRevnue,
   apiHomeUserLovers,
@@ -97,6 +103,9 @@ export {
   apiTopRequent,
   apiTopRecent,
   apiUserHireSessions,
+  apiSearchUsers,
+  apiSearchUsersDetails,
+  apiCities,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
