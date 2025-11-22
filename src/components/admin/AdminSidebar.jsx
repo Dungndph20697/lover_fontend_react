@@ -10,7 +10,7 @@ import {
 
 const menuItems = [
   { id: "overview", label: "Tổng quan", icon: <LayoutDashboard size={18} /> },
-  { id: "users", label: "Quản lý người dùng", icon: <Users size={18} /> },
+  { id: "approve-account", label: "Duyệt tài khoản", icon: <Users size={18} /> },
   { id: "orders", label: "Quản lý dịch vụ", icon: <ClipboardCheck size={18} /> },
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
   { id: "reports", label: "Báo cáo & thống kê", icon: <BarChart2 size={18} /> },
@@ -31,9 +31,8 @@ export default function AdminSidebar({ selected, setSelected }) {
         {menuItems.map((item) => (
           <li key={item.id} className="nav-item">
             <button
-              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${
-                selected === item.id ? "btn-danger text-white" : "btn-outline-danger bg-white"
-              }`}
+              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${selected === item.id ? "btn-danger text-white" : "btn-outline-danger bg-white"
+                }`}
               onClick={() => setSelected(item.id)}
               style={{ borderRadius: "10px", transition: "all 0.2s ease-in-out" }}
               onMouseEnter={(e) => {

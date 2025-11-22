@@ -55,6 +55,10 @@ const apiAdminApproveWithdraw = (id) =>
   `${apiURL}/admin/withdraw/approve/${id}`;
 const apiAdminRejectWithdraw = (id) => `${apiURL}/admin/withdraw/reject/${id}`;
 
+// ADMIN USER MANAGEMENT
+const apiAdminUsers = `${apiURL}/admin/users`;
+const apiAdminApproveUser = (id) => `${apiURL}/admin/users/approve/${id}`;
+
 // THÊM MỚI: API cho User Hire Sessions
 const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
 const apiUserHireStatistics = (userId) =>
@@ -116,4 +120,6 @@ export {
   apiAdminWithdrawList,
   apiAdminApproveWithdraw,
   apiAdminRejectWithdraw,
+  apiAdminUsers,
+  apiAdminApproveUser,
 };

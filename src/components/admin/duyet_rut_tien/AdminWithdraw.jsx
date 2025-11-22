@@ -9,6 +9,7 @@ import {
 
 const statusMeta = {
   PENDING: { label: "Chờ duyệt OTP", className: "badge text-bg-warning text-dark" },
+  OTP_VERIFIED: { label: "Đã xác thực OTP", className: "badge text-bg-info text-dark" },
   PROCESSING: { label: "Đang xử lý", className: "badge text-bg-primary" },
   APPROVED: { label: "Đã chuyển", className: "badge text-bg-success" },
   REJECTED: { label: "Đã từ chối", className: "badge text-bg-danger" },
@@ -117,9 +118,10 @@ const parseErrorMessage = (error) =>
 
 // ✅ Helper logic: trạng thái nào được duyệt / từ chối
 const canApproveStatus = (status) =>
-  status === "PENDING" || status === "OTP_PENDING";
+  status === "PENDING" || status === "OTP_PENDING" || status === "OTP_VERIFIED";
 
-const canRejectStatus = (status) => status === "PENDING";
+const canRejectStatus = (status) =>
+  status === "PENDING" || status === "OTP_PENDING" || status === "OTP_VERIFIED";
 
 export default function AdminWithdraw() {
   const [requests, setRequests] = useState([]);

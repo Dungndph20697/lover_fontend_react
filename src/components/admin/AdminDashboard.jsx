@@ -8,6 +8,7 @@ import AdminOrders from "./AdminOrders";
 import AdminReports from "./AdminReports";
 import AdminWithdraw from "./duyet_rut_tien/AdminWithdraw";
 import AdminFooter from "./AdminFooter";
+import AdminSuccessAccount from "./duyet_tai_khoan/AdminSuccessAccount";
 
 const sectionMap = {
   overview: {
@@ -17,6 +18,10 @@ const sectionMap = {
   users: {
     title: "Người dùng",
     component: <AdminUsers />,
+  },
+  "approve-account": {
+    title: "Duyệt tài khoản",
+    component: <AdminSuccessAccount />,
   },
   orders: {
     title: "Đơn dịch vụ",
