@@ -84,6 +84,8 @@ const apiCities = `${apiCcdv}/cities`;
 
 const apiVipSuggestions = `${apiCcdv}`;
 
+const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
+
 export {
   apiRevnue,
   apiHomeUserLovers,
@@ -109,6 +111,7 @@ export {
   apiSearchUsersDetails,
   apiCities,
   apiVipSuggestions,
+  apiListItemsServiceIntimateGesture,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
