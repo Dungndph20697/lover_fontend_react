@@ -66,6 +66,8 @@ export default function FindCcdvByCity() {
                                 <p className="text-success mb-3">
                                     Giá: {ccdv.services?.map(s => s.pricePerHour).join(" /h, ") || "Liên hệ"} /h
                                 </p>
+                                <Link to={`/profile/${ccdv.id}`} className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
+                                <Link to={`/user/chat?to=${ccdv.id}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>
                         </div>
                     </div>
