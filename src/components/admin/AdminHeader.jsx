@@ -19,8 +19,8 @@ export default function AdminHeader() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminInfo");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     Swal.fire({
       icon: "success",
       title: "Đã đăng xuất",
@@ -43,7 +43,10 @@ export default function AdminHeader() {
           <span className="d-none d-md-inline">
             Xin chào, <strong>{adminName}</strong>
           </span>
-          <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+          <button
+            className="btn btn-outline-light btn-sm"
+            onClick={handleLogout}
+          >
             Đăng xuất
           </button>
         </div>
@@ -51,4 +54,3 @@ export default function AdminHeader() {
     </nav>
   );
 }
-
