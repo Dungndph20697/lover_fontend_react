@@ -119,21 +119,27 @@ export default function HireModal({ show, onClose, ccdvId }) {
               };
 
               try {
-                await dangKyThue(data);
+                const xacNhan = await dangKyThue(data);
 
-                Swal.fire({
-                  icon: "success",
-                  title: "Thuê thành công 🥰",
-                  html: `
+                if (xacNhan.status == 200) {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Thuê thành công 🥰",
+                    html: `
                     <div style="font-size: 16px;">
                       Tổng tiền: <span style="color:red;font-weight:bold">
                         ${formatMoney(totalPrice)} ₫
                       </span>
                     </div>
                   `,
-                });
+                  });
 
-                onClose();
+                  onClose();
+                } else {
+                  Swal.fire("Lỗi", "Thuê thất bại", "error");
+
+                  onClose();
+                }
               } catch (err) {
                 Swal.fire(
                   "Lỗi",
