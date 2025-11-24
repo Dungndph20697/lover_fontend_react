@@ -14,6 +14,7 @@ import AdminSuccessVip from "./duyet_tai_khoan/AdminSuccessVip";
 
 import QuanLiDonThueAdmin from "./QuanLiDonThueAdmin";
 import AdminRevenueList from "./AdminRevenueList";
+import AdminUserActivity from "./trang_thai_hoat_dong/AdminUserActivity";
 
 
 const sectionMap = {
@@ -33,13 +34,17 @@ const sectionMap = {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
   },
+  "user-activity": {
+    title: "Trạng thái hoạt động",
+    component: <AdminUserActivity />,
+  },
   hireSessions: {
     title: "Quản Lý Đơn Đặt Thuê",
-    component: <QuanLiDonThueAdmin/>,
+    component: <QuanLiDonThueAdmin />,
   },
   revenues: {
-  title: "Doanh Thu Idol",
-  component: <AdminRevenueList />,
+    title: "Doanh Thu Idol",
+    component: <AdminRevenueList />,
   },
   withdraw: {
     title: "Duyệt rút tiền",

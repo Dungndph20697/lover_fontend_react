@@ -11,6 +11,7 @@ import {
 
   ShoppingCart,
   DollarSign,
+  Activity
 
 } from "lucide-react";
 
@@ -24,6 +25,8 @@ const menuItems = [
   { id: "reports", label: "Báo cáo & thống kê", icon: <BarChart2 size={18} /> },
   { id: "settings", label: "Cấu hình hệ thống", icon: <Settings size={18} /> },
   { id: "vip-manager", label: "Quản lý VIP", icon: <Star size={18} /> },
+  { id: "user-activity", label: "Trạng thái hoạt động", icon: <Activity size={18} /> },
+
 
 ];
 
