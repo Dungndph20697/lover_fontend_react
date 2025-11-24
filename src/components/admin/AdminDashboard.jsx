@@ -6,8 +6,15 @@ import AdminOverview from "./AdminOverview";
 import AdminUsers from "./AdminUsers";
 import AdminOrders from "./AdminOrders";
 import AdminReports from "./AdminReports";
-import AdminWithdraw from "./AdminWithdraw";
+import AdminWithdraw from "./duyet_rut_tien/AdminWithdraw";
 import AdminFooter from "./AdminFooter";
+
+import AdminSuccessAccount from "./duyet_tai_khoan/AdminSuccessAccount";
+import AdminSuccessVip from "./duyet_tai_khoan/AdminSuccessVip";
+
+import QuanLiDonThueAdmin from "./QuanLiDonThueAdmin";
+import AdminRevenueList from "./AdminRevenueList";
+
 
 const sectionMap = {
   overview: {
@@ -18,9 +25,21 @@ const sectionMap = {
     title: "Người dùng",
     component: <AdminUsers />,
   },
+  "approve-account": {
+    title: "Duyệt tài khoản",
+    component: <AdminSuccessAccount />,
+  },
   orders: {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
+  },
+  hireSessions: {
+    title: "Quản Lý Đơn Đặt Thuê",
+    component: <QuanLiDonThueAdmin/>,
+  },
+  revenues: {
+  title: "Doanh Thu Idol",
+  component: <AdminRevenueList />,
   },
   withdraw: {
     title: "Duyệt rút tiền",
@@ -29,6 +48,10 @@ const sectionMap = {
   reports: {
     title: "Báo cáo",
     component: <AdminReports />,
+  },
+  "vip-manager": {
+    title: "Quản lý VIP",
+    component: <AdminSuccessVip />,
   },
   settings: {
     title: "Cấu hình",

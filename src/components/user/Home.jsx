@@ -7,10 +7,15 @@ import FeaturedLovers from "./FeaturedLovers";
 import CallToAction from "./CallToAction";
 import Footer from "./layout/Footer";
 import TopLovers from "./TopLovers";
+import VipSuggestionList from "../user/VipSuggestionList";
+import CcdvListItemIntimateGesture from "./CcdvListItemIntimateGesture";
+import { getListItemsServiceIntimateGesture } from "../../service/IntimateGesture/DV_cu_chi_than_mat";
+import GenderSuggestionLovers from "./GenderSuggestionLovers";
 
 export default function Home() {
   const [lovers, setLovers] = useState([]);
   const [topLovers, setTopLovers] = useState([]);
+  const [itemLovers, setItemLovers] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -38,12 +43,28 @@ export default function Home() {
     fetchTopViewedLovers();
   }, []);
 
+  useEffect(() => {
+    async function fetchIntimateGestureLovers() {
+      try {
+        const response = await getListItemsServiceIntimateGesture(0, 12);
+        setItemLovers(response.content);
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    }
+
+    fetchIntimateGestureLovers();
+  }, []);
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
       <Header />
       <HeroSection />
       <TopLovers lovers={topLovers}/>
+      <VipSuggestionList />
       <FeaturedLovers lovers={lovers} />
+      <CcdvListItemIntimateGesture list={itemLovers} />
+      <GenderSuggestionLovers />
       <CallToAction />
       <Footer />
     </div>
