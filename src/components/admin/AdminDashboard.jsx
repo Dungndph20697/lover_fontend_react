@@ -8,6 +8,8 @@ import AdminOrders from "./AdminOrders";
 import AdminReports from "./AdminReports";
 import AdminWithdraw from "./AdminWithdraw";
 import AdminFooter from "./AdminFooter";
+import QuanLiDonThueAdmin from "./QuanLiDonThueAdmin";
+import AdminRevenueList from "./AdminRevenueList";
 
 const sectionMap = {
   overview: {
@@ -21,6 +23,14 @@ const sectionMap = {
   orders: {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
+  },
+  hireSessions: {
+    title: "Quản Lý Đơn Đặt Thuê",
+    component: <QuanLiDonThueAdmin/>,
+  },
+  revenues: {
+  title: "Doanh Thu Idol",
+  component: <AdminRevenueList />,
   },
   withdraw: {
     title: "Duyệt rút tiền",
