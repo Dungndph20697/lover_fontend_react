@@ -30,6 +30,10 @@ const sectionMap = {
     title: "Duyệt tài khoản",
     component: <AdminSuccessAccount />,
   },
+  quanlyuser: {
+    title: "Quản lý user",
+    component: <AdminUsers />,
+  },
   orders: {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
@@ -65,7 +69,8 @@ const sectionMap = {
         <div className="card-body">
           <h4 className="card-title">⚙️ Cấu hình hệ thống</h4>
           <p className="text-muted mb-0">
-            Khu vực cấu hình sẽ sớm được bổ sung. Vui lòng chọn một mục khác trong thanh bên.
+            Khu vực cấu hình sẽ sớm được bổ sung. Vui lòng chọn một mục khác
+            trong thanh bên.
           </p>
         </div>
       </div>
