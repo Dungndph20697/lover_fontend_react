@@ -25,7 +25,7 @@ const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
 const apiHomeUserLovers = `${apiURL}/home`;
 
-const apiTopViewedLovers = `${apiURL}/users`;
+const apiTopViewedLovers = `${apiURL}/toplover`;
 
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
@@ -76,7 +76,18 @@ const apiGetConversation = `${apiURL}/messages/chat-users/`;
 // GET /api/messages/chat-users/{id}
 const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
 
+const apiSearchUsers = `${apiCcdv}/search`;
+
+const apiSearchUsersDetails = `${apiCcdv}`;
+
+const apiCities = `${apiCcdv}/cities`;
+
+const apiVipSuggestions = `${apiCcdv}`;
+
 export {
+  apiRevnue,
+  apiHomeUserLovers,
+  apiTopViewedLovers,
   apiURL,
   apiUser,
   apiUserLogin,
@@ -94,20 +105,21 @@ export {
   apiTopRequent,
   apiTopRecent,
   apiUserHireSessions,
+  apiSearchUsers,
+  apiSearchUsersDetails,
+  apiCities,
+  apiVipSuggestions,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
   apiUserHireReport,
   apiUserHireDetail,
   apiUserHireUpdateStatus,
-  apiRevnue,
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,
-  apiTopViewedLovers,
   apiGetConversation,
   apiGetChatUsers,
-  apiHomeUserLovers,
   apiToggleStatus,
   apiWalletBalance,
   apiWithdrawRequest,
