@@ -55,6 +55,10 @@ const apiAdminApproveWithdraw = (id) =>
   `${apiURL}/admin/withdraw/approve/${id}`;
 const apiAdminRejectWithdraw = (id) => `${apiURL}/admin/withdraw/reject/${id}`;
 
+// ADMIN USER MANAGEMENT
+const apiAdminUsers = `${apiURL}/admin/users`;
+const apiAdminApproveUser = (id) => `${apiURL}/admin/users/approve/${id}`;
+
 // THÊM MỚI: API cho User Hire Sessions
 const apiUserHireSessions = `${apiURL}/user/hire-sessions`;
 const apiUserHireStatistics = (userId) =>
@@ -75,6 +79,11 @@ const apiGetConversation = `${apiURL}/messages/chat-users/`;
 
 // GET /api/messages/chat-users/{id}
 const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
+// Admin vip users
+const apiAdminVipUsers = `${apiURL}/admin/users/vip-users`;
+const apiAdminVipCcdv = `${apiURL}/admin/users/vip-ccdv`;
+const apiAdminSetVip = `${apiURL}/admin/users/set-vip`;
+
 
 const apiSearchUsers = `${apiCcdv}/search`;
 
@@ -87,6 +96,7 @@ const apiVipSuggestions = `${apiCcdv}`;
 const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
 
 const apiFilterGenderRequest = `${apiURL}/recommendation`;
+
 
 export {
   apiRevnue,
@@ -134,4 +144,9 @@ export {
   apiAdminWithdrawList,
   apiAdminApproveWithdraw,
   apiAdminRejectWithdraw,
+  apiAdminUsers,
+  apiAdminApproveUser,
+  apiAdminVipUsers,
+  apiAdminVipCcdv,
+  apiAdminSetVip,
 };

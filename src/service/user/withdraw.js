@@ -25,7 +25,7 @@ export const getWithdrawHistory = () => {
     return axiosClient.get("/withdraw/history");
 };
 
-// ADMIN lấy danh sách yêu cầu rút (hỗ trợ phân trang/tìm kiếm)
+// ADMIN lấy danh sách yêu cầu rút (Phân trang mặc định)
 export const adminGetList = (params = {}) => {
     return axiosClient.get("/admin/withdraw/list", { params });
 };
@@ -40,7 +40,9 @@ export const adminReject = (id) => {
     return axiosClient.post(`/admin/withdraw/reject/${id}`);
 };
 
-// (Legacy) ADMIN tìm kiếm yêu cầu rút - giữ lại để tránh lỗi cũ, chuyển hướng sang endpoint mới
-export const adminSearchWithdraw = (keyword) => {
-    return adminGetList({ q: keyword, search: keyword });
+// ADMIN tìm kiếm yêu cầu rút
+export const adminSearchWithdraw = ({ keyword = "", page = 0, size = 10, sort }) => {
+    const params = { keyword, page, size };
+    if (sort) params.sort = sort;
+    return axiosClient.get("/admin/withdraw/search", { params });
 };

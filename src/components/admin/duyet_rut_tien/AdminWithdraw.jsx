@@ -4,11 +4,12 @@ import {
   adminApprove,
   adminGetList,
   adminReject,
-} from "../../service/user/withdraw";
+  adminSearchWithdraw,
+} from "../../../service/user/withdraw";
 
 const statusMeta = {
-  PENDING: { label: "Chờ duyệt", className: "badge text-bg-warning text-dark" },
-  OTP_PENDING: { label: "Chờ OTP", className: "badge text-bg-info text-dark" },
+  PENDING: { label: "Chờ duyệt OTP", className: "badge text-bg-warning text-dark" },
+  OTP_VERIFIED: { label: "Đã xác thực OTP", className: "badge text-bg-info text-dark" },
   PROCESSING: { label: "Đang xử lý", className: "badge text-bg-primary" },
   APPROVED: { label: "Đã chuyển", className: "badge text-bg-success" },
   REJECTED: { label: "Đã từ chối", className: "badge text-bg-danger" },
@@ -31,8 +32,8 @@ const formatCurrency = (value) => `${toNumber(value).toLocaleString("vi-VN")}đ`
 const formatDateTime = (value) => {
   if (!value) return "--";
   const date = new Date(value);
-  const formatted = date.toLocaleString("vi-VN", { hour12: false });
-  return Number.isNaN(date.getTime()) ? value : formatted;
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("vi-VN", { hour12: false });
 };
 
 const getNetAmount = (request) => {
@@ -49,6 +50,7 @@ const sortParamMap = {
 
 const mapSortOption = (option) => sortParamMap[option] || null;
 
+// Chuẩn hóa object request từ API
 const normalizeRequest = (item = {}) => {
   const providerInfo =
     item.provider ||
@@ -83,7 +85,7 @@ const normalizeRequest = (item = {}) => {
     providerLabel;
 
   return {
-    id: item.id ?? item.requestId ?? item.code ?? `req-${item.providerId ?? Date.now()}`,
+    id: item.id ?? item.requestId ?? item.code ?? `req-${providerId ?? Date.now()}`,
     providerCode: derivedProviderCode,
     providerName: derivedProviderName,
     amount: toNumber(item.amount ?? item.requestAmount),
@@ -114,6 +116,13 @@ const extractRequests = (payload) => {
 const parseErrorMessage = (error) =>
   error?.response?.data?.message || error?.message || "Có lỗi xảy ra";
 
+// ✅ Helper logic: trạng thái nào được duyệt / từ chối
+const canApproveStatus = (status) =>
+  status === "PENDING" || status === "OTP_PENDING" || status === "OTP_VERIFIED";
+
+const canRejectStatus = (status) =>
+  status === "PENDING" || status === "OTP_PENDING" || status === "OTP_VERIFIED";
+
 export default function AdminWithdraw() {
   const [requests, setRequests] = useState([]);
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -142,20 +151,30 @@ export default function AdminWithdraw() {
     } = {}) => {
       if (showLoading) setLoading(true);
       try {
-        const params = {
-          page: pageParam,
-          size,
-        };
-        if (search) params.search = search;
+        const params = { page: pageParam, size };
+        const keywordParam = search?.trim();
+        if (keywordParam) {
+          params.search = keywordParam;
+          params.q = keywordParam;
+          params.keyword = keywordParam;
+        }
         if (status && status !== "ALL") params.status = status;
         const sortParam = mapSortOption(sort);
         if (sortParam) params.sort = sortParam;
 
-        const res = await adminGetList(params);
+        const res = keywordParam
+          ? await adminSearchWithdraw({
+            keyword: keywordParam,
+            page: pageParam,
+            size,
+            sort: sortParam,
+          })
+          : await adminGetList(params);
         const payload = res?.data ?? {};
         const list = extractRequests(
           payload.content ?? payload.items ?? payload.data ?? payload
         ).map((item) => normalizeRequest(item));
+
         const hasServerPagination =
           payload.content !== undefined ||
           payload.totalElements !== undefined ||
@@ -179,6 +198,7 @@ export default function AdminWithdraw() {
           payload.totalPage ??
           ((resolvedTotal ? Math.ceil(resolvedTotal / size) : 0) || 1)
           : Math.max(Math.ceil((resolvedTotal || 0) / size), 1) || 1;
+
         setTotalPages(totalPageCount);
       } catch (error) {
         console.error("Failed to load withdraw requests", error);
@@ -190,6 +210,7 @@ export default function AdminWithdraw() {
     []
   );
 
+  // debounce search
   useEffect(() => {
     const handler = setTimeout(() => {
       setPage(0);
@@ -198,6 +219,7 @@ export default function AdminWithdraw() {
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
+  // load mỗi khi filter / sort / page thay đổi
   useEffect(() => {
     loadRequests({
       page,
@@ -208,21 +230,22 @@ export default function AdminWithdraw() {
     });
   }, [page, pageSize, query, statusFilter, sortOption, loadRequests]);
 
+  // reset về page 0 khi đổi filter/sort
   useEffect(() => {
     setPage(0);
   }, [statusFilter, sortOption]);
 
+  // nếu page > totalPages thì kéo về cuối
   useEffect(() => {
     if (page >= totalPages && totalPages > 0) {
       setPage(Math.max(totalPages - 1, 0));
     }
-  }, [totalPages]);
+  }, [totalPages, page]);
 
+  // sync selectedRequest khi list thay đổi
   useEffect(() => {
     if (requests.length === 0) {
-      if (selectedRequestId !== null) {
-        setSelectedRequestId(null);
-      }
+      if (selectedRequestId !== null) setSelectedRequestId(null);
       return;
     }
     const currentExists = requests.some((item) => item.id === selectedRequestId);
@@ -236,6 +259,7 @@ export default function AdminWithdraw() {
     [requests, selectedRequestId]
   );
 
+  // tính tổng trên list hiện tại
   const aggregates = useMemo(() => {
     return requests.reduce(
       (acc, req) => {
@@ -250,6 +274,7 @@ export default function AdminWithdraw() {
       { total: 0, totalAmount: 0, approvedAmount: 0 }
     );
   }, [requests]);
+
   const startItem = totalRecords === 0 ? 0 : page * pageSize + 1;
   const endItem = totalRecords === 0 ? 0 : page * pageSize + requests.length;
 
@@ -314,11 +339,16 @@ export default function AdminWithdraw() {
     }
   };
 
-  const canReject = !!(activeRequest && activeRequest.status !== "REJECTED");
+  // canApprove/canReject cho PANEL chi tiết
+  const canApprove =
+    activeRequest && canApproveStatus(activeRequest.status);
+  const canReject =
+    activeRequest && canRejectStatus(activeRequest.status);
 
   return (
     <div className="card shadow-sm">
       <div className="card-body">
+        {/* Header */}
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>
             <h4 className="card-title mb-1">💸 Duyệt yêu cầu rút tiền</h4>
@@ -341,6 +371,7 @@ export default function AdminWithdraw() {
           </button>
         </div>
 
+        {/* Summary cards */}
         <div className="row g-3 mb-4">
           <div className="col-md-3">
             <div className="border rounded-3 p-3 bg-light">
@@ -374,6 +405,7 @@ export default function AdminWithdraw() {
           </div>
         </div>
 
+        {/* Filters */}
         <div className="border rounded-3 p-3 bg-white mb-4 shadow-sm">
           <div className="row g-3 align-items-end">
             <div className="col-md-4">
@@ -419,6 +451,7 @@ export default function AdminWithdraw() {
         </div>
 
         <div className="row g-4">
+          {/* Table list */}
           <div className="col-lg-8">
             <div className="table-responsive">
               <table className="table table-hover align-middle">
@@ -450,12 +483,14 @@ export default function AdminWithdraw() {
                   ) : (
                     requests.map((request) => {
                       const status = statusMeta[request.status] || null;
+                      const rowCanApprove = canApproveStatus(request.status);
+                      const rowCanReject = canRejectStatus(request.status);
+
                       return (
                         <tr
                           key={request.id}
-                          className={`align-middle ${
-                            selectedRequestId === request.id ? "table-active" : ""
-                          }`}
+                          className={`align-middle ${selectedRequestId === request.id ? "table-active" : ""
+                            }`}
                           style={{ cursor: "pointer" }}
                           onClick={() => setSelectedRequestId(request.id)}
                         >
@@ -493,9 +528,10 @@ export default function AdminWithdraw() {
                               <button
                                 type="button"
                                 className="btn btn-success"
+                                disabled={!rowCanApprove}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  startAction("APPROVE", request);
+                                  if (rowCanApprove) startAction("APPROVE", request);
                                 }}
                               >
                                 Duyệt
@@ -503,11 +539,11 @@ export default function AdminWithdraw() {
                               <button
                                 type="button"
                                 className="btn btn-outline-danger"
+                                disabled={!rowCanReject}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  startAction("REJECT", request);
+                                  if (rowCanReject) startAction("REJECT", request);
                                 }}
-                                disabled={request.status === "REJECTED"}
                               >
                                 Từ chối
                               </button>
@@ -520,6 +556,7 @@ export default function AdminWithdraw() {
                 </tbody>
               </table>
             </div>
+
             {!loading && requests.length > 0 && (
               <div className="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
                 <div className="text-muted small">
@@ -554,7 +591,9 @@ export default function AdminWithdraw() {
                     </span>
                     <button
                       className="btn btn-outline-secondary"
-                      onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                      onClick={() =>
+                        setPage((prev) => Math.min(prev + 1, totalPages - 1))
+                      }
                       disabled={page + 1 >= totalPages}
                     >
                       Sau
@@ -565,6 +604,7 @@ export default function AdminWithdraw() {
             )}
           </div>
 
+          {/* Detail panel */}
           <div className="col-lg-4">
             {loading ? (
               <div className="border rounded-3 p-4 text-center text-muted">
@@ -594,7 +634,8 @@ export default function AdminWithdraw() {
                   <div className="text-uppercase text-muted small">Ngân hàng thụ hưởng</div>
                   <div className="fw-semibold">{activeRequest.bank?.name}</div>
                   <div className="small">
-                    STK {activeRequest.bank?.accountNumber} · {activeRequest.bank?.accountName}
+                    STK {activeRequest.bank?.accountNumber} ·{" "}
+                    {activeRequest.bank?.accountName}
                   </div>
                   <div className="small text-muted">{activeRequest.bank?.branch}</div>
                 </div>
@@ -607,7 +648,9 @@ export default function AdminWithdraw() {
                 {activeRequest.adminNote && (
                   <div className="mb-3">
                     <div className="text-uppercase text-muted small">Ghi chú admin</div>
-                    <div className="fw-semibold text-danger">{activeRequest.adminNote}</div>
+                    <div className="fw-semibold text-danger">
+                      {activeRequest.adminNote}
+                    </div>
                   </div>
                 )}
 
@@ -623,7 +666,9 @@ export default function AdminWithdraw() {
                           className="d-flex justify-content-between border-bottom py-1 small"
                         >
                           <span>{item.label}</span>
-                          <span className="text-muted">{formatDateTime(item.time)}</span>
+                          <span className="text-muted">
+                            {formatDateTime(item.time)}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -633,16 +678,17 @@ export default function AdminWithdraw() {
                 <div className="d-flex flex-column gap-2">
                   <button
                     className="btn btn-success"
-                    onClick={() => startAction("APPROVE", activeRequest)}
+                    disabled={!canApprove}
+                    onClick={() => canApprove && startAction("APPROVE", activeRequest)}
                   >
-                    Xác nhận chuyển khoản
+                    {canApprove ? "Xác nhận chuyển khoản" : "Không thể duyệt"}
                   </button>
                   <button
                     className="btn btn-outline-danger"
-                    onClick={() => startAction("REJECT", activeRequest)}
                     disabled={!canReject}
+                    onClick={() => canReject && startAction("REJECT", activeRequest)}
                   >
-                    Từ chối yêu cầu
+                    {canReject ? "Từ chối yêu cầu" : "Không thể từ chối"}
                   </button>
                 </div>
               </div>
@@ -655,6 +701,7 @@ export default function AdminWithdraw() {
         </div>
       </div>
 
+      {/* Modal xác nhận duyệt / từ chối */}
       {showActionModal && currentAction && (
         <>
           <div className="modal-backdrop fade show" />
@@ -663,9 +710,15 @@ export default function AdminWithdraw() {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">
-                    {currentAction.type === "APPROVE" ? "Xác nhận duyệt" : "Từ chối yêu cầu"}
+                    {currentAction.type === "APPROVE"
+                      ? "Xác nhận duyệt"
+                      : "Từ chối yêu cầu"}
                   </h5>
-                  <button type="button" className="btn-close" onClick={closeActionModal} />
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={closeActionModal}
+                  />
                 </div>
                 <div className="modal-body">
                   <p className="mb-2">
@@ -674,21 +727,30 @@ export default function AdminWithdraw() {
                     <strong>{currentAction.request.providerName}</strong>.
                   </p>
                   <p className="text-muted small">
-                    Hãy chắc chắn rằng bạn đã kiểm tra thông tin ngân hàng trước khi xác nhận.
+                    Hãy chắc chắn rằng bạn đã kiểm tra thông tin ngân hàng trước
+                    khi xác nhận.
                   </p>
                 </div>
                 <div className="modal-footer">
-                  <button className="btn btn-outline-secondary" onClick={closeActionModal}>
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={closeActionModal}
+                  >
                     Huỷ
                   </button>
                   <button
-                    className={`btn ${currentAction.type === "APPROVE" ? "btn-success" : "btn-danger"
+                    className={`btn ${currentAction.type === "APPROVE"
+                      ? "btn-success"
+                      : "btn-danger"
                       }`}
                     onClick={handleConfirmAction}
                     disabled={actionSubmitting}
                   >
                     {actionSubmitting && (
-                      <span className="spinner-border spinner-border-sm me-2" role="status" />
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      />
                     )}
                     Xác nhận
                   </button>
