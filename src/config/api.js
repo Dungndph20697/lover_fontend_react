@@ -80,6 +80,12 @@ const apiGetConversation = `${apiURL}/messages/chat-users/`;
 // GET /api/messages/chat-users/{id}
 const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
 
+// Admin vip users
+const apiAdminVipUsers = `${apiURL}/admin/users/vip-users`;
+const apiAdminVipCcdv = `${apiURL}/admin/users/vip-ccdv`;
+const apiAdminSetVip = `${apiURL}/admin/users/set-vip`;
+
+
 export {
   apiURL,
   apiUser,
@@ -122,4 +128,7 @@ export {
   apiAdminRejectWithdraw,
   apiAdminUsers,
   apiAdminApproveUser,
+  apiAdminVipUsers,
+  apiAdminVipCcdv,
+  apiAdminSetVip,
 };

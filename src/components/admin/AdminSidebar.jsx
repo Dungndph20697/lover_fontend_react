@@ -6,6 +6,7 @@ import {
   Banknote,
   BarChart2,
   Settings,
+  Star,
 } from "lucide-react";
 
 const menuItems = [
@@ -15,6 +16,8 @@ const menuItems = [
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
   { id: "reports", label: "Báo cáo & thống kê", icon: <BarChart2 size={18} /> },
   { id: "settings", label: "Cấu hình hệ thống", icon: <Settings size={18} /> },
+  { id: "vip-manager", label: "Quản lý VIP", icon: <Star size={18} /> },
+
 ];
 
 export default function AdminSidebar({ selected, setSelected }) {

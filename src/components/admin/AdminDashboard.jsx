@@ -9,7 +9,7 @@ import AdminReports from "./AdminReports";
 import AdminWithdraw from "./duyet_rut_tien/AdminWithdraw";
 import AdminFooter from "./AdminFooter";
 import AdminSuccessAccount from "./duyet_tai_khoan/AdminSuccessAccount";
-
+import AdminSuccessVip from "./duyet_tai_khoan/AdminSuccessVip";
 const sectionMap = {
   overview: {
     title: "Tổng quan",
@@ -34,6 +34,10 @@ const sectionMap = {
   reports: {
     title: "Báo cáo",
     component: <AdminReports />,
+  },
+  "vip-manager": {
+    title: "Quản lý VIP",
+    component: <AdminSuccessVip />,
   },
   settings: {
     title: "Cấu hình",
