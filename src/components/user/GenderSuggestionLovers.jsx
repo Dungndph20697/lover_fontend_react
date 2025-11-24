@@ -62,8 +62,8 @@ export default function GenderSuggestionLovers() {
                             <div className="card-body text-center">
                                 <h5 className="fw-bold text-dark mb-1">{lover.fullName}</h5>
                                 <p className="text-muted mb-3">{lover.description || "Đang cập nhật"}</p>
-                                <p className="text-primary mb-2">Dịch vụ: {lover.hobbies || "Chưa có"}</p>
-                                <p className="text-success mb-3">Giá: {lover.pricePerHour || "Liên hệ"} /h</p>
+                                {/* <p className="text-primary mb-2">Dịch vụ: {lover.hobbies || "Chưa có"}</p>
+                                <p className="text-success mb-3">Giá: {lover.pricePerHour || "Liên hệ"} /h</p> */}
                                 <Link to={`/profile/${lover.id}`} className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
                                 <Link to={`/user/chat?to=${lover.id}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>
