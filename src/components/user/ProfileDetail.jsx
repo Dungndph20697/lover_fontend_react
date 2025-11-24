@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import HireModal from "./HireModal";
+import { getUserStatus } from "../../service/user/userActiviApi";
 import {
   loadCcdvDetail,
   loadDichVuByCcdvId,
@@ -17,6 +18,43 @@ export default function ProfileDetail() {
   const [profile, setProfile] = useState(null);
   const [services, setServices] = useState([]);
   const [showHireModal, setShowHireModal] = useState(false);
+  const [activity, setActivity] = useState(null);
+
+  // Load trạng thái hoạt động
+  const formatTimeAgo = (timestamp) => {
+    if (!timestamp) return "Không xác định";
+
+    const diffMs = new Date() - new Date(timestamp);
+    const diffMin = Math.floor(diffMs / 60000);
+
+    if (diffMin < 1) return "Vừa xong";
+    if (diffMin < 60) return `${diffMin} phút trước`;
+
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return `${diffHour} giờ trước`;
+
+    return new Date(timestamp).toLocaleString("vi-VN");
+  };
+
+  // load trạng thái hoạt động
+  useEffect(() => {
+    if (!profile) return;
+
+    const loadActivity = async () => {
+      try {
+        console.log("📌 Gọi API getUserStatus với userId =", profile.user.id);
+
+        const data = await getUserStatus(profile.user.id);
+
+        console.log("📌 Kết quả trả về:", data);
+        setActivity(data);
+      } catch (err) {
+        console.error("❌ Lỗi khi gọi API trạng thái hoạt động:", err);
+      }
+    };
+
+    loadActivity();
+  }, [profile]);
 
   // Load profile
   useEffect(() => {
@@ -99,6 +137,23 @@ export default function ProfileDetail() {
               </p>
               <p>
                 <strong>Số lần được thuê:</strong> {profile.hireCount}
+              </p>
+              <p>
+                <strong>Trạng thái hoạt động: </strong>
+
+                {!activity && <span>Đang tải...</span>}
+
+                {activity && (
+                  <>
+                    {activity.status === "Đang hoạt động" ? (
+                      <span className="text-success fw-bold">🟢 Đang hoạt động</span>
+                    ) : (
+                      <span className="text-muted">
+                        🔴 Không hoạt động — {formatTimeAgo(activity.lastActivity)}
+                      </span>
+                    )}
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -188,7 +243,7 @@ export default function ProfileDetail() {
             Chat ngay
           </Link>
         </div>
-      </div>
+      </div >
       <HireModal
         show={showHireModal}
         onClose={() => setShowHireModal(false)}
