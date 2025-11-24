@@ -6,7 +6,7 @@ const ADMIN_API = `${apiURL}/admin`;
 
 // Lấy danh sách user (trừ admin)
 export const apiAdminGetUsers = async (token) => {
-  const res = await axios.get(`${ADMIN_API}/users`, {
+  const res = await axios.get(`${ADMIN_API}/list-users`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
