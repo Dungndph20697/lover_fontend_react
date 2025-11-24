@@ -25,7 +25,7 @@ const apiServicesTypeDetail = `${apiCcdv}/ccdv-service-details`;
 
 const apiHomeUserLovers = `${apiURL}/home`;
 
-const apiTopViewedLovers = `${apiURL}/users`;
+const apiTopViewedLovers = `${apiURL}/toplover`;
 
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
@@ -79,14 +79,29 @@ const apiGetConversation = `${apiURL}/messages/chat-users/`;
 
 // GET /api/messages/chat-users/{id}
 const apiGetChatUsers = `${apiURL}/messages/chat-users/`;
-
 // Admin vip users
 const apiAdminVipUsers = `${apiURL}/admin/users/vip-users`;
 const apiAdminVipCcdv = `${apiURL}/admin/users/vip-ccdv`;
 const apiAdminSetVip = `${apiURL}/admin/users/set-vip`;
 
 
+const apiSearchUsers = `${apiCcdv}/search`;
+
+const apiSearchUsersDetails = `${apiCcdv}`;
+
+const apiCities = `${apiCcdv}/cities`;
+
+const apiVipSuggestions = `${apiCcdv}`;
+
+const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
+
+const apiFilterGenderRequest = `${apiURL}/recommendation`;
+
+
 export {
+  apiRevnue,
+  apiHomeUserLovers,
+  apiTopViewedLovers,
   apiURL,
   apiUser,
   apiUserLogin,
@@ -104,20 +119,23 @@ export {
   apiTopRequent,
   apiTopRecent,
   apiUserHireSessions,
+  apiSearchUsers,
+  apiSearchUsersDetails,
+  apiCities,
+  apiVipSuggestions,
+  apiListItemsServiceIntimateGesture,
+  apiFilterGenderRequest,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
   apiUserHireReport,
   apiUserHireDetail,
   apiUserHireUpdateStatus,
-  apiRevnue,
   apiGetFullInfoUser,
   apitLoadCcdvDetail,
   apitLoadDichVuByIdCcdv,
-  apiTopViewedLovers,
   apiGetConversation,
   apiGetChatUsers,
-  apiHomeUserLovers,
   apiToggleStatus,
   apiWalletBalance,
   apiWithdrawRequest,

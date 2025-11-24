@@ -8,8 +8,14 @@ import AdminOrders from "./AdminOrders";
 import AdminReports from "./AdminReports";
 import AdminWithdraw from "./duyet_rut_tien/AdminWithdraw";
 import AdminFooter from "./AdminFooter";
+
 import AdminSuccessAccount from "./duyet_tai_khoan/AdminSuccessAccount";
 import AdminSuccessVip from "./duyet_tai_khoan/AdminSuccessVip";
+
+import QuanLiDonThueAdmin from "./QuanLiDonThueAdmin";
+import AdminRevenueList from "./AdminRevenueList";
+
+
 const sectionMap = {
   overview: {
     title: "Tổng quan",
@@ -26,6 +32,14 @@ const sectionMap = {
   orders: {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
+  },
+  hireSessions: {
+    title: "Quản Lý Đơn Đặt Thuê",
+    component: <QuanLiDonThueAdmin/>,
+  },
+  revenues: {
+  title: "Doanh Thu Idol",
+  component: <AdminRevenueList />,
   },
   withdraw: {
     title: "Duyệt rút tiền",

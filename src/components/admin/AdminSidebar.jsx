@@ -6,13 +6,20 @@ import {
   Banknote,
   BarChart2,
   Settings,
+
   Star,
+
+  ShoppingCart,
+  DollarSign,
+
 } from "lucide-react";
 
 const menuItems = [
   { id: "overview", label: "Tổng quan", icon: <LayoutDashboard size={18} /> },
   { id: "approve-account", label: "Duyệt tài khoản", icon: <Users size={18} /> },
   { id: "orders", label: "Quản lý dịch vụ", icon: <ClipboardCheck size={18} /> },
+  { id: "hireSessions", label: "Quản lý đơn đặt thuê", icon: <ShoppingCart size={18} /> },
+  { id: "revenues", label: "Doanh thu Idol", icon: <DollarSign size={18} /> },
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
   { id: "reports", label: "Báo cáo & thống kê", icon: <BarChart2 size={18} /> },
   { id: "settings", label: "Cấu hình hệ thống", icon: <Settings size={18} /> },
@@ -52,4 +59,3 @@ export default function AdminSidebar({ selected, setSelected }) {
     </aside>
   );
 }
-
