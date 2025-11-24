@@ -105,7 +105,7 @@ const QuanLiDonThueAdmin = () => {
                   <th>Ngày</th>
                   <th>Tổng Đơn</th>
                   <th>Trạng Thái</th>
-                  <th>Hành Động</th>
+                  <th>Duyệt đánh giá</th>
                 </tr>
               </thead>
               <tbody>

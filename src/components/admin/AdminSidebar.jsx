@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { id: "overview", label: "Tổng quan", icon: <LayoutDashboard size={18} /> },
   {
     id: "approve-account",
     label: "Duyệt tài khoản",
@@ -24,19 +23,12 @@ const menuItems = [
     icon: <Users size={18} />,
   },
   {
-    id: "orders",
-    label: "Quản lý dịch vụ",
-    icon: <ClipboardCheck size={18} />,
-  },
-  {
     id: "hireSessions",
     label: "Quản lý đơn đặt thuê",
     icon: <ShoppingCart size={18} />,
   },
   { id: "revenues", label: "Doanh thu Idol", icon: <DollarSign size={18} /> },
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
-  { id: "reports", label: "Báo cáo & thống kê", icon: <BarChart2 size={18} /> },
-  { id: "settings", label: "Cấu hình hệ thống", icon: <Settings size={18} /> },
   { id: "vip-manager", label: "Quản lý VIP", icon: <Star size={18} /> },
 ];
 
