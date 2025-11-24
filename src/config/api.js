@@ -104,6 +104,11 @@ const apiFilterGenderRequest = `${apiURL}/recommendation`;
 
 const apiFindByCity = `${apiCcdv}/city`;
 
+// API trạng thái hoạt động
+const apiUserStatus = (userId) => `${apiURL}/user-activity/status/${userId}`;
+const apiOnlineUsers = `${apiURL}/user-activity/online`;
+const apiActivitySummary = `${apiURL}/user-activity/admin/summary`;
+
 
 export {
   apiRevnue,
@@ -161,5 +166,9 @@ export {
   apiAdminVipUsers,
   apiAdminVipCcdv,
   apiAdminSetVip,
+
+  apiUserStatus,
+  apiOnlineUsers,
+  apiActivitySummary,
 
 };
