@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { dangKyThue, findDichVuByCcdvId } from "../../service/user/dangkythue";
 
 export default function HireModal({ show, onClose, ccdvId }) {
   const [services, setServices] = useState([]);
@@ -13,9 +13,10 @@ export default function HireModal({ show, onClose, ccdvId }) {
   // Load dịch vụ CCDV
   useEffect(() => {
     if (ccdvId) {
-      axios
-        .get(`http://localhost:8080/api/users/service/${ccdvId}`)
-        .then((res) => setServices(res.data))
+      findDichVuByCcdvId(ccdvId)
+        .then((data) => {
+          if (data) setServices(data);
+        })
         .catch((err) => console.error(err));
     }
   }, [ccdvId]);
@@ -98,7 +99,7 @@ export default function HireModal({ show, onClose, ccdvId }) {
               message: "",
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
+            onSubmit={async (values) => {
               if (selectedServices.length < 1) {
                 Swal.fire(
                   "Thiếu thông tin",
@@ -117,36 +118,60 @@ export default function HireModal({ show, onClose, ccdvId }) {
                 message: values.message,
               };
 
-              axios
-                .post("http://localhost:8080/api/hire/create", data, {
-                  headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                  },
-                })
-                .then((res) => {
-                  Swal.fire({
-                    icon: "success",
-                    title: "Thuê thành công!",
-                    html: `
-                      <div style="font-size: 16px; margin-top: 10px;">
-                          <b>Dịch vụ đã được xác nhận.</b><br/>
-                          Tổng tiền thanh toán: 
-                          <span style="color: red; font-weight: bold;">
-                              ${formatMoney(totalPrice)} ₫
-                          </span>
-                      </div>
+              try {
+                await dangKyThue(data);
+
+                Swal.fire({
+                  icon: "success",
+                  title: "Thuê thành công 🥰",
+                  html: `
+                    <div style="font-size: 16px;">
+                      Tổng tiền: <span style="color:red;font-weight:bold">
+                        ${formatMoney(totalPrice)} ₫
+                      </span>
+                    </div>
                   `,
-                    confirmButtonText: "OK"
-                  });
-                  onClose();
-                })
-                .catch((err) => {
-                  Swal.fire(
-                    "Lỗi",
-                    err.response?.data || "Thuê thất bại",
-                    "error"
-                  );
                 });
+
+                onClose();
+              } catch (err) {
+                Swal.fire(
+                  "Lỗi",
+                  err?.response?.data || "Thuê thất bại",
+                  "error"
+                );
+              }
+
+              // axios
+              //   .post("http://localhost:8080/api/hire/create", data, {
+              //     headers: {
+              //       Authorization: "Bearer " + localStorage.getItem("token"),
+              //     },
+              //   })
+              //   .then((res) => {
+              //     Swal.fire({
+              //       icon: "success",
+              //       title: "Thuê thành công!",
+              //       html: `
+              //         <div style="font-size: 16px; margin-top: 10px;">
+              //             <b>Dịch vụ đã được xác nhận.</b><br/>
+              //             Tổng tiền thanh toán:
+              //             <span style="color: red; font-weight: bold;">
+              //                 ${formatMoney(totalPrice)} ₫
+              //             </span>
+              //         </div>
+              //     `,
+              //       confirmButtonText: "OK",
+              //     });
+              //     onClose();
+              //   })
+              //   .catch((err) => {
+              //     Swal.fire(
+              //       "Lỗi",
+              //       err.response?.data || "Thuê thất bại",
+              //       "error"
+              //     );
+              //   });
             }}
           >
             {({ values, setFieldValue }) => (

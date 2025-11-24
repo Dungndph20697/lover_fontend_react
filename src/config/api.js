@@ -27,6 +27,11 @@ const apiHomeUserLovers = `${apiURL}/home`;
 
 const apiTopViewedLovers = `${apiURL}/toplover`;
 
+const apiFindDichVuByCcdvId = `${apiUser}/service/`;
+
+//thue ccdv
+const apiDangKyThue = `${apiURL}/hire/create`;
+
 //top 3 user đã thuê
 const apiTopRequent = `${apiCcdv}/top-frequent/`;
 const apiTopRecent = `${apiCcdv}/top-recent/`;
@@ -147,9 +152,14 @@ export {
   apiAdminWithdrawList,
   apiAdminApproveWithdraw,
   apiAdminRejectWithdraw,
+
+  apiFindDichVuByCcdvId,
+  apiDangKyThue,
+
   apiAdminUsers,
   apiAdminApproveUser,
   apiAdminVipUsers,
   apiAdminVipCcdv,
   apiAdminSetVip,
+
 };

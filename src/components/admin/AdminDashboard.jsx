@@ -29,17 +29,21 @@ const sectionMap = {
     title: "Duyệt tài khoản",
     component: <AdminSuccessAccount />,
   },
+  quanlyuser: {
+    title: "Quản lý user",
+    component: <AdminUsers />,
+  },
   orders: {
     title: "Đơn dịch vụ",
     component: <AdminOrders />,
   },
   hireSessions: {
     title: "Quản Lý Đơn Đặt Thuê",
-    component: <QuanLiDonThueAdmin/>,
+    component: <QuanLiDonThueAdmin />,
   },
   revenues: {
-  title: "Doanh Thu Idol",
-  component: <AdminRevenueList />,
+    title: "Doanh Thu Idol",
+    component: <AdminRevenueList />,
   },
   withdraw: {
     title: "Duyệt rút tiền",
@@ -60,7 +64,8 @@ const sectionMap = {
         <div className="card-body">
           <h4 className="card-title">⚙️ Cấu hình hệ thống</h4>
           <p className="text-muted mb-0">
-            Khu vực cấu hình sẽ sớm được bổ sung. Vui lòng chọn một mục khác trong thanh bên.
+            Khu vực cấu hình sẽ sớm được bổ sung. Vui lòng chọn một mục khác
+            trong thanh bên.
           </p>
         </div>
       </div>
@@ -115,9 +120,9 @@ export default function AdminDashboard() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <h2 className="mb-0">{activeSection.title}</h2>
-                <small className="text-muted">
+                {/* <small className="text-muted">
                   Trang quản trị hệ thống Lover — cập nhật theo thời gian thực.
-                </small>
+                </small> */}
               </div>
             </div>
             {activeSection.component}
