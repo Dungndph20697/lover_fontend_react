@@ -10,6 +10,7 @@ import TopLovers from "./TopLovers";
 import VipSuggestionList from "../user/VipSuggestionList";
 import CcdvListItemIntimateGesture from "./CcdvListItemIntimateGesture";
 import { getListItemsServiceIntimateGesture } from "../../service/IntimateGesture/DV_cu_chi_than_mat";
+import GenderSuggestionLovers from "./GenderSuggestionLovers";
 
 export default function Home() {
   const [lovers, setLovers] = useState([]);
@@ -62,7 +63,8 @@ export default function Home() {
       <TopLovers lovers={topLovers}/>
       <VipSuggestionList />
       <FeaturedLovers lovers={lovers} />
-      <CcdvListItemIntimateGesture list={itemLovers}/>
+      <CcdvListItemIntimateGesture list={itemLovers} />
+      <GenderSuggestionLovers />
       <CallToAction />
       <Footer />
     </div>

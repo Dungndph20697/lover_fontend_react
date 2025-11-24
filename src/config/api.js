@@ -86,6 +86,8 @@ const apiVipSuggestions = `${apiCcdv}`;
 
 const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
 
+const apiFilterGenderRequest = `${apiURL}/recommendation`;
+
 export {
   apiRevnue,
   apiHomeUserLovers,
@@ -112,6 +114,7 @@ export {
   apiCities,
   apiVipSuggestions,
   apiListItemsServiceIntimateGesture,
+  apiFilterGenderRequest,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
