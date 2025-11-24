@@ -84,6 +84,10 @@ const apiCities = `${apiCcdv}/cities`;
 
 const apiVipSuggestions = `${apiCcdv}`;
 
+const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
+
+const apiFilterGenderRequest = `${apiURL}/recommendation`;
+
 export {
   apiRevnue,
   apiHomeUserLovers,
@@ -109,6 +113,8 @@ export {
   apiSearchUsersDetails,
   apiCities,
   apiVipSuggestions,
+  apiListItemsServiceIntimateGesture,
+  apiFilterGenderRequest,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,
