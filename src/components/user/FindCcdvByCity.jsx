@@ -10,14 +10,14 @@ export default function FindCcdvByCity() {
     useEffect(() => {
         async function fetchProfiles() {
             try {
-                const data = await findByCity(); // lấy tất cả CCDV
+                const data = await findByCity(city); // lấy tất cả CCDV
                 setAllProfiles(data);
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu CCDV:", error);
             }
         }
         fetchProfiles();
-    }, []);
+    }, [city]);
 
     useEffect(() => {
         const filtered = allProfiles
@@ -58,14 +58,24 @@ export default function FindCcdvByCity() {
                                 </span>
                             </div>
                             <div className="card-body text-center">
-                                <h5 className="fw-bold text-dark mb-1">{ccdv.fullName}</h5>
+                                <h5 className="fw-bold text-dark mb-1">{ccdv.name}</h5>
                                 <p className="text-muted mb-3">{ccdv.description || "Đang cập nhật"}</p>
-                                {/* <p className="text-primary mb-2">
-                                    Dịch vụ: {ccdv.services?.map(s => s.name).join(", ") || "Chưa có"}
+                                <p className="text-primary mb-2">
+                                    {ccdv.services?.length > 0 ? (
+                                        ccdv.services.map((s, idx) => (
+                                            <span
+                                                key={idx}
+                                                className="badge bg-primary me-1 mb-1"
+                                            >
+                                                {s.name} ({s.pricePerHour || "Đang cập nhật"}đ / giờ)
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-muted">Không có dịch vụ</span>
+                                    )}</p>
+                                <p className="fw-bold fs-6 text-danger mt-1">
+                                    Tổng giá dịch vụ: {ccdv.totalPrice || "0"} đ
                                 </p>
-                                <p className="text-success mb-3">
-                                    Giá: {ccdv.services?.map(s => s.pricePerHour).join(" /h, ") || "Liên hệ"} /h
-                                </p> */}
                                 <Link to={`/profile/${ccdv.id}`} className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
                                 <Link to={`/user/chat?to=${ccdv.id}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>

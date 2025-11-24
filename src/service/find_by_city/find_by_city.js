@@ -1,12 +1,10 @@
 import axios from "axios";
 import { apiFindByCity } from "../../config/api";
 
-export const findByCity = async () => {
+export const findByCity = async (city = "") => {
     try {
         const response = await axios.get(`${apiFindByCity}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                },
+                params: { city }
             }
         );
 

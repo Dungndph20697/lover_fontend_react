@@ -12,7 +12,7 @@ export default function GenderSuggestionLovers() {
         async function fetchAllProfiles() {
             try {
                 // gọi API gợi ý 12 người theo gender
-                const data = await filterGenderRequest();
+                const data = await filterGenderRequest(gender);
                 setAllProfiles(data);
             } catch (error) {
                 console.error("Lỗi khi lấy dữ liệu gợi ý:", error);
@@ -20,7 +20,7 @@ export default function GenderSuggestionLovers() {
         }
 
         fetchAllProfiles();
-    }, []);
+    }, [gender]);
 
     useEffect(() => {
         const filtered = allProfiles
@@ -60,10 +60,24 @@ export default function GenderSuggestionLovers() {
                                 </span>
                             </div>
                             <div className="card-body text-center">
-                                <h5 className="fw-bold text-dark mb-1">{lover.fullName}</h5>
+                                <h5 className="fw-bold text-dark mb-1">{lover.name}</h5>
                                 <p className="text-muted mb-3">{lover.description || "Đang cập nhật"}</p>
-                                {/* <p className="text-primary mb-2">Dịch vụ: {lover.hobbies || "Chưa có"}</p>
-                                <p className="text-success mb-3">Giá: {lover.pricePerHour || "Liên hệ"} /h</p> */}
+                                <p className="text-primary mb-2">
+                                    {lover.services?.length > 0 ? (
+                                        lover.services.map((s, idx) => (
+                                            <span
+                                                key={idx}
+                                                className="badge bg-primary me-1 mb-1"
+                                            >
+                                                {s.name} ({s.pricePerHour || "Đang cập nhật"}đ / giờ)
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-muted">Không có dịch vụ</span>
+                                    )}</p>
+                                <p className="fw-bold fs-6 text-danger mt-1">
+                                    Tổng giá dịch vụ: {lover.totalPrice || "0"} đ
+                                </p>
                                 <Link to={`/profile/${lover.id}`} className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
                                 <Link to={`/user/chat?to=${lover.id}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>
