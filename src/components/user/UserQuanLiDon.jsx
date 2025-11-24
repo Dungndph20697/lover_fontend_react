@@ -15,8 +15,6 @@ import {
   coTheHuy,
 } from "../../service/user_quan_li_don/UserQuanLiDon";
 import { findUserByToken } from "../../service/user/login";
-import Footer from "./layout/Footer";
-import Header from "./layout/Header";
 
 export default function UserQuanLiDon() {
   const navigate = useNavigate();
@@ -33,7 +31,6 @@ export default function UserQuanLiDon() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
-      console.log("🔵 Token:", token);
       if (!token) {
         Swal.fire({
           icon: "error",
@@ -49,7 +46,6 @@ export default function UserQuanLiDon() {
 
       try {
         const user = await findUserByToken(token);
-        console.log("🔵 User from token:", user);
         setUserId(user.id);
       } catch (err) {
         console.error(err);
@@ -69,15 +65,10 @@ export default function UserQuanLiDon() {
     fetchUser();
   }, [navigate]);
 
-  // Load sessions + statistics khi có userId (Thống kê)
+  // Load sessions + statistics khi có userId
   useEffect(() => {
-    console.log("🔵 useEffect loadStatistics triggered, userId:", userId);
     if (!userId) return;
     loadSessions();
-  }, [userId, filter, page]);
-
-  useEffect(() => {
-    if (!userId) return;
     loadStatistics();
   }, [userId, filter, page]);
 
@@ -87,9 +78,8 @@ export default function UserQuanLiDon() {
 
     const result = await getDanhSachDonThue(userId, filter || null, page, 10);
     if (result.success) {
-      setSessions(result.data.content);
-      console.log(result.data.content);
-      setTotalPages(result.data.totalPages);
+      setSessions(result.data.content || []);
+      setTotalPages(result.data.totalPages || 0);
     } else {
       setError(result.message || "Không thể tải danh sách đơn thuê");
     }
@@ -99,9 +89,7 @@ export default function UserQuanLiDon() {
 
   const loadStatistics = async () => {
     const result = await getThongKeDonThue(userId);
-    console.log("Thống kê API response:", result);
     if (result.success) {
-      console.log("Dữ liệu thống kê:", result.data);
       setStatistics(result.data);
     }
   };
@@ -191,58 +179,89 @@ export default function UserQuanLiDon() {
         <i className="bi bi-heart-fill me-2"></i>
         Danh sách đơn đã thuê
       </h2>
-      {/* Nút quay lại trang chủ */}
+
+      {/* Nút quay lại */}
       <div className="mb-4">
-        <button
-          className="btn btn-secondary"
-          onClick={() => navigate("/")}
-        >
+        <button className="btn btn-secondary" onClick={() => navigate("/")}>
           <i className="bi bi-house-door me-2"></i>
           Quay lại trang chủ
         </button>
       </div>
 
-      {/* Thống kê */}
+      {/* ✅ THỐNG KÊ - UPDATE */}
       {statistics && (
         <div className="row g-3 mb-4">
+          {/* Tổng đơn */}
           <div className="col-md-2">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Tổng đơn</h6>
-                <h3 className="text-primary mb-0">{statistics.total}</h3>
+                <h3 className="text-primary mb-0">{statistics.total || 0}</h3>
               </div>
             </div>
           </div>
+
+          {/* Chờ phản hồi */}
           <div className="col-md-2">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Chờ phản hồi</h6>
-                <h3 className="text-warning mb-0">{statistics.waiting}</h3>
+                <h3 className="text-warning mb-0">{statistics.pending || 0}</h3>
               </div>
             </div>
           </div>
+
+          {/* Đã nhận */}
           <div className="col-md-2">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Đã nhận</h6>
-                <h3 className="text-info mb-0">{statistics.accepted}</h3>
+                <h3 className="text-info mb-0">{statistics.accepted || 0}</h3>
               </div>
             </div>
           </div>
+
+          {/* Đã hoàn thành */}
           <div className="col-md-2">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Đã hoàn thành</h6>
-                <h3 className="text-success mb-0">{statistics.completed}</h3>
+                <h3 className="text-success mb-0">
+                  {statistics.completed || 0}
+                </h3>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
+
+          {/* ✅ THÊM: Báo cáo chờ duyệt */}
+          <div className="col-md-2">
+            <div className="card border-0 shadow-sm">
+              <div className="card-body text-center">
+                <h6 className="text-muted mb-2">Báo cáo chờ duyệt</h6>
+                <h3 className="text-secondary mb-0">
+                  {statistics.reviewReport || 0}
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          {/* ✅ THÊM: Đã báo cáo */}
+          <div className="col-md-2">
+            <div className="card border-0 shadow-sm">
+              <div className="card-body text-center">
+                <h6 className="text-muted mb-2">Đã báo cáo</h6>
+                <h3 className="text-danger mb-0">{statistics.reported || 0}</h3>
+              </div>
+            </div>
+          </div>
+
+          {/* Tổng chi tiêu */}
+          <div className="col-md-3">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center">
                 <h6 className="text-muted mb-2">Tổng chi tiêu</h6>
                 <h3 className="text-danger mb-0">
-                  {formatGiaTien(statistics.totalAmount)}
+                  {formatGiaTien(statistics.totalAmount || 0)}
                 </h3>
               </div>
             </div>
@@ -250,8 +269,8 @@ export default function UserQuanLiDon() {
         </div>
       )}
 
-      {/* Filter */}
-      <div className="btn-group mb-4" role="group">
+      {/* ✅ FILTER - UPDATE */}
+      <div className="btn-group mb-4 flex-wrap" role="group">
         <button
           type="button"
           className={`btn ${!filter ? "btn-danger" : "btn-outline-danger"}`}
@@ -264,8 +283,9 @@ export default function UserQuanLiDon() {
         </button>
         <button
           type="button"
-          className={`btn ${filter === "PENDING" ? "btn-warning" : "btn-outline-warning"
-            }`}
+          className={`btn ${
+            filter === "PENDING" ? "btn-warning" : "btn-outline-warning"
+          }`}
           onClick={() => {
             setFilter("PENDING");
             setPage(0);
@@ -275,8 +295,9 @@ export default function UserQuanLiDon() {
         </button>
         <button
           type="button"
-          className={`btn ${filter === "ACCEPTED" ? "btn-info" : "btn-outline-info"
-            }`}
+          className={`btn ${
+            filter === "ACCEPTED" ? "btn-info" : "btn-outline-info"
+          }`}
           onClick={() => {
             setFilter("ACCEPTED");
             setPage(0);
@@ -286,14 +307,43 @@ export default function UserQuanLiDon() {
         </button>
         <button
           type="button"
-          className={`btn ${filter === "COMPLETED" ? "btn-success" : "btn-outline-success"
-            }`}
+          className={`btn ${
+            filter === "COMPLETED" ? "btn-success" : "btn-outline-success"
+          }`}
           onClick={() => {
             setFilter("COMPLETED");
             setPage(0);
           }}
         >
           Đã hoàn thành
+        </button>
+        {/* ✅ THÊM: Filter báo cáo chờ duyệt */}
+        <button
+          type="button"
+          className={`btn ${
+            filter === "REVIEW_REPORT"
+              ? "btn-secondary"
+              : "btn-outline-secondary"
+          }`}
+          onClick={() => {
+            setFilter("REVIEW_REPORT");
+            setPage(0);
+          }}
+        >
+          Báo cáo chờ duyệt
+        </button>
+        {/* ✅ THÊM: Filter đã báo cáo */}
+        <button
+          type="button"
+          className={`btn ${
+            filter === "REPORTED" ? "btn-danger" : "btn-outline-danger"
+          }`}
+          onClick={() => {
+            setFilter("REPORTED");
+            setPage(0);
+          }}
+        >
+          Đã báo cáo
         </button>
       </div>
 
@@ -321,18 +371,16 @@ export default function UserQuanLiDon() {
                     <div className="row align-items-center">
                       {/* Thông tin CCDV */}
                       <div className="col-md-3">
-                        <div className="d-flex align-items-center">
-                          <div className="me-3">
-                            <img
-                              src={ccdv.avatar || "/default-avatar.png"}
-                              alt={ccdv.fullName || "CCDV"}
-                              className="rounded-circle"
-                              style={{ width: "60px", height: "60px", objectFit: "cover" }}
-                            />
-                          </div>
+                        <div className="d-flex align-items-center">                       
                           <div>
-                            <h6 className="mb-1">{ccdv.fullName || "Chưa có tên"}</h6>
-                            <span className={`badge ${getStatusClass(session.status)}`}>
+                            <h6 className="mb-1">
+                              {ccdv.fullName || ccdv.username || "Chưa có tên"}
+                            </h6>
+                            <span
+                              className={`badge ${getStatusClass(
+                                session.status
+                              )}`}
+                            >
                               {getStatusText(session.status)}
                             </span>
                           </div>
@@ -340,28 +388,30 @@ export default function UserQuanLiDon() {
                       </div>
 
                       {/* Thông tin đơn */}
-                      <div className="col-md-5">
-                        <p className="mb-1">
-                          <i className="bi bi-briefcase text-muted me-2"></i>
-                          <strong>Dịch vụ:</strong> {serviceType.name || "N/A"}
-                        </p>
+                      <div className="col-md-5">                       
                         <p className="mb-1">
                           <i className="bi bi-clock text-muted me-2"></i>
-                          <strong>Thời gian:</strong> {formatNgayGio(session.startTime)}
+                          <strong>Thời gian:</strong>{" "}
+                          {formatNgayGio(session.startTime)}
                         </p>
                         <p className="mb-1">
                           <i className="bi bi-hourglass text-muted me-2"></i>
-                          <strong>Thời lượng:</strong> {tinhThoiLuong(session.startTime, session.endTime)} giờ
+                          <strong>Thời lượng:</strong>{" "}
+                          {tinhThoiLuong(session.startTime, session.endTime)}{" "}
+                          giờ
                         </p>
                         <p className="mb-0">
                           <i className="bi bi-geo-alt text-muted me-2"></i>
-                          <strong>Địa chỉ:</strong> {session.address || "Chưa có địa chỉ"}
+                          <strong>Địa chỉ:</strong>{" "}
+                          {session.address || "Chưa có địa chỉ"}
                         </p>
                       </div>
 
                       {/* Giá và hành động */}
                       <div className="col-md-4 text-end">
-                        <h4 className="text-danger mb-3">{formatGiaTien(session.totalPrice)}</h4>
+                        <h4 className="text-danger mb-3">
+                          {formatGiaTien(session.totalPrice)}
+                        </h4>
 
                         <div className="d-grid gap-2">
                           {/* Xem chi tiết */}
@@ -375,7 +425,10 @@ export default function UserQuanLiDon() {
 
                           {/* Hoàn thành */}
                           {coTheHoanThanh(session.status) && (
-                            <button className="btn btn-success" onClick={() => handleComplete(session.id)}>
+                            <button
+                              className="btn btn-success"
+                              onClick={() => handleComplete(session.id)}
+                            >
                               <i className="bi bi-check-circle me-2"></i>
                               Hoàn thành
                             </button>
@@ -383,30 +436,43 @@ export default function UserQuanLiDon() {
 
                           {/* Hủy đơn */}
                           {coTheHuy(session.status) && (
-                            <button className="btn btn-danger" onClick={() => handleCancel(session.id)}>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => handleCancel(session.id)}
+                            >
                               <i className="bi bi-x-circle me-2"></i>
                               Hủy đơn
                             </button>
                           )}
 
                           {/* Thêm báo cáo */}
-                          {session.status === "COMPLETED" && !session.userReport && (
-                            <Link
-                              to={`/user/don-thue/bao-cao/${session.id}`}
-                              className="btn btn-info"
-                            >
-                              <i className="bi bi-chat-left-text me-2"></i>
-                              Thêm báo cáo
-                            </Link>
-                          )}
+                          {session.status === "COMPLETED" &&
+                            !session.userReport && (
+                              <Link
+                                to={`/user/don-thue/bao-cao/${session.id}`}
+                                className="btn btn-info"
+                              >
+                                <i className="bi bi-chat-left-text me-2"></i>
+                                Thêm báo cáo
+                              </Link>
+                            )}
 
-                          {/* Hiển thị báo cáo nếu có */}
-                          {session.userReport && (
-                            <div className="alert alert-secondary mb-0 mt-2 small text-start">
-                              <i className="bi bi-chat-left-dots me-2"></i>
-                              <strong>Báo cáo:</strong> {session.userReport}
+                          {/* ✅ Báo cáo chờ duyệt */}
+                          {session.status === "REVIEW_REPORT" && (
+                            <div className="alert alert-secondary mb-0 mt-2 small">
+                              <i className="bi bi-clock-history me-2"></i>
+                              <strong>Báo cáo đang chờ duyệt...</strong>
                             </div>
                           )}
+
+                          {/* ✅ Hiển thị báo cáo đã duyệt */}
+                          {session.status === "REPORTED" &&
+                            session.userReport && (
+                              <div className="alert alert-danger mb-0 mt-2 small text-start">
+                                <i className="bi bi-exclamation-circle me-2"></i>
+                                <strong>Báo cáo:</strong> {session.userReport}
+                              </div>
+                            )}
                         </div>
                       </div>
                     </div>
@@ -416,7 +482,6 @@ export default function UserQuanLiDon() {
             );
           })}
         </div>
-
       )}
 
       {/* Phân trang */}
@@ -438,8 +503,9 @@ export default function UserQuanLiDon() {
               </span>
             </li>
             <li
-              className={`page-item ${page === totalPages - 1 ? "disabled" : ""
-                }`}
+              className={`page-item ${
+                page === totalPages - 1 ? "disabled" : ""
+              }`}
             >
               <button
                 className="page-link"

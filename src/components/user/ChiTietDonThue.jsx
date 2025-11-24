@@ -8,10 +8,6 @@ import {
   formatGiaTien,
   formatNgayGio,
   tinhThoiLuong,
-  getStatusClass,
-  getStatusText,
-  coTheHoanThanh,
-  coTheHuy,
 } from "../../service/user_quan_li_don/UserQuanLiDon";
 import { findUserByToken } from "../../service/user/login";
 
@@ -23,6 +19,58 @@ export default function ChiTietDonThue() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // ✅ Helper: Lấy tên CCDV
+  const getCcdvName = (ccdv) => {
+    if (!ccdv) return "Chưa có thông tin";
+    return (
+      ccdv.username ||
+      "Chưa có tên"
+    );
+  };
+
+  // ✅ Helper: Lấy phone CCDV
+  const getCcdvPhone = (ccdv) => {
+    if (!ccdv) return "Chưa có số điện thoại";
+    return ccdv.phone || ccdv.phoneNumber || "Chưa có số điện thoại";
+  };
+
+  // ✅ Helper: Map status sang text và color
+  const getStatusInfo = (status) => {
+    const statusMap = {
+      PENDING: { text: "Chờ phản hồi", class: "badge-warning" },
+      ACCEPTED: { text: "Đã nhận", class: "badge-primary" },
+      COMPLETED: { text: "Đã hoàn thành", class: "badge-success" },
+      REVIEW_REPORT: { text: "⏳ Báo cáo chờ duyệt", class: "badge-secondary" },
+      REPORTED: { text: "❌ Đã báo cáo", class: "badge-danger" },
+    };
+    return statusMap[status] || { text: status, class: "badge-secondary" };
+  };
+
+  // ✅ Helper: Kiểm tra có thể hoàn thành không
+  const coTheHoanThanh = (status) => {
+    return status === "ACCEPTED";
+  };
+
+  // ✅ Helper: Kiểm tra có thể hủy không
+  const coTheHuy = (status) => {
+    return status === "PENDING";
+  };
+
+  // ✅ Helper: Kiểm tra có thể báo cáo không
+  const coTheBaoCao = (status) => {
+    return status === "COMPLETED" && !session?.userReport;
+  };
+
+  // ✅ Helper: Kiểm tra báo cáo đang chờ duyệt
+  const isReportPending = (status) => {
+    return status === "REVIEW_REPORT";
+  };
+
+  // ✅ Helper: Kiểm tra báo cáo đã được duyệt
+  const isReportApproved = (status) => {
+    return status === "REPORTED";
+  };
 
   // Lấy userId từ token
   useEffect(() => {
@@ -65,6 +113,7 @@ export default function ChiTietDonThue() {
     const result = await getChiTietDonThue(sessionId);
 
     if (result.success) {
+      console.log("Session data:", result.data); // DEBUG
       setSession(result.data);
       setError("");
     } else {
@@ -175,6 +224,8 @@ export default function ChiTietDonThue() {
     );
   }
 
+  const statusInfo = getStatusInfo(session.status);
+
   return (
     <div className="container py-5">
       {/* Header */}
@@ -188,7 +239,7 @@ export default function ChiTietDonThue() {
           Quay lại
         </Link>
       </div>
-  
+
       <div className="row">
         {/* Cột trái - Thông tin chi tiết */}
         <div className="col-md-8">
@@ -197,29 +248,25 @@ export default function ChiTietDonThue() {
               <h5 className="mb-0">Thông tin đơn thuê</h5>
             </div>
             <div className="card-body">
-              {/* Trạng thái */}
+              {/* ✅ Trạng thái */}
               <div className="mb-3">
-                <span className={`badge ${getStatusClass(session.status)} fs-6`}>
-                  {getStatusText(session.status)}
+                <span className={`badge ${statusInfo.class} fs-6`}>
+                  {statusInfo.text}
                 </span>
               </div>
-  
-              {/* Thông tin CCDV */}
+
+              {/* ✅ Thông tin CCDV */}
               {session.ccdv && (
                 <div className="mb-4">
-                  <h6 className="text-muted mb-3">Thông tin người cung cấp dịch vụ</h6>
-                  <div className="d-flex align-items-center">
-                    <img
-                      src={session.ccdv.avatar || "/default-avatar.png"}
-                      alt={session.ccdv.fullName || "CCDV"}
-                      className="rounded-circle me-3"
-                      style={{ width: "80px", height: "80px", objectFit: "cover" }}
-                    />
+                  <h6 className="text-muted mb-3">
+                    Thông tin người cung cấp dịch vụ
+                  </h6>
+                  <div className="d-flex align-items-center">                   
                     <div>
-                      <h5 className="mb-1">{session.ccdv.fullName || "Chưa có tên"}</h5>
+                      <h5 className="mb-1">{getCcdvName(session.ccdv)}</h5>
                       <p className="text-muted mb-0">
                         <i className="bi bi-telephone me-2"></i>
-                        {session.ccdv.phone || "Chưa có số điện thoại"}
+                        {getCcdvPhone(session.ccdv)}
                       </p>
                       <p className="text-muted mb-0">
                         <i className="bi bi-envelope me-2"></i>
@@ -229,9 +276,9 @@ export default function ChiTietDonThue() {
                   </div>
                 </div>
               )}
-  
+
               <hr />
-  
+
               {/* Thông tin dịch vụ */}
               {session.serviceType && (
                 <div className="mb-4">
@@ -252,7 +299,10 @@ export default function ChiTietDonThue() {
                         <div>
                           <small className="text-muted d-block">Đơn giá</small>
                           <strong>
-                            {formatGiaTien(session.serviceType.pricePerHour || 0)}/giờ
+                            {formatGiaTien(
+                              session.serviceType.pricePerHour || 0
+                            )}
+                            /giờ
                           </strong>
                         </div>
                       </div>
@@ -260,9 +310,9 @@ export default function ChiTietDonThue() {
                   </div>
                 </div>
               )}
-  
+
               <hr />
-  
+
               {/* Thông tin thời gian */}
               <div className="mb-4">
                 <h6 className="text-muted mb-3">Thông tin thời gian</h6>
@@ -291,16 +341,17 @@ export default function ChiTietDonThue() {
                       <div>
                         <small className="text-muted d-block">Thời lượng</small>
                         <strong>
-                          {tinhThoiLuong(session.startTime, session.endTime)} giờ
+                          {tinhThoiLuong(session.startTime, session.endTime)}{" "}
+                          giờ
                         </strong>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-  
+
               <hr />
-  
+
               {/* Địa chỉ */}
               <div className="mb-3">
                 <h6 className="text-muted mb-3">Địa chỉ</h6>
@@ -311,47 +362,84 @@ export default function ChiTietDonThue() {
                   </div>
                 </div>
               </div>
-  
-              {/* Báo cáo nếu có */}
-              {session.userReport && (
+
+              {/* ✅ Báo cáo - chỉ hiển thị khi REPORTED (đã duyệt) */}
+              {session.userReport && isReportApproved(session.status) && (
                 <>
                   <hr />
                   <div>
-                    <h6 className="text-muted mb-3">Báo cáo của bạn</h6>
-                    <div className="alert alert-light border">
+                    <h6 className="text-muted mb-3">❌ Báo cáo từ CCDV</h6>
+                    <div className="alert alert-danger border">
                       <i className="bi bi-chat-left-quote me-2"></i>
                       {session.userReport}
                     </div>
                   </div>
                 </>
               )}
+
+              {/* ✅ Báo cáo chờ duyệt */}
+              {session.userReport && isReportPending(session.status) && (
+                <>
+                  <hr />
+                  <div>
+                    <h6 className="text-muted mb-3">⏳ Báo cáo chờ duyệt</h6>
+                    <div className="alert alert-info border">
+                      <i className="bi bi-info-circle me-2"></i>
+                      Báo cáo từ CCDV đang chờ admin xem xét. Bạn sẽ được thông
+                      báo kết quả sớm.
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* ✅ Không có báo cáo */}
+              {!session.userReport && !coTheBaoCao(session.status) && (
+                <>
+                  <hr />
+                  <div>
+                    <h6 className="text-muted mb-3">📄 Báo cáo</h6>
+                    <p className="text-muted mb-0">Chưa có báo cáo nào</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-  
+
         {/* Cột phải - Tổng tiền và hành động */}
         <div className="col-md-4">
-          <div className="card border-0 shadow-sm sticky-top" style={{ top: "20px" }}>
+          <div
+            className="card border-0 shadow-sm sticky-top"
+            style={{ top: "20px" }}
+          >
             <div className="card-body">
               <h6 className="text-muted mb-3">Tổng thanh toán</h6>
-              <h2 className="text-danger mb-4">{formatGiaTien(session.totalPrice)}</h2>
-  
+              <h2 className="text-danger mb-4">
+                {formatGiaTien(session.totalPrice)}
+              </h2>
+
               <div className="d-grid gap-2">
                 {coTheHoanThanh(session.status) && (
-                  <button className="btn btn-success btn-lg" onClick={handleComplete}>
+                  <button
+                    className="btn btn-success btn-lg"
+                    onClick={handleComplete}
+                  >
                     <i className="bi bi-check-circle me-2"></i>
                     Hoàn thành
                   </button>
                 )}
-  
+
                 {coTheHuy(session.status) && (
-                  <button className="btn btn-danger btn-lg" onClick={handleCancel}>
+                  <button
+                    className="btn btn-danger btn-lg"
+                    onClick={handleCancel}
+                  >
                     <i className="bi bi-x-circle me-2"></i>
                     Hủy đơn
                   </button>
                 )}
-  
-                {session.status === "COMPLETED" && !session.userReport && (
+
+                {coTheBaoCao(session.status) && (
                   <Link
                     to={`/user/don-thue/bao-cao/${session.id}`}
                     className="btn btn-info btn-lg"
@@ -360,13 +448,13 @@ export default function ChiTietDonThue() {
                     Thêm báo cáo
                   </Link>
                 )}
-  
+
                 <Link to="/user/don-thue" className="btn btn-outline-secondary">
                   <i className="bi bi-arrow-left me-2"></i>
                   Quay lại danh sách
                 </Link>
               </div>
-  
+
               {/* Timeline */}
               <hr className="my-4" />
               <h6 className="text-muted mb-3">Lịch sử</h6>
@@ -392,5 +480,4 @@ export default function ChiTietDonThue() {
       </div>
     </div>
   );
-  
 }
