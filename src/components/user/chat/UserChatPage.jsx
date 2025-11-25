@@ -24,7 +24,7 @@ export default function UserChatPage() {
     if (startChatUserId) {
       chatUserService.getUserInfoById(startChatUserId).then((user) => {
         setTarget({
-          userId: user.id,
+          userId: startChatUserId,
           firstName: user.firstName,
           nickname: user.nickname,
         });
