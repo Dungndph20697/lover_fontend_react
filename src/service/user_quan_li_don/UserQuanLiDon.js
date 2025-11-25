@@ -204,7 +204,7 @@ export const getStatusText = (status) => {
     PENDING: "Chờ phản hồi",
     ACCEPTED: "Đã nhận",
     COMPLETED: "Đã hoàn thành",
-    REVIEW_REPORT: "⏳ Báo cáo chờ duyệt",
+    REVIEW_REPORT: "⏳ Đánh giá chờ duyệt",
     REPORTED: "✅ Đã đánh giá",
     CANCELLED: "Đã hủy",
   };

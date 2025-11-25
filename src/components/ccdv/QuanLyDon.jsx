@@ -184,7 +184,7 @@ const QuanLiDonThue = () => {
                         onClick={() => { setSelectedSession(s); setShowReportModal(true); }}
                         style={{ fontWeight: '500' }}
                     >
-                        <FileText size={16} className="me-1" /> Báo cáo
+                        <FileText size={16} className="me-1" /> Đánh giá
                     </button>
                 );
             case "DUYET_BAO_CAO":
@@ -364,7 +364,7 @@ const QuanLiDonThue = () => {
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '16px', overflow: 'hidden' }}>
                             <div className="modal-header border-0 pb-0" style={{ background: 'linear-gradient(135deg, #ff9a9e 0%, #ffd1dc 100%)' }}>
-                                <h5 className="modal-title fw-bold text-white">Báo cáo khách hàng</h5>
+                                <h5 className="modal-title fw-bold text-white">Đánh giá khách hàng</h5>
                                 <button 
                                     type="button" 
                                     className="btn-close btn-close-white" 
@@ -377,13 +377,13 @@ const QuanLiDonThue = () => {
                                     <p className="fw-semibold mb-0">{selectedSession?.user.username}</p>
                                 </div>
                                 <div>
-                                    <label className="form-label fw-semibold small text-muted text-uppercase">Nội dung báo cáo</label>
+                                    <label className="form-label fw-semibold small text-muted text-uppercase">Nội dung đánh giá</label>
                                     <textarea
                                         className="form-control shadow-sm"
                                         rows="5"
                                         value={reportText}
                                         onChange={(e) => setReportText(e.target.value)}
-                                        placeholder="Nhập nội dung báo cáo..."
+                                        placeholder="Nhập nội dung đánh giá..."
                                         style={{ borderRadius: '12px', border: '2px solid #f0f0f0' }}
                                     />
                                 </div>
@@ -405,7 +405,7 @@ const QuanLiDonThue = () => {
                                         background: 'linear-gradient(135deg, #ff9a9e 0%, #ffd1dc 100%)'
                                     }}
                                 >
-                                    Gửi báo cáo
+                                    Gửi đánh giá
                                 </button>
                             </div>
                         </div>
