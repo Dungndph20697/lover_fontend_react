@@ -1,19 +1,14 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
   Users,
-  ClipboardCheck,
-  Banknote,
-  BarChart2,
-  Settings,
-  Star,
   ShoppingCart,
   DollarSign,
-
-  Activity
-
-
+  Banknote,
+  Star,
+  Activity,
 } from "lucide-react";
+import "./AdminSidebar.css";
 
 const menuItems = [
   {
@@ -21,11 +16,7 @@ const menuItems = [
     label: "Duyệt tài khoản",
     icon: <Users size={18} />,
   },
-  {
-    id: "quanlyuser",
-    label: "Quản lý user",
-    icon: <Users size={18} />,
-  },
+  { id: "quanlyuser", label: "Quản lý user", icon: <Users size={18} /> },
   {
     id: "hireSessions",
     label: "Quản lý đơn đặt thuê",
@@ -34,14 +25,16 @@ const menuItems = [
   { id: "revenues", label: "Doanh thu Idol", icon: <DollarSign size={18} /> },
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
   { id: "vip-manager", label: "Quản lý VIP", icon: <Star size={18} /> },
-
-  { id: "user-activity", label: "Trạng thái hoạt động", icon: <Activity size={18} /> },
-
-
-
+  {
+    id: "user-activity",
+    label: "Trạng thái hoạt động",
+    icon: <Activity size={18} />,
+  },
 ];
 
-export default function AdminSidebar({ selected, setSelected }) {
+export default function AdminSidebar() {
+  const location = useLocation();
+
   return (
     <aside
       className="bg-white shadow-sm p-3 d-flex flex-column"
@@ -56,32 +49,28 @@ export default function AdminSidebar({ selected, setSelected }) {
       </h5>
 
       <ul className="nav flex-column gap-2">
-        {menuItems.map((item) => (
-          <li key={item.id} className="nav-item">
-            <button
-              className={`btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm ${
-                selected === item.id
-                  ? "btn-danger text-white"
-                  : "btn-outline-danger bg-white"
-              }`}
-              onClick={() => setSelected(item.id)}
-              style={{
-                borderRadius: "10px",
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseEnter={(e) => {
-                if (selected !== item.id)
-                  e.currentTarget.classList.add("bg-danger-subtle");
-              }}
-              onMouseLeave={(e) =>
-                e.currentTarget.classList.remove("bg-danger-subtle")
-              }
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          </li>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = location.pathname === `/admin/${item.id}`;
+
+          return (
+            <li key={item.id} className="nav-item">
+              <Link to={`/admin/${item.id}`}>
+                <button
+                  className={`btn admin-sidebar-btn w-100 text-start d-flex align-items-center gap-2 fw-medium shadow-sm 
+                    ${
+                      isActive
+                        ? "btn-danger text-white"
+                        : "btn-outline-danger bg-white text-danger"
+                    }`}
+                  style={{ borderRadius: "10px" }}
+                >
+                  {item.icon}
+                  {item.label}
+                </button>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );
