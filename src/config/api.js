@@ -102,6 +102,8 @@ const apiListItemsServiceIntimateGesture = `${apiCcdv}`;
 
 const apiFilterGenderRequest = `${apiURL}/recommendation`;
 
+const apiFindByCity = `${apiCcdv}/city`;
+
 // API trạng thái hoạt động
 const apiUserStatus = (userId) => `${apiURL}/user-activity/status/${userId}`;
 const apiOnlineUsers = `${apiURL}/user-activity/online`;
@@ -135,6 +137,7 @@ export {
   apiVipSuggestions,
   apiListItemsServiceIntimateGesture,
   apiFilterGenderRequest,
+  apiFindByCity,
   apiUserHireStatistics,
   apiUserHireComplete,
   apiUserHireCancel,

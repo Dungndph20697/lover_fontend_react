@@ -1,10 +1,12 @@
 import axios from "axios";
 import { apiFilterGenderRequest } from "../../config/api";
 
-export const filterGenderRequest = async () => {
+export const filterGenderRequest = async (gender = "") => {
     try {
         const response = await axios.get(
-            `${apiFilterGenderRequest}/providers`
+            `${apiFilterGenderRequest}/providers`, {
+                params: { gender }
+            }
         );
         return response.data;
     } catch (error) {
