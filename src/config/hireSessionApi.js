@@ -51,14 +51,6 @@ const hireSessionApi = {
   approveHireSession: (hireSessionId) => {
     return axios.put(apiAdminApproveHireSession(hireSessionId), {}, getAuthHeader());
   },
-
-  blockUser: (userId) => {
-    return axios.put(apiAdminBlockUser(userId), {}, getAuthHeader());
-  },
-
-  unblockUser: (userId) => {
-    return axios.put(apiAdminUnblockUser(userId), {}, getAuthHeader());
-  },
 };
 
 export {

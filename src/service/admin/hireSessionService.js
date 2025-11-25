@@ -82,28 +82,6 @@ const hireSessionService = {
     }
   },
 
-  // Block tài khoản người dùng
-  async blockUser(userId) {
-    try {
-      const response = await hireSessionApi.blockUser(userId);
-      return response.data;
-    } catch (error) {
-      console.error('Lỗi khi khóa tài khoản:', error);
-      throw error;
-    }
-  },
-
-  // Unblock tài khoản người dùng
-  async unblockUser(userId) {
-    try {
-      const response = await hireSessionApi.unblockUser(userId);
-      return response.data;
-    } catch (error) {
-      console.error('Lỗi khi mở khóa tài khoản:', error);
-      throw error;
-    }
-  },
-
   // Xác định hành động hiển thị cho đơn
   getActions(hireSession) {
     console.log('getActions - HireSession:', hireSession);
