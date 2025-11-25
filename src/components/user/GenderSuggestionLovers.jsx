@@ -46,7 +46,7 @@ export default function GenderSuggestionLovers() {
 
             <div className="row g-4 justify-content-center">
                 {lovers.map((lover) => (
-                    <div className="col-md-4 col-sm-6 col-12" key={lover.id}>
+                    <div className="col-md-4 col-sm-6 col-12" key={lover.userId}>
                         <div className="card border-0 shadow-lg h-100 position-relative overflow-hidden" style={{ borderRadius: "20px" }}>
                             <div className="position-relative">
                                 <img
@@ -78,8 +78,8 @@ export default function GenderSuggestionLovers() {
                                 <p className="fw-bold fs-6 text-danger mt-1">
                                     Tổng giá dịch vụ: {lover.totalPrice || "0"} đ
                                 </p>
-                                <Link to={`/profile/${lover.id}`} className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
-                                <Link to={`/user/chat?to=${lover.id}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
+                                <Link to={`/profile/${lover.userId}`} className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
+                                <Link to={`/user/chat?to=${lover.userId}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>
                         </div>
                     </div>
