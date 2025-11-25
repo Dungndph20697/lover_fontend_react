@@ -30,7 +30,7 @@ export default function FeaturedLovers({ lovers }) {
                   className="card-img-top"
                   alt={lover.fullName}
                   style={{
-                    height: "320px",
+                    height: "540px",
                     objectFit: "cover",
                     borderTopLeftRadius: "20px",
                     borderTopRightRadius: "20px",

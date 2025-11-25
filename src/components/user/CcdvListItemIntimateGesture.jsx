@@ -20,7 +20,7 @@ export default function CcdvListItemIntimateGesture({ list = [] }) {
                                     className="card-img-top"
                                     alt={item.fullName}
                                     style={{
-                                        height: "260px",
+                                        height: "540px",
                                         objectFit: "cover",
                                         borderTopLeftRadius: "20px",
                                         borderTopRightRadius: "20px",

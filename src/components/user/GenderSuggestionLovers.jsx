@@ -53,7 +53,7 @@ export default function GenderSuggestionLovers() {
                                     src={lover.avatar}
                                     className="card-img-top"
                                     alt={lover.fullName}
-                                    style={{ height: "320px", objectFit: "cover", borderTopLeftRadius: "20px", borderTopRightRadius: "20px" }}
+                                    style={{ height: "540px", objectFit: "cover", borderTopLeftRadius: "20px", borderTopRightRadius: "20px" }}
                                 />
                                 <span className="position-absolute top-0 end-0 m-3 badge bg-danger fs-6" style={{ borderRadius: "10px" }}>
                                     ❤️ {lover.hireCount || 0}

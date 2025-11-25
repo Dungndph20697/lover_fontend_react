@@ -48,7 +48,7 @@ export default function VipSuggestionList() {
                                     className="card-img-top"
                                     alt={vip.name}
                                     style={{
-                                        height: "320px",
+                                        height: "540px",
                                         objectFit: "cover",
                                         borderTopLeftRadius: "20px",
                                         borderTopRightRadius: "20px",

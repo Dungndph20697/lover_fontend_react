@@ -3,7 +3,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createCcdvProfile } from "../../service/ccdvProfileService/ccdvProfileService";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function CcdvProfileForm({ setProfile }) {
     const [files, setFiles] = useState({
@@ -15,6 +16,15 @@ export default function CcdvProfileForm({ setProfile }) {
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [userId, setUserId] = useState(null);
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+    });
 
     // 🔹 Lấy userId từ localStorage
     useEffect(() => {
@@ -93,12 +103,14 @@ export default function CcdvProfileForm({ setProfile }) {
             description: Yup.string()
                 .nullable()
                 .required("Mô tả bản thân là bắt buộc")
-                .min(10, "Mô tả phải có ít nhất 10 ký tự"),
+                .min(10, "Mô tả phải có ít nhất 10 ký tự")
+                .max(500, "Mô tả không được vượt quá 500 ký tự"),
 
             requirement: Yup.string()
                 .nullable()
                 .required("Yêu cầu với người thuê là bắt buộc")
-                .min(10, "Yêu cầu phải có ít nhất 10 ký tự"),
+                .min(10, "Yêu cầu phải có ít nhất 10 ký tự")
+                .max(300, "Yêu cầu không được vượt quá 300 ký tự"),
 
             facebookLink: Yup.string()
                 .nullable()
@@ -165,8 +177,10 @@ export default function CcdvProfileForm({ setProfile }) {
             for (let [k, v] of formData.entries()) console.log(k, v);
 
             try {
+                setLoading(true);
                 const data = await createCcdvProfile(formData, token);
                 setMessage("✅ Đăng thông tin thành công!");
+                Toast.fire({ icon: "success", title: "Cập nhật thành công!" });
 
                 // 🔸 Lưu hồ sơ vào localStorage
                 localStorage.setItem(`ccdvProfile_${userId}`, JSON.stringify(values));
@@ -200,6 +214,25 @@ export default function CcdvProfileForm({ setProfile }) {
         <div className="min-vh-100 d-flex align-items-center justify-content-center p-4" style={{ background: "linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%)", fontFamily: "'Poppins', sans-serif" }}>
             <div className="card shadow-lg p-4" style={{ maxWidth: "850px", width: "100%", borderRadius: "20px", backgroundColor: "white" }}>
                 <h2 className="text-center mb-4 fw-bold" style={{ color: "#e75480" }}>💕 Đăng Thông Tin Cá Nhân CCDV 💕</h2>
+                {loading && (
+                    <div style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.4)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999
+                    }}>
+                        <div className="spinner-border text-light" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                )}
+
                 {message && <div className="alert alert-info text-center rounded-3">{message}</div>}
                 <form onSubmit={formik.handleSubmit}>
                     {/* Họ tên + Năm sinh */}
@@ -295,6 +328,7 @@ export default function CcdvProfileForm({ setProfile }) {
                         <label className="form-label fw-semibold">Ảnh đại diện <span style={{ color: "red" }}>*</span></label>
                         <input type="file" name="avatar" className="form-control mb-2" onChange={handleFileChange} />
                         {avatarPreview && <img src={avatarPreview} alt="avatar preview" className="rounded-circle shadow-sm" style={{ width: "120px", height: "120px", objectFit: "cover", border: "3px solid #e75480" }} />}
+                        {formik.touched.avatar && formik.errors.avatar && <div className="text-danger mt-1">{formik.errors.avatar}</div>}
                     </div>
 
                     {/* Portraits */}
@@ -302,8 +336,11 @@ export default function CcdvProfileForm({ setProfile }) {
                         <label className="form-label fw-semibold">Ảnh chân dung (3 ảnh) <span style={{ color: "red" }}>*</span></label>
                         <div className="d-flex gap-2 flex-wrap">
                             <input type="file" name="portrait1" className="form-control" onChange={handleFileChange} />
+                            {(formik.touched.portrait1 && formik.errors.portrait1) && <div className="text-danger mt-1">{formik.errors.portrait1}</div>}
                             <input type="file" name="portrait2" className="form-control" onChange={handleFileChange} />
+                            {(formik.touched.portrait2 && formik.errors.portrait2) && <div className="text-danger mt-1">{formik.errors.portrait2}</div>}
                             <input type="file" name="portrait3" className="form-control" onChange={handleFileChange} />
+                            {(formik.touched.portrait3 && formik.errors.portrait3) && <div className="text-danger mt-1">{formik.errors.portrait3}</div>}
                         </div>
                     </div>
 
