@@ -17,7 +17,7 @@ const dangKyThue = async (data) => {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error("failed:", error);
     return null;

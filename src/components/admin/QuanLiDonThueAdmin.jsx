@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import hireSessionService from '../../service/admin/hireSessionService';
 import AdminReviewReportDetail from './AdminReviewReportDetail';
-import { Container, Table, Pagination, Alert, Spinner, Button } from 'react-bootstrap';
+import { Container, Table, Pagination, Alert, Spinner, Button, Modal } from 'react-bootstrap';
 
 const QuanLiDonThueAdmin = () => {
   const [hireSessions, setHireSessions] = useState([]);
@@ -12,6 +12,12 @@ const QuanLiDonThueAdmin = () => {
   const [pageSize] = useState(20);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+
+  // === NEW STATES FOR MODALS ===
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [selectedApproveId, setSelectedApproveId] = useState(null);
 
   useEffect(() => {
     loadHireSessions(currentPage);
@@ -32,15 +38,22 @@ const QuanLiDonThueAdmin = () => {
     }
   };
 
+  // === UPDATED handleApprove: mở modal xác nhận ===
   const handleApprove = async (hireSessionId) => {
-    if (window.confirm('Bạn có chắc chắn muốn duyệt đơn này?')) {
-      try {
-        await hireSessionService.approveHireSession(hireSessionId);
-        alert('Duyệt đơn thành công');
-        loadHireSessions(currentPage);
-      } catch (err) {
-        alert('Lỗi khi duyệt đơn');
-      }
+    setSelectedApproveId(hireSessionId);
+    setShowConfirmModal(true);
+  };
+
+  // === THỰC HIỆN DUYỆT SAU KHI XÁC NHẬN TRONG MODAL ===
+  const confirmApprove = async () => {
+    try {
+      await hireSessionService.approveHireSession(selectedApproveId);
+      setShowConfirmModal(false);
+      setShowSuccessModal(true);
+      loadHireSessions(currentPage);
+    } catch (err) {
+      setShowConfirmModal(false);
+      setShowErrorModal(true);
     }
   };
 
@@ -134,7 +147,8 @@ const QuanLiDonThueAdmin = () => {
                           {actions.length > 0 ? (
                             <div className="d-flex gap-2 justify-content-center flex-wrap">
                               {actions.map((action, index) => {
-                                let variant = action.type === 'reviewReport' ? 'danger' : 'success';
+                                let variant =
+                                  action.type === 'reviewReport' ? 'danger' : 'success';
                                 return (
                                   <Button
                                     key={index}
@@ -170,8 +184,14 @@ const QuanLiDonThueAdmin = () => {
                 </Pagination.Item>
               ))}
 
-              <Pagination.Next disabled={currentPage === totalPages - 1} onClick={() => setCurrentPage(currentPage + 1)} />
-              <Pagination.Last disabled={currentPage === totalPages - 1} onClick={() => setCurrentPage(totalPages - 1)} />
+              <Pagination.Next
+                disabled={currentPage === totalPages - 1}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              />
+              <Pagination.Last
+                disabled={currentPage === totalPages - 1}
+                onClick={() => setCurrentPage(totalPages - 1)}
+              />
             </Pagination>
           </div>
         </>
@@ -188,6 +208,48 @@ const QuanLiDonThueAdmin = () => {
           onRefresh={() => loadHireSessions(currentPage)}
         />
       )}
+
+      {/* === MODAL XÁC NHẬN === */}
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận duyệt đơn</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn duyệt đơn này?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+            Hủy
+          </Button>
+          <Button variant="success" onClick={confirmApprove}>
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* === MODAL THÀNH CÔNG === */}
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title>Thành công</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Duyệt đơn thành công.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={() => setShowSuccessModal(false)}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* === MODAL LỖI === */}
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>Lỗi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Đã xảy ra lỗi khi duyệt đơn. Vui lòng thử lại.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="light" onClick={() => setShowErrorModal(false)}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

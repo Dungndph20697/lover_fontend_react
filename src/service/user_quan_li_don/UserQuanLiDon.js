@@ -167,11 +167,6 @@ export const capNhatTrangThaiDonThue = async (sessionId, userId, status) => {
   }
 };
 
-
-// =====================
-// ===== HELPERS =====
-// =====================
-
 // ✅ 8. Helper: Format tiền
 export const formatGiaTien = (amount) => {
   if (!amount && amount !== 0) return "0₫";
@@ -194,7 +189,7 @@ export const formatNgayGio = (dateString) => {
   });
 };
 
-// ✅ 10. Helper: Tính thời lượng (giờ)
+// 10. Helper: Tính thời lượng (giờ)
 export const tinhThoiLuong = (start, end) => {
   if (!start || !end) return 0;
   const s = new Date(start);
@@ -203,33 +198,33 @@ export const tinhThoiLuong = (start, end) => {
   return diff.toFixed(1);
 };
 
-// ✅ 11. Helper: Status text - UPDATE với REVIEW_REPORT
+// 11. Helper: Status text - UPDATE với REVIEW_REPORT
 export const getStatusText = (status) => {
   const statusMap = {
     PENDING: "Chờ phản hồi",
     ACCEPTED: "Đã nhận",
     COMPLETED: "Đã hoàn thành",
     REVIEW_REPORT: "⏳ Báo cáo chờ duyệt",
-    REPORTED: "❌ Đã báo cáo",
+    REPORTED: "✅ Đã đánh giá",
     CANCELLED: "Đã hủy",
   };
   return statusMap[status] || "Không xác định";
 };
 
-// ✅ 12. Helper: Status CSS class - UPDATE với REVIEW_REPORT
+// 12. Helper: Status CSS class - UPDATE với REVIEW_REPORT
 export const getStatusClass = (status) => {
   const classMap = {
     PENDING: "bg-warning text-dark",
     ACCEPTED: "bg-info text-white",
     COMPLETED: "bg-success text-white",
     REVIEW_REPORT: "bg-secondary text-white",
-    REPORTED: "bg-danger text-white",
+    REPORTED: "bg-purple-light text-success",
     CANCELLED: "bg-dark text-white",
   };
   return classMap[status] || "bg-light text-dark";
 };
 
-// ✅ 13. Logic check các hành động
+// 13. Logic check các hành động
 
 /**
  * Kiểm tra có thể hoàn thành đơn không

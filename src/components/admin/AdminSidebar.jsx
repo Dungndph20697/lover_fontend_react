@@ -9,6 +9,10 @@ import {
   Star,
   ShoppingCart,
   DollarSign,
+
+  Activity
+
+
 } from "lucide-react";
 
 const menuItems = [
@@ -30,6 +34,11 @@ const menuItems = [
   { id: "revenues", label: "Doanh thu Idol", icon: <DollarSign size={18} /> },
   { id: "withdraw", label: "Duyệt rút tiền", icon: <Banknote size={18} /> },
   { id: "vip-manager", label: "Quản lý VIP", icon: <Star size={18} /> },
+
+  { id: "user-activity", label: "Trạng thái hoạt động", icon: <Activity size={18} /> },
+
+
+
 ];
 
 export default function AdminSidebar({ selected, setSelected }) {

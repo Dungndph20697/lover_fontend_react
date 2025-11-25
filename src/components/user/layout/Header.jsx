@@ -62,7 +62,7 @@ export default function Header() {
   };
 
   return (
-    <header className="navbar navbar-expand-lg bg-white shadow-sm">
+    <header className="navbar navbar-expand-lg bg-light shadow-sm">
       <div className="container">
         <Link className="navbar-brand text-danger fw-bold fs-4" to="/">
           ❤️ Lover
