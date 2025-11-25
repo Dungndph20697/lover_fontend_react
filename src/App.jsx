@@ -5,29 +5,37 @@ import { useState, useEffect } from "react";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Home from "./components/user/Home";
-
 import PersonalProfile from "./components/ccdv/PersonalProfile";
-
 import CCDVHome from "./components/ccdv/CCDVHome";
 import { findUserByToken } from "./service/user/login";
 import Swal from "sweetalert2";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Explore from "./components/user/Explore";
-
 import PersonalProfileEdit from "./components/ccdv/PersonalProfileEdit";
 import UserInfo from "./components/ccdv/UserInfo";
 import UserQuanLiDon from "./components/user/UserQuanLiDon";
 import ChiTietDonThue from "./components/user/ChiTietDonThue";
 import BaoCaoDonThue from "./components/user/BaoCaoDonThue";
-
 import RevenueForm from "./components/ccdv/TongDoanhThu";
-
 import ProfileDetail from "./components/user/ProfileDetail";
 import AdminDashboard from "./components/admin/AdminDashboard";
-
 import UserChatPage from "./components/user/chat/UserChatPage";
+import Services from "./components/ccdv/Services";
+import QuanLyDon from "./components/ccdv/QuanLyDon";
+import CcdvChatPage from "./components/ccdv/chat/CcdvChatPage";
+import CcdvTopCustomers from "./components/ccdv/lichsudathue/CcdvTopCustomers";
+import WithdrawRequest from "./components/wallet/WithdrawRequest";
+import WithdrawHistory from "./components/wallet/WithdrawHistory";
 
+import AdminSuccessAccount from "./components/admin/duyet_tai_khoan/AdminSuccessAccount";
+import AdminUsers from "./components/admin/AdminUsers";
+import QuanLiDonThueAdmin from "./components/admin/QuanLiDonThueAdmin";
+import AdminRevenueList from "./components/admin/AdminRevenueList";
+import AdminWithdraw from "./components/admin/duyet_rut_tien/AdminWithdraw";
+import AdminSuccessVip from "./components/admin/duyet_tai_khoan/AdminSuccessVip";
+import AdminUserActivity from "./components/admin/trang_thai_hoat_dong/AdminUserActivity";
+import AdminOverview from "./components/admin/AdminOverview";
 // import "./App.css";
 
 // Component bảo vệ route
@@ -101,10 +109,7 @@ function App() {
           }
         />
 
-
         <Route path="/admin" element={<AdminDashboard />} />
-
-
 
         {/* User đơn đã thuê */}
         <Route
@@ -131,7 +136,41 @@ function App() {
               <CCDVHome />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="userinfo" element={<UserInfo />} />
+          <Route path="services" element={<Services />} />
+          <Route path="quanlydon" element={<QuanLyDon />} />
+          <Route path="lichsuthue" element={<CcdvTopCustomers />} />
+          <Route path="revenue" element={<RevenueForm />} />
+          <Route path="chat" element={<CcdvChatPage />} />
+
+          <Route path="withdraw" element={<WithdrawRequest />} />
+          <Route path="withdraw-history" element={<WithdrawHistory />} />
+
+          {/* Mặc định khi /ccdv thì load userinfo */}
+          <Route index element={<UserInfo />} />
+        </Route>
+
+        {/* đây là admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="approve-account" element={<AdminSuccessAccount />} />
+          <Route path="quanlyuser" element={<AdminUsers />} />
+          <Route path="hireSessions" element={<QuanLiDonThueAdmin />} />
+          <Route path="revenues" element={<AdminRevenueList />} />
+          <Route path="withdraw" element={<AdminWithdraw />} />
+          <Route path="vip-manager" element={<AdminSuccessVip />} />
+          <Route path="user-activity" element={<AdminUserActivity />} />
+
+          {/* Default */}
+          <Route index element={<AdminOverview />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
