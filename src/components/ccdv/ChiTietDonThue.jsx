@@ -90,8 +90,8 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
       PENDING: "Chờ phản hồi",
       ACCEPTED: "Đã nhận",
       COMPLETED: "Đã hoàn thành",
-      REVIEW_REPORT: "⏳ Chờ duyệt báo cáo",
-      REPORTED: "❌ Đã báo cáo",
+      REVIEW_REPORT: "⏳ Chờ duyệt đánh giá",
+      REPORTED: "✅ Đã đánh giá",
     };
     return map[status] || status;
   };
@@ -102,7 +102,7 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
       ACCEPTED: "primary",
       COMPLETED: "success",
       REVIEW_REPORT: "secondary",
-      REPORTED: "danger",
+      REPORTED: "success",
     };
     return map[status] || "secondary";
   };
@@ -162,7 +162,7 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
         {/* Cột trái - Thông tin chính */}
         <div className="col-lg-8 mb-4">
           <div className="card shadow-sm">
-            <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div className="card-header bg-white text-black d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Thông tin đơn thuê</h5>
               <span className={`badge bg-${getStatusColor(session.status)}`}>
                 {getStatusText(session.status)}
@@ -264,7 +264,7 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
           {/* ✅ CHỈNH SỬA: Phản hồi về người thuê */}
           <div className="card shadow-sm">
             <div className="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Phản hồi về người thuê</h5>
+              <h5 className="mb-0">Đánh giá về người thuê</h5>
               {session.status === "COMPLETED" && !isEditingFeedback && (
                 <button
                   className="btn btn-sm btn-light"
@@ -278,9 +278,9 @@ const ChiTietDonThue = ({ sessionId, ccdvId, onBack }) => {
               {/* ✅ THÊM: Hiển thị cảnh báo khi báo cáo chờ duyệt */}
               {isReportPending && (
                 <div className="alert alert-info mb-3">
-                  <strong>⏳ Báo cáo đang chờ duyệt từ admin</strong>
+                  <strong>⏳ Đánh giá đang chờ duyệt từ admin</strong>
                   <p className="mb-0 mt-2 small">
-                    Nội dung báo cáo của bạn đã được gửi. Admin sẽ xem xét và
+                    Nội dung đánh giá của bạn đã được gửi. Admin sẽ xem xét và
                     thông báo kết quả sớm.
                   </p>
                 </div>
