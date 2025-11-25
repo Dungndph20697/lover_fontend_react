@@ -6,7 +6,7 @@ export default function ChatList({ me, loadUsers, onSelect, incoming }) {
   useEffect(() => {
     loadUsers(me.id).then((data) => setUsers(data));
     // loadUsers().then((data) => setUsers(data));
-    console.log(me);
+    // console.log(me);
   }, [me.id, incoming]);
 
   return (

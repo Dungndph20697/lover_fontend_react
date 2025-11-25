@@ -1,25 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChatList from "../../shared/ChatList";
 import ChatWindow from "../../shared/ChatWindow";
 import useChatSocket from "../../../service/chat/useChatSocket";
 import { chatUserService } from "../../../service/chat/chatUserService ";
+import { useSearchParams } from "react-router-dom";
 
 export default function CcdvChatPage() {
-  const [target, setTarget] = useState(null);
-  const [incoming, setIncoming] = useState(null);
   const raw = localStorage.getItem("user");
   const me = raw ? JSON.parse(raw) : null;
 
-  if (!me) {
-    return (
-      <div className="text-center mt-5">
-        Bạn cần đăng nhập để sử dụng tính năng chat.
-      </div>
-    );
-  }
+  const [params] = useSearchParams();
+  const startChatUserId = params.get("to"); // <-- GET ?to=ID từ URL
 
-  // const { send } = useChatSocket(me.id, setIncoming);
+  const [target, setTarget] = useState(null);
+  const [incoming, setIncoming] = useState(null);
+
   const { sendMessage } = useChatSocket(me.id, setIncoming);
+
+  // 🔥 Load người mà CCDV muốn chat khi bấm "chat ngay"
+  useEffect(() => {
+    console.log(startChatUserId);
+    if (startChatUserId) {
+      chatUserService.getUserInfoById(startChatUserId).then((user) => {
+        setTarget({
+          userId: startChatUserId,
+          firstName: user.firstName,
+          nickname: user.nickname,
+        });
+      });
+    }
+  }, [startChatUserId]);
 
   return (
     <div className="d-flex" style={{ height: "90vh" }}>
@@ -29,6 +39,7 @@ export default function CcdvChatPage() {
         onSelect={setTarget}
         incoming={incoming}
       />
+
       <ChatWindow
         me={me}
         target={target}

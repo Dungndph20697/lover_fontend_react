@@ -11,6 +11,7 @@ import VipSuggestionList from "../user/VipSuggestionList";
 import CcdvListItemIntimateGesture from "./CcdvListItemIntimateGesture";
 import { getListItemsServiceIntimateGesture } from "../../service/IntimateGesture/DV_cu_chi_than_mat";
 import GenderSuggestionLovers from "./GenderSuggestionLovers";
+import FindCcdvByCity from "./FindCcdvByCity";
 
 export default function Home() {
   const [lovers, setLovers] = useState([]);
@@ -65,6 +66,7 @@ export default function Home() {
       <FeaturedLovers lovers={lovers} />
       <CcdvListItemIntimateGesture list={itemLovers} />
       <GenderSuggestionLovers />
+      <FindCcdvByCity />
       <CallToAction />
       <Footer />
     </div>
