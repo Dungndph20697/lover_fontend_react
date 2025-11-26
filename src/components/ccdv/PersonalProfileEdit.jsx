@@ -78,7 +78,7 @@ export default function CcdvProfileEditForm() {
         nationality: Yup.string().required("Quốc tịch là bắt buộc"),
         height: Yup.number().nullable(),
         weight: Yup.number().nullable(),
-        hobbies: Yup.string().nullable(),
+        hobbies: Yup.string().nullable().max(400, "Sở thích không được vượt quá 300 ký tự"),
         description: Yup.string().nullable().max(500, "Mô tả không được vượt quá 500 ký tự"),
         requirement: Yup.string().nullable().max(300, "Yêu cầu không được vượt quá 300 ký tự"),
         facebookLink: Yup.string().nullable().url("Link Facebook không hợp lệ"),
@@ -173,8 +173,6 @@ export default function CcdvProfileEditForm() {
             });
         }
     };
-
-
 
     const handleFileChange = (e, field) => {
         const file = e.target.files[0];
