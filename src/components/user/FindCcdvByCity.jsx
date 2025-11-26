@@ -73,9 +73,9 @@ export default function FindCcdvByCity() {
                                     ) : (
                                         <span className="text-muted">Không có dịch vụ</span>
                                     )}</p>
-                                <p className="fw-bold fs-6 text-danger mt-1">
+                                {/* <p className="fw-bold fs-6 text-danger mt-1">
                                     Tổng giá dịch vụ: {ccdv.totalPrice || "0"} đ
-                                </p>
+                                </p> */}
                                 <Link to={`/profile/${ccdv.userId}`} className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold me-2">Xem hồ sơ</Link>
                                 <Link to={`/user/chat?to=${ccdv.userId}`} className="btn btn-danger px-4 py-2 rounded-pill fw-semibold">Chat ngay</Link>
                             </div>
