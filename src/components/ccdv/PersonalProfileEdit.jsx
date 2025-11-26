@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import { getProfileByUserId, updateCcdvProfile, toggleCcdvStatus } from "../../service/ccdvProfileService/ccdvProfileService";
 import { findUserByToken } from "../../service/user/login.js";
-import { toast } from "react-toastify"; // nếu đang dùng toast
+// import { toast } from "react-toastify"; // nếu đang dùng toast
 
 
 
@@ -16,7 +16,6 @@ export default function CcdvProfileEditForm() {
     const [files, setFiles] = useState({ avatar: null, portrait1: null, portrait2: null, portrait3: null });
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
-    const [saving, setSaving] = useState(false);
 
 
     const Toast = Swal.mixin({
@@ -61,8 +60,8 @@ export default function CcdvProfileEditForm() {
         height: Yup.number().nullable(),
         weight: Yup.number().nullable(),
         hobbies: Yup.string().nullable(),
-        description: Yup.string().nullable(),
-        requirement: Yup.string().nullable(),
+        description: Yup.string().nullable().max(500, "Mô tả không được vượt quá 500 ký tự"),
+        requirement: Yup.string().nullable().max(300, "Yêu cầu không được vượt quá 300 ký tự"),
         facebookLink: Yup.string().nullable().url("Link Facebook không hợp lệ"),
         avatar: Yup.mixed().required("Ảnh đại diện là bắt buộc").test("fileType", "Chỉ nhận ảnh PNG/JPG", value => value && ["image/jpeg", "image/png"].includes(value.type)),
         portrait1: Yup.mixed().required("Ảnh chân dung 1 là bắt buộc").test("fileType", "Chỉ nhận ảnh PNG/JPG", value => value && ["image/jpeg", "image/png"].includes(value.type)),
@@ -80,8 +79,8 @@ export default function CcdvProfileEditForm() {
         height: Yup.number().nullable(),
         weight: Yup.number().nullable(),
         hobbies: Yup.string().nullable(),
-        description: Yup.string().nullable(),
-        requirement: Yup.string().nullable(),
+        description: Yup.string().nullable().max(500, "Mô tả không được vượt quá 500 ký tự"),
+        requirement: Yup.string().nullable().max(300, "Yêu cầu không được vượt quá 300 ký tự"),
         facebookLink: Yup.string().nullable().url("Link Facebook không hợp lệ"),
         avatar: Yup.mixed().nullable().test("fileType", "Chỉ nhận ảnh PNG/JPG", value => !value || ["image/jpeg", "image/png"].includes(value.type)),
         portrait1: Yup.mixed().nullable().test("fileType", "Chỉ nhận ảnh PNG/JPG", value => !value || ["image/jpeg", "image/png"].includes(value.type)),
