@@ -67,7 +67,8 @@ export default function FindCcdvByCity() {
                                                 key={idx}
                                                 className="badge bg-primary me-1 mb-1"
                                             >
-                                                {s.name} ({s.pricePerHour || "Đang cập nhật"}đ / giờ)
+                                                {s.name} 
+                                                {/* ({s.pricePerHour || "Đang cập nhật"}đ / giờ) */}
                                             </span>
                                         ))
                                     ) : (

@@ -45,6 +45,7 @@ export default function ProfileDetail() {
         console.log("📌 Gọi API getUserStatus với userId =", profile.user.id);
 
         const data = await getUserStatus(profile.user.id);
+        console.log("📌 Dữ liệu trạng thái hoạt động nhận được:", data);
 
         console.log("📌 Kết quả trả về:", data);
         setActivity(data);
@@ -60,6 +61,7 @@ export default function ProfileDetail() {
   useEffect(() => {
     const fetchProfile = async () => {
       const data = await loadCcdvDetail(id);
+      console.log("📌 Dữ liệu CCDV:", data);
       setProfile(data);
     };
     fetchProfile();
@@ -69,6 +71,7 @@ export default function ProfileDetail() {
   useEffect(() => {
     const fetchServices = async () => {
       const data = await loadDichVuByCcdvId(id);
+      console.log("📌 Dịch vụ của CCDV:", data);
       setServices(data);
     };
     fetchServices();
