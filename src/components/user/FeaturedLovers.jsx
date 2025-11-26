@@ -49,18 +49,22 @@ export default function FeaturedLovers({ lovers }) {
                 <p className="text-muted mb-3">
                   {lover.description || "Đang cập nhật"} 🌆
                 </p>
-                <Link
-                  to={`/profile/${lover.id}`}
-                  className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold"
-                >
-                  Xem hồ sơ
-                </Link>
-                <Link
-                  to={`/user/chat?to=${lover.id}`}
-                  className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
-                >
-                  Chat ngay
-                </Link>
+
+                <div className="mt-3">
+
+                  <Link
+                    to={`/profile/${lover.id}`}
+                    className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold"
+                  >
+                    Xem hồ sơ
+                  </Link>
+                  <Link
+                    to={`/user/chat?to=${lover.id}`}
+                    className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
+                  >
+                    Chat ngay
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -109,7 +109,7 @@ function App() {
           }
         />
 
-        <Route path="/admin" element={<AdminDashboard />} />
+        {/* <Route path="/admin" element={<AdminDashboard />} /> */}
 
         {/* User đơn đã thuê */}
         <Route
