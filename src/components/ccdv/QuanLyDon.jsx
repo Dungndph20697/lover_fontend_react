@@ -204,7 +204,7 @@ const QuanLiDonThue = () => {
             }}
             style={{ fontWeight: "500" }}
           >
-            <FileText size={16} className="me-1" /> Báo cáo
+            <FileText size={16} className="me-1" /> Đánh giá
           </button>
         );
       case "DUYET_BAO_CAO":
@@ -501,7 +501,7 @@ const QuanLiDonThue = () => {
                 }}
               >
                 <h5 className="modal-title fw-bold text-white">
-                  Báo cáo khách hàng
+                  Đánh giá khách hàng
                 </h5>
                 <button
                   type="button"
@@ -520,14 +520,14 @@ const QuanLiDonThue = () => {
                 </div>
                 <div>
                   <label className="form-label fw-semibold small text-muted text-uppercase">
-                    Nội dung báo cáo
+                    Nội dung đánh giá
                   </label>
                   <textarea
                     className="form-control shadow-sm"
                     rows="5"
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
-                    placeholder="Nhập nội dung báo cáo..."
+                    placeholder="Nhập nội dung đánh giá..."
                     style={{
                       borderRadius: "12px",
                       border: "2px solid #f0f0f0",
@@ -553,7 +553,7 @@ const QuanLiDonThue = () => {
                       "linear-gradient(135deg, #ff9a9e 0%, #ffd1dc 100%)",
                   }}
                 >
-                  Gửi báo cáo
+                  Gửi đánh giá
                 </button>
               </div>
             </div>
