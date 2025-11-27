@@ -153,11 +153,11 @@ export default function Login() {
               Đăng nhập
             </button>
 
-            <div className="text-center mt-3">
+            {/* <div className="text-center mt-3">
               <a href="#" className="text-decoration-none text-danger small">
                 Quên mật khẩu?
               </a>
-            </div>
+            </div> */}
           </form>
 
           <hr />

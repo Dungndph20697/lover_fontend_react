@@ -253,10 +253,13 @@ export default function CcdvProfileForm({ setProfile }) {
                     <div className="row g-3 mb-3">
                         <div className="col-md-4">
                             <label className="form-label d-block">Giới tính <span style={{ color: "red" }}>*</span></label>
-                            {["Nam", "Nữ", "Khác"].map(g => <div key={g} className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="gender" value={g} checked={formik.values.gender === g} onChange={() => formik.setFieldValue("gender", g)} />
-                                <label className="form-check-label">{g}</label>
-                            </div>)}
+                            {/* , "Khác" */}
+                            {["Nam", "Nữ"].map(g => 
+                                <div key={g} className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="gender" value={g} checked={formik.values.gender === g} onChange={() => formik.setFieldValue("gender", g)} />
+                                    <label className="form-check-label">{g}</label>
+                                </div>
+                            )}
                             {formik.touched.gender && formik.errors.gender && <div className="text-danger mt-1">{formik.errors.gender}</div>}
                         </div>
                         <div className="col-md-4">

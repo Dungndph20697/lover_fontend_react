@@ -147,7 +147,7 @@ export default function ProfileDetail() {
                 {!activity && <span>Đang tải...</span>}
 
                 {activity && (
-                  <> // sửa lại
+                  <>
                     {activity.status === "Đang hoạt động" ? (
                       <span className="text-success fw-bold">🟢 Đang hoạt động</span>
                     ) : (
