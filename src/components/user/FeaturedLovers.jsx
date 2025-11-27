@@ -8,7 +8,7 @@ export default function FeaturedLovers({ lovers }) {
 
       <div className="row g-4 justify-content-center">
         {lovers.map((lover) => (
-          <div className="col-md-4 col-sm-6 col-12" key={lover.id}>
+          <div className="col-md-4 col-sm-6 col-12" key={lover.userId}>
             <div
               className="card border-0 shadow-lg h-100 position-relative overflow-hidden"
               style={{
@@ -53,13 +53,13 @@ export default function FeaturedLovers({ lovers }) {
                 <div className="mt-3">
 
                   <Link
-                    to={`/profile/${lover.id}`}
+                    to={`/profile/${lover.userId}`}
                     className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold"
                   >
                     Xem hồ sơ
                   </Link>
                   <Link
-                    to={`/user/chat?to=${lover.id}`}
+                    to={`/user/chat?to=${lover.userId}`}
                     className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
                   >
                     Chat ngay
