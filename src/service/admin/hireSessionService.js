@@ -4,7 +4,7 @@ const STATUS_MAP = {
   'PENDING': 'Chờ phản hồi',
   'ACCEPTED': 'Đã nhận',
   'COMPLETED': 'Đã hoàn thành',
-  'REVIEW_REPORT': 'Duyệt báo cáo',
+  'REVIEW_REPORT': 'Duyệt đánh giá',
 };
 
 const hireSessionService = {
@@ -55,7 +55,7 @@ const hireSessionService = {
       const response = await hireSessionApi.approveReport(hireSessionId);
       return response.data;
     } catch (error) {
-      console.error('Lỗi khi duyệt báo cáo:', error);
+      console.error('Lỗi khi duyệt đánh giá:', error);
       throw error;
     }
   },
@@ -66,7 +66,7 @@ const hireSessionService = {
       const response = await hireSessionApi.rejectReport(hireSessionId);
       return response.data;
     } catch (error) {
-      console.error('Lỗi khi từ chối báo cáo:', error);
+      console.error('Lỗi khi từ chối đánh giá:', error);
       throw error;
     }
   },
