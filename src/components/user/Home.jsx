@@ -1,40 +1,72 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import { getTopLoverHome, getTopViewedLoverHome } from "../../service/top_lover_home/topCcdv";
 import Header from "./layout/Header";
 import HeroSection from "./layout/HeroSection";
 import FeaturedLovers from "./FeaturedLovers";
 import CallToAction from "./CallToAction";
 import Footer from "./layout/Footer";
+import TopLovers from "./TopLovers";
+import VipSuggestionList from "../user/VipSuggestionList";
+import CcdvListItemIntimateGesture from "./CcdvListItemIntimateGesture";
+import { getListItemsServiceIntimateGesture } from "../../service/IntimateGesture/DV_cu_chi_than_mat";
+import GenderSuggestionLovers from "./GenderSuggestionLovers";
+import FindCcdvByCity from "./FindCcdvByCity";
 
 export default function Home() {
-  const lovers = [
-    {
-      id: 1,
-      name: "Linh",
-      age: 22,
-      city: "Hà Nội",
-      image: "https://i.pravatar.cc/300?img=47",
-    },
-    {
-      id: 2,
-      name: "Huy",
-      age: 25,
-      city: "TP.HCM",
-      image: "https://i.pravatar.cc/300?img=12",
-    },
-    {
-      id: 3,
-      name: "My",
-      age: 21,
-      city: "Đà Nẵng",
-      image: "https://i.pravatar.cc/300?img=32",
-    },
-  ];
+  const [lovers, setLovers] = useState([]);
+  const [topLovers, setTopLovers] = useState([]);
+  const [itemLovers, setItemLovers] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getTopLoverHome();
+        setLovers(data);
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchTopViewedLovers() {
+      try {
+        const data = await getTopViewedLoverHome();
+        setTopLovers(data);
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    }
+
+    fetchTopViewedLovers();
+  }, []);
+
+  useEffect(() => {
+    async function fetchIntimateGestureLovers() {
+      try {
+        const response = await getListItemsServiceIntimateGesture(0, 12);
+        setItemLovers(response.content);
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    }
+
+    fetchIntimateGestureLovers();
+  }, []);
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-column">
       <Header />
       <HeroSection />
+      <TopLovers lovers={topLovers}/>
+      <VipSuggestionList />
       <FeaturedLovers lovers={lovers} />
+      <CcdvListItemIntimateGesture list={itemLovers} />
+      <GenderSuggestionLovers />
+      <FindCcdvByCity />
       <CallToAction />
       <Footer />
     </div>

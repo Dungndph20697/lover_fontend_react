@@ -1,0 +1,13 @@
+.sidebar-btn {
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover khi KHÔNG active */
+.sidebar-btn:not(.active):hover {
+  background-color: #ffe5e5 !important; /* đỏ nhạt */
+  color: #dc3545 !important; /* chữ đỏ */
+}
+a {
+  text-decoration: none !important;
+}

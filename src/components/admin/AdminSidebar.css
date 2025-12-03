@@ -1,0 +1,13 @@
+.admin-sidebar-btn {
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-sidebar-btn:not(.btn-danger):hover {
+  background-color: #ffe5e5 !important;
+  color: #dc3545 !important;
+}
+
+a {
+  text-decoration: none !important;
+}

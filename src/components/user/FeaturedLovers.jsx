@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 export default function FeaturedLovers({ lovers }) {
   return (
     <section className="container my-5">
-      <h2 className="text-center fw-bold mb-5 text-danger">💕 Gợi ý nổi bật</h2>
+      <h2 className="text-center fw-bold mb-5 text-danger">💕 Top 12 người được thuê nhiều nhất</h2>
 
       <div className="row g-4 justify-content-center">
         {lovers.map((lover) => (
-          <div className="col-md-4 col-sm-6 col-12" key={lover.id}>
+          <div className="col-md-4 col-sm-6 col-12" key={lover.userId}>
             <div
               className="card border-0 shadow-lg h-100 position-relative overflow-hidden"
               style={{
@@ -26,11 +26,11 @@ export default function FeaturedLovers({ lovers }) {
             >
               <div className="position-relative">
                 <img
-                  src={lover.image}
+                  src={lover.avatar}
                   className="card-img-top"
-                  alt={lover.name}
+                  alt={lover.fullName}
                   style={{
-                    height: "320px",
+                    height: "540px",
                     objectFit: "cover",
                     borderTopLeftRadius: "20px",
                     borderTopRightRadius: "20px",
@@ -40,21 +40,31 @@ export default function FeaturedLovers({ lovers }) {
                   className="position-absolute top-0 end-0 m-3 badge bg-danger fs-6"
                   style={{ borderRadius: "10px" }}
                 >
-                  ❤️ {lover.age}
+                  ❤️ {lover.hireCount}
                 </span>
               </div>
 
               <div className="card-body text-center">
-                <h5 className="fw-bold text-dark mb-1">{lover.name}</h5>
+                <h5 className="fw-bold text-dark mb-1">{lover.fullName}</h5>
                 <p className="text-muted mb-3">
-                  {lover.city || "Đang cập nhật"} 🌆
+                  {lover.description || "Đang cập nhật"} 🌆
                 </p>
-                <Link
-                  to={`/lover/${lover.id}`}
-                  className="btn btn-outline-danger px-4 py-2 rounded-pill fw-semibold"
-                >
-                  Xem hồ sơ
-                </Link>
+
+                <div className="mt-3">
+
+                  <Link
+                    to={`/profile/${lover.userId}`}
+                    className="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold"
+                  >
+                    Xem hồ sơ
+                  </Link>
+                  <Link
+                    to={`/user/chat?to=${lover.userId}`}
+                    className="btn btn-danger px-4 py-2 rounded-pill fw-semibold"
+                  >
+                    Chat ngay
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

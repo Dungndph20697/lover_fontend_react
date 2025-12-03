@@ -23,6 +23,7 @@ export default function Login() {
     timerProgressBar: true,
   });
 
+  // bổ sung thêm check nếu tài khoản chưa được duyệt thì hiển thị thông báo
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -43,12 +44,35 @@ export default function Login() {
         navigate("/");
       } else if (userData.role.name === "SERVICE_PROVIDER") {
         navigate("/ccdv");
+      } else if (userData.role.name === "ADMIN") {
+        navigate("/admin");
       }
     } catch (error) {
       console.log("Login error:", error);
+
+      // LỖI USER CHƯA DUYỆT
+      if (error.type === "NOT_APPROVED") {
+        Swal.fire({
+          icon: "warning",
+          title: "Tài khoản chưa được duyệt!",
+          text: error.message || "Vui lòng đợi Admin phê duyệt.",
+        });
+        return;
+      }
+
+      //  LỖI SAI TÀI KHOẢN / MẬT KHẨU
+      if (error.type === "INVALID_CREDENTIALS") {
+        Toast.fire({
+          icon: "error",
+          title: "Sai tên đăng nhập hoặc mật khẩu!",
+        });
+        return;
+      }
+
+      //Các lỗi khác (nếu có)
       Toast.fire({
         icon: "error",
-        title: "Sai tên đăng nhập hoặc mật khẩu!",
+        title: "Không thể đăng nhập. Vui lòng thử lại.",
       });
     }
   };
@@ -129,11 +153,11 @@ export default function Login() {
               Đăng nhập
             </button>
 
-            <div className="text-center mt-3">
+            {/* <div className="text-center mt-3">
               <a href="#" className="text-decoration-none text-danger small">
                 Quên mật khẩu?
               </a>
-            </div>
+            </div> */}
           </form>
 
           <hr />
